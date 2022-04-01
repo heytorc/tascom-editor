@@ -1,5 +1,8 @@
+import { Box, Heading, VStack, Button, Divider } from "@chakra-ui/react";
+import { DownloadIcon } from '@chakra-ui/icons';
+
 import { useDocument } from "@/commons/contexts/document.context";
-import { Box, Heading, VStack, Text, Button, Divider } from "@chakra-ui/react";
+
 import IField from "@/commons/interfaces/IField";
 
 interface IElementFieldsProps {
@@ -9,7 +12,7 @@ interface IElementFieldsProps {
 
 export default function EditorElements({ fields, setFields }: IElementFieldsProps) {
 
-  const { createField } = useDocument();
+  const { createField, saveDocument } = useDocument();
 
   return (
     <Box bg={'white'} h={'100vh'} paddingX={10}>
@@ -60,6 +63,19 @@ export default function EditorElements({ fields, setFields }: IElementFieldsProp
             isFullWidth
           >
             Label
+          </Button>
+        </VStack>
+
+        <Divider />
+
+        <VStack>
+          <Button
+            leftIcon={<DownloadIcon />}
+            colorScheme="green"
+            variant='solid'
+            onClick={saveDocument}
+          >
+            Salvar
           </Button>
         </VStack>
       </VStack>

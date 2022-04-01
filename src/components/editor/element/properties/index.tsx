@@ -5,7 +5,6 @@ import {
   IconButton,
   Text,
   Divider,
-  Input,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,

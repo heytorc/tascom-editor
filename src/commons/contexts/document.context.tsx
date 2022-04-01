@@ -1,15 +1,21 @@
-import React, { createContext, FC, useContext, useState } from "react";
+import React, { createContext, FC, useContext, useEffect, useState } from "react";
 import { v1 as uuidv1 } from 'uuid';
 
 import IField, { FieldType } from "@/commons/interfaces/IField";
 import IPage from "@/commons/interfaces/IPage";
 import FieldsDefaultProps from "@/commons/constants/fields/default.configuration";
+import IDocument from "@/commons/interfaces/IDocument";
+import api from "../services/api";
 
 interface IDocumentContext {
   fields: IField[],
   setFields: React.Dispatch<React.SetStateAction<IField[]>>,
   selectedField: IField | undefined,
   setSelectedField: React.Dispatch<React.SetStateAction<IField | undefined>>,
+  document: IDocument | undefined,
+  setDocument: React.Dispatch<React.SetStateAction<IDocument | undefined>>,
+  findDocument: (id: number | string) => void,
+  saveDocument: () => void,
   createField: (type: FieldType) => void,
   deleteField: () => void,
   updateLabel: (value: string) => void,
@@ -32,8 +38,16 @@ export const DocumentContext = createContext({} as IDocumentContext);
 export const DocumentProvider: FC = ({ children }) => {
   const [pages, setPages] = useState<IPage[]>();
 
+  const [document, setDocument] = useState<IDocument>();
+
   const [fields, setFields] = useState<IField[]>([])
   const [selectedField, setSelectedField] = useState<IField>();
+
+  useEffect(() => console.log(fields), [fields]);
+
+  useEffect(() => {
+    fillDocumentFields();
+  }, [document]);
 
   const createField = (type: FieldType) => {
     let field = FieldsDefaultProps[type];
@@ -105,13 +119,53 @@ export const DocumentProvider: FC = ({ children }) => {
     }
   };
 
+  const fillDocumentFields = () => {
+    if (document) {
+      const { version, versions } = document;
+
+      const actualVersion = versions.find(item => item.number === version);
+
+      if (actualVersion)
+        setFields(actualVersion.fields);
+    }
+  };
+
+  const findDocument = async (id: number | string) => {
+    const { data: document }: any = await api.get(`/documents?id=${id}`);
+
+    if (document[0]) {
+      setDocument(document[0]);
+    }
+  };
+
+  const saveDocument = async () => {
+    if (document) {
+      const { version, versions } = document;
+
+      const actualIndexVersion = versions.findIndex(item => item.number === version);
+
+      if (actualIndexVersion > -1) {
+        const data = { ...document };
+        data.versions[actualIndexVersion].fields = fields;
+
+        const documentSaved = await api.put(`/documents/${document._id}`, data);
+
+        console.log(documentSaved);
+      }
+    }
+  };
+
   return (
     <DocumentContext.Provider
       value={{
+        document,
+        setDocument,
         fields,
         setFields,
         selectedField,
         setSelectedField,
+        findDocument,
+        saveDocument,
         createField,
         deleteField,
         updateLabel,

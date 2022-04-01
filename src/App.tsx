@@ -1,4 +1,3 @@
-import React from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -9,13 +8,17 @@ import { DocumentProvider } from './commons/contexts/document.context';
 
 import './App.css'
 import CreateDocument from "./pages/document/create";
+import PreviewDocument from "./pages/document/preview";
 
 function App() {
   return (
     <Router>
       <DocumentProvider>
         <Routes>
-          <Route path="/document/create" element={<CreateDocument />} />
+          <Route path="document">
+            <Route path="create" element={<CreateDocument />} />
+            <Route path=":id/preview" element={<PreviewDocument />} />
+          </Route>
         </Routes>
       </DocumentProvider>
     </Router>

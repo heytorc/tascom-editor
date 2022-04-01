@@ -1,4 +1,4 @@
-import { useDocument } from "@/commons/contexts/document.context";
+import { useEffect } from "react";
 import {
   Box,
   Editable,
@@ -17,12 +17,16 @@ import {
 } from "@chakra-ui/react";
 import { Rnd, DraggableData, Position, ResizableDelta } from "react-rnd";
 
-import IField from "../../../commons/interfaces/IField";
-import EditorElementsList from "../../../components/editor/element/list";
-import ElementProperties from "../../../components/editor/element/properties";
+import { useDocument } from "@/commons/contexts/document.context";
+
+import EditorElementsList from "@/components/editor/element/list";
+import ElementProperties from "@/components/editor/element/properties";
+
+import IField from "@/commons/interfaces/IField";
 
 export default function CreateDocument() {
   const {
+    findDocument,
     fields,
     setFields,
     selectedField,
@@ -31,6 +35,8 @@ export default function CreateDocument() {
     updatePosition,
     updateSize
   } = useDocument();
+
+  useEffect(() => { findDocument(1) }, []);
 
   const handleDragStop = (event: any, { x, y }: DraggableData) => {
     updatePosition({ x, y });
@@ -182,8 +188,7 @@ export default function CreateDocument() {
       <Rnd
         key={`editor-field-${index}`}
         default={{
-          x: 0,
-          y: 0,
+          ...field.position,
           ...field.size,
         }}
         maxWidth={800}

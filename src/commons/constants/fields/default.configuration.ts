@@ -95,7 +95,7 @@ const label: IField = {
   },
   size: {
     width: 300,
-    height: 80
+    height: 40
   },
   styles: {
     fontSize: 14,
