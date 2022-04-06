@@ -1,4 +1,4 @@
-export type FieldType = "text" | "number" | "date" | "textarea" | "label";
+import { FieldType } from "../types/field.types"
 
 export interface IFieldProps {
   _id?: string,
@@ -21,7 +21,7 @@ export interface IFieldProps {
 export default interface IField {
   _id: string,
   label: string,
-  placeholder: string,
+  placeholder?: string,
   type: FieldType,
   position: {
     x: number,
