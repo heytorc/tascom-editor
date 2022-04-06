@@ -1,7 +1,8 @@
 import React, { createContext, FC, useContext, useEffect, useState } from "react";
 import { v1 as uuidv1 } from 'uuid';
 
-import IField, { FieldType } from "@/commons/interfaces/IField";
+import IField from "@/commons/interfaces/IField";
+import { FieldType } from "@/commons/types/field.types";
 import IPage from "@/commons/interfaces/IPage";
 import FieldsDefaultProps from "@/commons/constants/fields/default.configuration";
 import IDocument from "@/commons/interfaces/IDocument";
@@ -14,8 +15,11 @@ interface IDocumentContext {
   setSelectedField: React.Dispatch<React.SetStateAction<IField | undefined>>,
   document: IDocument | undefined,
   setDocument: React.Dispatch<React.SetStateAction<IDocument | undefined>>,
+  documentData: any,
+  setDocumentData: React.Dispatch<React.SetStateAction<any>>,
   findDocument: (id: number | string) => void,
   saveDocument: () => void,
+  handleDocumentData: (id: number | string) => void,
   createField: (type: FieldType) => void,
   deleteField: () => void,
   updateLabel: (value: string) => void,
@@ -39,6 +43,7 @@ export const DocumentProvider: FC = ({ children }) => {
   const [pages, setPages] = useState<IPage[]>();
 
   const [document, setDocument] = useState<IDocument>();
+  const [documentData, setDocumentData] = useState<any>();
 
   const [fields, setFields] = useState<IField[]>([])
   const [selectedField, setSelectedField] = useState<IField>();
@@ -138,6 +143,14 @@ export const DocumentProvider: FC = ({ children }) => {
     }
   };
 
+  const handleDocumentData = async (id: number | string) => {
+    const { data: document }: any = await api.get(`/completed_documents?id=${id}`);
+
+    if (document) {
+      setDocumentData(document);
+    }
+  };
+
   const saveDocument = async () => {
     if (document) {
       const { version, versions } = document;
@@ -166,6 +179,9 @@ export const DocumentProvider: FC = ({ children }) => {
         setSelectedField,
         findDocument,
         saveDocument,
+        handleDocumentData,
+        documentData,
+        setDocumentData,
         createField,
         deleteField,
         updateLabel,

@@ -18,6 +18,7 @@ function App() {
           <Route path="document">
             <Route path="create" element={<CreateDocument />} />
             <Route path=":id/preview" element={<PreviewDocument />} />
+            <Route path=":id/preview/:record_id" element={<PreviewDocument />} />
           </Route>
         </Routes>
       </DocumentProvider>
