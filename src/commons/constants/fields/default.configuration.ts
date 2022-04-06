@@ -105,10 +105,61 @@ const label: IField = {
   required: false
 }
 
+const checkbox: IField = {
+  _id: "",
+  label: "Checkbox",
+  type: "checkbox",
+  position: {
+    x: 0,
+    y: 20
+  },
+  size: {
+    width: 300,
+    height: 80
+  },
+  styles: {},
+  required: false
+}
+
+const radio: IField = {
+  _id: "",
+  label: "Radio",
+  type: "radio",
+  position: {
+    x: 0,
+    y: 20
+  },
+  size: {
+    width: 300,
+    height: 80
+  },
+  styles: {},
+  required: false
+}
+
+const select: IField = {
+  _id: "",
+  label: "Select",
+  type: "select",
+  position: {
+    x: 0,
+    y: 20
+  },
+  size: {
+    width: 300,
+    height: 80
+  },
+  styles: {},
+  required: false
+}
+
 export default {
   text,
   date,
   number,
   textarea,
   label,
+  radio,
+  checkbox,
+  select
 }
