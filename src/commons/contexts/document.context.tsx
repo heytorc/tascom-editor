@@ -33,8 +33,8 @@ interface IFieldPosition {
 }
 
 interface IFieldSize {
-  width: number | string;
-  height: number | string;
+  width: number;
+  height: number;
 }
 
 export const DocumentContext = createContext({} as IDocumentContext);
@@ -115,7 +115,7 @@ export const DocumentProvider: FC = ({ children }) => {
       const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
 
       if (only) {
-        fieldsCopy[fieldKey].size[only] = size[only];
+        fieldsCopy[fieldKey].size[only] = isNaN(size[only]) ? 0 : size[only] ;
       } else {
         fieldsCopy[fieldKey].size = size;
       }

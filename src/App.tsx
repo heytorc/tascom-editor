@@ -20,10 +20,9 @@ function App() {
     <Router>
       <DocumentProvider>
         <Routes>
-          <Route path="/" element={<LoginPage />} />
-
+          <Route index element={<LoginPage />} />
           <Route path="app">
-            <Route path="/" element={<AppPage />} />
+            <Route index element={<AppPage />} />
             <Route path="document">
               <Route path="build" element={<BuildDocument />}>
                 <Route path=":record_id" element={<BuildDocument />} />

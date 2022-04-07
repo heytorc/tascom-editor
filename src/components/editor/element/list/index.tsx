@@ -1,5 +1,5 @@
-import { Box, Heading, VStack, Button, Divider } from "@chakra-ui/react";
-import { DownloadIcon } from '@chakra-ui/icons';
+import { Box, Stack, Typography, Divider, Button } from "@mui/material";
+import { Save as SaveIcon } from "@mui/icons-material";
 
 import { useDocument } from "@/commons/contexts/document.context";
 
@@ -15,70 +15,64 @@ export default function EditorElements({ fields, setFields }: IElementFieldsProp
   const { createField, saveDocument } = useDocument();
 
   return (
-    <Box bg={'white'} h={'100vh'} paddingX={10}>
-      <VStack>
+    <Box
+      bgcolor={'white'}
+      height={'100vh'}
+      paddingX={10}
+    >
+      <Stack>
         <Box>
-          <Heading>Elementos</Heading>
+          <Typography variant="h4">Elementos</Typography>
         </Box>
 
         <Divider />
 
-        <VStack>
+        <Stack>
           <Button
-            colorScheme='teal'
-            variant='ghost'
+            color="primary"
             onClick={() => createField('text')}
-            isFullWidth
           >
             Texto
           </Button>
           <Button
-            colorScheme='teal'
-            variant='ghost'
+            color="primary"
             onClick={() => createField('date')}
-            isFullWidth
           >
             Data
           </Button>
           <Button
-            colorScheme='teal'
-            variant='ghost'
+            color="primary"
             onClick={() => createField('number')}
-            isFullWidth
           >
             Número
           </Button>
           <Button
-            colorScheme='teal'
-            variant='ghost'
+            color="primary"
             onClick={() => createField('textarea')}
-            isFullWidth
           >
             Caixa de Texto
           </Button>
           <Button
-            colorScheme='teal'
-            variant='ghost'
+            color="primary"
             onClick={() => createField('label')}
-            isFullWidth
           >
             Label
           </Button>
-        </VStack>
+        </Stack>
 
         <Divider />
 
-        <VStack>
+        <Stack>
           <Button
-            leftIcon={<DownloadIcon />}
-            colorScheme="green"
-            variant='solid'
+            startIcon={<SaveIcon />}
+            color="success"
+            variant="contained"
             onClick={saveDocument}
           >
             Salvar
           </Button>
-        </VStack>
-      </VStack>
+        </Stack>
+      </Stack>
     </Box>
   );
 }

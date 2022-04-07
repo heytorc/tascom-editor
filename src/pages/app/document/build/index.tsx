@@ -1,21 +1,8 @@
 import { useEffect } from "react";
-import {
-  Box,
-  Editable,
-  EditableInput,
-  EditablePreview,
-  Flex,
-  Input,
-  Textarea,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  EditableTextarea,
-  Stack
-} from "@chakra-ui/react";
 import { Rnd, DraggableData, Position, ResizableDelta } from "react-rnd";
+import { Box, Stack, Typography, TextField } from "@mui/material";
+import { DatePicker, LocalizationProvider } from '@mui/lab';
+import DateAdapter from '@mui/lab/AdapterDayjs';
 
 import { useDocument } from "@/commons/contexts/document.context";
 
@@ -80,18 +67,20 @@ export default function CreateDocument() {
       case 'text':
         fieldComponent = (
           <>
-            <Editable defaultValue={field.label} onChange={(value: string) => updateLabel(value)}>
+            {/* <Editable defaultValue={field.label} onChange={(value: string) => updateLabel(value)}>
               <EditablePreview />
               <EditableInput
                 onDoubleClick={(element) => element.currentTarget.select()}
                 w={field.size.width}
               />
-            </Editable>
-            <Input
-              size='md'
+            </Editable> */}
+            <Typography>{field.label}</Typography>
+            <TextField
+              size="small"
               name={`${field.label}-text`}
               placeholder={field.placeholder}
               style={{ cursor: 'move' }}
+              fullWidth
               disabled
             />
           </>
@@ -101,20 +90,22 @@ export default function CreateDocument() {
       case 'date':
         fieldComponent = (
           <>
-            <Editable defaultValue={field.label} onChange={(value: string) => updateLabel(value)}>
+            {/* <Editable defaultValue={field.label} onChange={(value: string) => updateLabel(value)}>
               <EditablePreview />
               <EditableInput
                 onDoubleClick={(element) => element.currentTarget.select()}
                 w={field.size.width}
               />
-            </Editable>
-            <input
-              type="date"
-              name={`${field.label}-date`}
-              placeholder={field.placeholder}
-              style={{ width: field.size.width, height: field.size.height, cursor: "move" }}
-              disabled
-            />
+            </Editable> */}
+            <Typography>{field.label}</Typography>
+            <LocalizationProvider dateAdapter={DateAdapter}>
+              <DatePicker
+                onChange={(date: unknown, keyboardInputValue?: string) => { }}
+                renderInput={(params) => <TextField size="small" {...params} />}
+                value={undefined}
+                disabled
+              />
+            </LocalizationProvider>
           </>
         );
         break;
@@ -122,26 +113,23 @@ export default function CreateDocument() {
       case 'number':
         fieldComponent = (
           <>
-            <Editable defaultValue={field.label} onChange={(value: string) => updateLabel(value)}>
+            {/* <Editable defaultValue={field.label} onChange={(value: string) => updateLabel(value)}>
               <EditablePreview />
               <EditableInput
                 onDoubleClick={(element) => element.currentTarget.select()}
                 w={field.size.width}
               />
-            </Editable>
-            <NumberInput
-              isDisabled
-            >
-              <NumberInputField
-                name={`${field.label}-number`}
-                placeholder={field.placeholder}
-                style={{ width: field.size.width, cursor: "move" }}
-              />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
+            </Editable> */}
+            <Typography>{field.label}</Typography>
+            <TextField
+              size="small"
+              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+              name={`${field.label}-number`}
+              placeholder={field.placeholder}
+              style={{ width: field.size.width, cursor: "move" }}
+              fullWidth
+              disabled
+            />
           </>
         );
         break;
@@ -149,37 +137,42 @@ export default function CreateDocument() {
       case 'textarea':
         fieldComponent = (
           <>
-            <Editable defaultValue={field.label} onChange={(value: string) => updateLabel(value)}>
+            {/* <Editable defaultValue={field.label} onChange={(value: string) => updateLabel(value)}>
               <EditablePreview />
               <EditableInput
                 onDoubleClick={(element) => element.currentTarget.select()}
                 w={field.size.width}
               />
-            </Editable>
-            <Textarea
+            </Editable> */}
+            <Typography>{field.label}</Typography>
+            <TextField
+              multiline
+              size="small"
               name={`${field.label}-textarea`}
               placeholder={field.placeholder}
               style={{ cursor: "move" }}
+              InputProps={{ style: { cursor: "move", flex: 1 } }}
+              fullWidth
               disabled
-            >
-            </Textarea>
+            />
           </>
         );
         break;
 
       default:
         fieldComponent = (
-          <Editable
-            defaultValue={field.label}
-            style={{ width: field.size.width, height: field.size.height, cursor: "move" }}
-            onChange={(value: string) => updateLabel(value)}
-          >
-            <EditablePreview style={{ cursor: "move" }} />
-            <EditableTextarea
-              onDoubleClick={(element) => element.currentTarget.select()}
-              style={{ height: field.size.height, padding: 0 }}
-            />
-          </Editable>
+          // <Editable
+          //   defaultValue={field.label}
+          //   style={{ width: field.size.width, height: field.size.height, cursor: "move" }}
+          //   onChange={(value: string) => updateLabel(value)}
+          // >
+          //   <EditablePreview style={{ cursor: "move" }} />
+          //   <EditableTextarea
+          //     onDoubleClick={(element) => element.currentTarget.select()}
+          //     style={{ height: field.size.height, padding: 0 }}
+          //   />
+          // </Editable>
+          <Typography>{field.label}</Typography>
         );
         break;
     }
@@ -205,7 +198,10 @@ export default function CreateDocument() {
   };
 
   return (
-    <Flex bg={'gray.200'} justifyContent={'space-between'}>
+    <Stack
+      direction={'row'}
+      justifyContent={'space-between'}
+    >
       <EditorElementsList
         fields={fields}
         setFields={setFields}
@@ -213,12 +209,12 @@ export default function CreateDocument() {
       {/* {documents.map((document: any, index: number) => <p key={index}>{document.name}</p>)} */}
       <Box
         flex={1}
-        overflowX={'hidden'}
         display={'flex'}
         justifyContent={'center'}
         alignItems={'flex-start'}
-        h={'100vh'}
-        paddingY={10}
+        height={'100vh'}
+        paddingY={5}
+        style={{ overflowX: 'hidden' }}
       >
         <Stack
           padding={5}
@@ -240,6 +236,6 @@ export default function CreateDocument() {
       {selectedField && (
         <ElementProperties />
       )}
-    </Flex>
+    </Stack>
   )
 }

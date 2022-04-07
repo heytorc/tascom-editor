@@ -1,20 +1,5 @@
-import {
-  Box,
-  Flex,
-  Button,
-  IconButton,
-  Text,
-  Divider,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  Editable,
-  EditablePreview,
-  EditableTextarea
-} from "@chakra-ui/react";
-import { CloseIcon, DeleteIcon } from "@chakra-ui/icons";
+import { Box, Stack, Typography, Button, IconButton, Divider, TextField } from "@mui/material";
+import { Close as CloseIcon, Delete as DeleteIcon } from "@mui/icons-material";
 
 import { useDocument } from "@/commons/contexts/document.context";
 
@@ -31,24 +16,27 @@ export default function ElementProperties() {
 
   return (
     <Box
-      bg={'white'}
-      h={'100vh'}
-      w={300}
+      bgcolor={'white'}
+      height={'100vh'}
+      width={300}
       padding={8}
     >
-      <Flex justifyContent={'flex-end'}>
+      <Box display={'flex'} justifyContent={'flex-end'}>
         <IconButton
           onClick={() => setSelectedField(undefined)}
-          aria-label='Close element config'
-          size={'sm'}
-          icon={<CloseIcon />}
-        />
-      </Flex>
+          size="medium"
+        >
+          <CloseIcon />
+        </IconButton>
+      </Box>
 
-      <Divider my={10} />
+      <Box paddingY={2}>
+        <Divider />
+      </Box>
 
-      <Text fontWeight={'bold'}>Label:</Text>
-      <Editable
+      <Box paddingY={1}>
+        <Typography fontWeight={'bold'}>Label:</Typography>
+        {/* <Editable
         defaultValue={selectedField?.label}
         onChange={(value: string) => updateLabel(value)}
       >
@@ -56,81 +44,54 @@ export default function ElementProperties() {
         <EditableTextarea
           onDoubleClick={(element) => element.currentTarget.select()}
         />
-      </Editable>
-
-      <br />
-
-      <Text fontWeight={'bold'}>Posição:</Text>
-
-      <NumberInput
-        onChange={(value) => updatePosition({ x: parseInt(value), y: 0 }, "x")}
-        value={selectedField?.position.x}
-      >
-        <NumberInputField
-          name={`${selectedField?.label}-position-x`}
+      </Editable> */}
+        <TextField
+          onChange={(element) => updateLabel(element.target.value)}
+          name={`${selectedField?.label}-label`}
+          value={selectedField?.label}
+          multiline={selectedField && selectedField?.label.length > 10}
+          rows={selectedField && selectedField?.label.length > 10 ? 10 : undefined}
+          size="small"
         />
-        <NumberInputStepper>
-          <NumberIncrementStepper />
-          <NumberDecrementStepper />
-        </NumberInputStepper>
-      </NumberInput>
+      </Box>
 
-      <NumberInput
-        onChange={(value) => updatePosition({ x: 0, y: parseInt(value) }, "y")}
-        value={selectedField?.position.y}
-      >
-        <NumberInputField
-          name={`${selectedField?.label}-position-y`}
-          value={selectedField?.position.y}
-        />
-        <NumberInputStepper>
-          <NumberIncrementStepper />
-          <NumberDecrementStepper />
-        </NumberInputStepper>
-      </NumberInput>
+      <Box paddingY={1}>
+        <Typography fontWeight={'bold'} marginBottom={2}>Tamanho:</Typography>
 
-      <br />
+        <Stack direction={'row'} gap={2}>
 
-      <Text fontWeight={'bold'}>Tamanho:</Text>
+          <TextField
+            label="Largura"
+            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+            onChange={(element) => updateSize({ width: parseInt(element.target.value), height: 0 }, "width")}
+            name={`${selectedField?.label}-size-w`}
+            value={selectedField?.size.width}
+            size="small"
+          />
 
-      <NumberInput
-        onChange={(value) => updateSize({ width: parseInt(value), height: 0 }, "width")}
-        value={selectedField?.size.width}
-      >
-        <NumberInputField
-          name={`${selectedField?.label}-size-w`}
-          value={selectedField?.size.width}
-        />
-        <NumberInputStepper>
-          <NumberIncrementStepper />
-          <NumberDecrementStepper />
-        </NumberInputStepper>
-      </NumberInput>
+          <TextField
+            label="Altura"
+            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+            onChange={(element) => updateSize({ width: 0, height: parseInt(element.target.value) }, "height")}
+            name={`${selectedField?.label}-size-y`}
+            value={selectedField?.size.height}
+            size="small"
+          />
 
-      <NumberInput
-        onChange={(value) => updateSize({ width: 0, height: parseInt(value) }, "height")}
-        value={selectedField?.size.height}
-      >
-        <NumberInputField
-          name={`${selectedField?.label}-size-h`}
-          value={selectedField?.size.height}
-        />
-        <NumberInputStepper>
-          <NumberIncrementStepper />
-          <NumberDecrementStepper />
-        </NumberInputStepper>
-      </NumberInput>
+        </Stack>
+      </Box>
 
-      <br />
-
-      <Button
-        leftIcon={<DeleteIcon />}
-        colorScheme="red"
-        variant='solid'
-        onClick={deleteField}
-      >
-        Excluir
-      </Button>
+      <Box paddingY={2}>
+        <Button
+          startIcon={<DeleteIcon />}
+          color="error"
+          variant="contained"
+          onClick={deleteField}
+          fullWidth
+        >
+          Excluir
+        </Button>
+      </Box>
     </Box>
   )
 }

@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { useParams } from 'react-router-dom';
+import { Box, Typography, Stack, Button, TextField } from "@mui/material"
 
 import { useDocument } from "@/commons/contexts/document.context";
-import { Box, Editable, EditableInput, EditablePreview, EditableTextarea, Flex, Input, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Stack, Text, Textarea } from "@chakra-ui/react";
 import { Rnd } from "react-rnd";
 
 import IField from "@/commons/interfaces/IField";
@@ -12,7 +12,7 @@ interface IPreviewDocumentParams {
   record_id?: string | undefined;
 }
 
-const PreviewDocument = () => {
+const CreateDocument = () => {
   const { document, documentData, findDocument, fields, handleDocumentData } = useDocument();
 
   const { id, record_id } = useParams();
@@ -36,9 +36,9 @@ const PreviewDocument = () => {
     }
 
     const label = (
-      <Text>
+      <Typography>
         {field.label}
-      </Text>
+      </Typography>
     );
 
     switch (field.type) {
@@ -46,8 +46,8 @@ const PreviewDocument = () => {
         fieldComponent = (
           <Stack style={{ ...field.size }}>
             {label}
-            <Input
-              size='md'
+            <TextField
+              size="medium"
               name={`${field.label}-text`}
               placeholder={field.placeholder}
               value={value}
@@ -75,20 +75,13 @@ const PreviewDocument = () => {
         fieldComponent = (
           <Stack style={{ ...field.size }}>
             {label}
-            <NumberInput
-              isDisabled
-            >
-              <NumberInputField
-                name={`${field.label}-number`}
-                placeholder={field.placeholder}
-                style={{ width: field.size.width, cursor: "move" }}
-                value={value}
-              />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
+            <TextField
+              name={`${field.label}-number`}
+              placeholder={field.placeholder}
+              style={{ width: field.size.width, cursor: "move" }}
+              value={value}
+              disabled
+            />
           </Stack>
         );
         break;
@@ -97,7 +90,8 @@ const PreviewDocument = () => {
         fieldComponent = (
           <Stack style={{ ...field.size }}>
             {label}
-            <Textarea
+            <TextField
+              multiline
               name={`${field.label}-textarea`}
               placeholder={field.placeholder}
               value={value}
@@ -108,9 +102,9 @@ const PreviewDocument = () => {
 
       default:
         fieldComponent = (
-          <Text style={{ ...field.size }}>
+          <Typography style={{ ...field.size }}>
             {field.label}
-          </Text>
+          </Typography>
         );
         break;
     }
@@ -135,14 +129,13 @@ const PreviewDocument = () => {
   };
 
   return (
-    <Flex bg={'gray.200'} justifyContent={'space-between'}>
+    <Stack display={'flex'} bgcolor={'#ccc'} justifyContent={'space-between'}>
       <Box
         flex={1}
-        overflowX={'hidden'}
         display={'flex'}
         justifyContent={'center'}
         alignItems={'flex-start'}
-        h={'100vh'}
+        height={'100vh'}
         paddingY={10}
       >
         <Stack
@@ -163,8 +156,8 @@ const PreviewDocument = () => {
           )}
         </Stack>
       </Box>
-    </Flex>
+    </Stack>
   );
 };
 
-export default PreviewDocument;
+export default CreateDocument;

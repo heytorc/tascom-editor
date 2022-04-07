@@ -10,8 +10,8 @@ export interface IFieldProps {
     y?: number
   },
   size?: {
-    width?: number | string,
-    height?: number | string,
+    width?: number,
+    height?: number,
   },
   styles?: React.CSSProperties,
   required?: boolean,
@@ -28,8 +28,8 @@ export default interface IField {
     y: number
   },
   size: {
-    width: number | string,
-    height: number | string,
+    width: number,
+    height: number,
   },
   styles: React.CSSProperties,
   required: boolean,
