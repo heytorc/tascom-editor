@@ -27,9 +27,9 @@ function App() {
           <DocumentProvider>
             <Routes>
               <Route index element={<LoginPage />} />
-              <Route path="app" element={<AuthMiddleware />}>
+              <Route path="app">
                 <Route index element={<AppPage />} />
-                <Route path="document">
+                <Route path="document" element={<AuthMiddleware />}>
                   <Route path="build" element={<BuildDocument />}>
                     <Route path=":record_id" element={<BuildDocument />} />
                   </Route>

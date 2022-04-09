@@ -1,5 +1,5 @@
 
-import { useLocation, Navigate } from 'react-router-dom';
+import { useLocation, Navigate, Outlet } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 
 import { useAuth } from "@/commons/contexts/auth.context";
@@ -17,5 +17,5 @@ export const AuthMiddleware = () => {
     return <Navigate to="/" state={{ from: location }} replace />;
   }
 
-  return <></>;
+  return <Outlet />;
 };

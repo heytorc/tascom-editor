@@ -11,7 +11,7 @@ import ElementProperties from "@/components/editor/element/properties";
 
 import IField from "@/commons/interfaces/IField";
 
-export default function CreateDocument() {
+export default function BuildDocument() {
   const {
     findDocument,
     fields,
@@ -31,8 +31,8 @@ export default function CreateDocument() {
 
   const handleResize = (e: MouseEvent | TouchEvent, dir: any, elementRef: HTMLElement, delta: ResizableDelta, position: Position) => {
     updateSize({
-      width: elementRef.style.width,
-      height: elementRef.style.height
+      width: parseFloat(elementRef.style.width),
+      height: parseFloat(elementRef.style.height)
     })
   };
 
