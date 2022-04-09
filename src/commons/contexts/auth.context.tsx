@@ -1,5 +1,5 @@
 import React, { createContext, useState, FC, useContext } from "react";
-import { save as setCookie, remove as removeCookie } from 'react-cookies';
+import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 
 import api from "@/commons/services/api";
@@ -39,6 +39,8 @@ export const AuthContext = createContext({} as IAuthContext);
 export const AuthProvider: FC = ({ children }) => {
   const navigate = useNavigate();
 
+  const [cookie, setCookie, removeCookie] = useCookies(['app.tascomeditor.token'])
+
   const [user, setUser] = useState<IUser>({});
   const [error, setError] = useState({ message: null });
 
@@ -46,11 +48,12 @@ export const AuthProvider: FC = ({ children }) => {
     try {
       setError({ message: null });
 
-      const { data: userAuthenticaded } = await api.post<IUserLoginResponse>('/user/auth', userData);
+      // const { data: userAuthenticaded } = await api.post<IUserLoginResponse>('/user/auth', userData);
+      const { data: [userAuthenticaded] } = await api.get<IUserLoginResponse[]>(`/users/?username=${userData.username}&password=${userData.password}&_limit=1`);
   
       api.defaults.headers.common['Authorization'] = userAuthenticaded.token;
   
-      setCookie('app.token', userAuthenticaded.token, {
+      setCookie('app.tascomeditor.token', userAuthenticaded.token, {
         maxAge: 60 * 60 * 1, // 1 hora
         path: '/app',
       });
@@ -65,7 +68,7 @@ export const AuthProvider: FC = ({ children }) => {
   };
 
   const logOff = () => {
-    removeCookie('app.token');
+    removeCookie('app.tascomeditor.token');
 
     navigate('/');
   };

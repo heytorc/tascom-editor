@@ -195,5 +195,15 @@
     "created_at": "2022-01-01T00:00:00-03:00",
     "canceled_by": 1,
     "canceled_at": "2022-01-01T00:00:00-03:00"
-  }
+  },
+  "users": [
+    {
+      "id": 1,
+      "name": "Administrador",
+      "username": "admin",
+      "password": "admin",
+      "token": "test",
+      "active": true
+    }
+  ]
 }

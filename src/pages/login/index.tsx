@@ -31,8 +31,8 @@ export default function LoginPage() {
 
   const handleLogin: SubmitHandler<IFormInput> = async (data) => {
     console.log('errors', errors);
-    if (data.username === 'admin') setError('username', { message: 'username is invalid', type: 'validate' })
-    // await signIn(data);
+    // if (data.username === 'admin') setError('username', { message: 'username is invalid', type: 'validate' })
+    await signIn(data);
   };
 
   return (

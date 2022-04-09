@@ -3,6 +3,7 @@ import {
   Route,
   Routes,
 } from "react-router-dom";
+import { CookiesProvider } from 'react-cookie';
 
 import { AuthProvider } from "@/commons/contexts/auth.context";
 import { DocumentProvider } from '@/commons/contexts/document.context';
@@ -20,27 +21,29 @@ import './App.css'
 
 function App() {
   return (
-    <Router>
-      <AuthProvider>
-        <DocumentProvider>
-          <Routes>
-            <Route index element={<LoginPage />} />
-            <Route path="app" element={<AuthMiddleware />}>
-              <Route index element={<AppPage />} />
-              <Route path="document">
-                <Route path="build" element={<BuildDocument />}>
-                  <Route path=":record_id" element={<BuildDocument />} />
-                </Route>
-                <Route path=":id/create/:record_id" element={<CreateDocument />} />
-                <Route path=":id/preview" element={<PreviewDocument />}>
-                  <Route path=":record_id" element={<PreviewDocument />} />
+    <CookiesProvider>
+      <Router>
+        <AuthProvider>
+          <DocumentProvider>
+            <Routes>
+              <Route index element={<LoginPage />} />
+              <Route path="app" element={<AuthMiddleware />}>
+                <Route index element={<AppPage />} />
+                <Route path="document">
+                  <Route path="build" element={<BuildDocument />}>
+                    <Route path=":record_id" element={<BuildDocument />} />
+                  </Route>
+                  <Route path=":id/create/:record_id" element={<CreateDocument />} />
+                  <Route path=":id/preview" element={<PreviewDocument />}>
+                    <Route path=":record_id" element={<PreviewDocument />} />
+                  </Route>
                 </Route>
               </Route>
-            </Route>
-          </Routes>
-        </DocumentProvider>
-      </AuthProvider>
-    </Router>
+            </Routes>
+          </DocumentProvider>
+        </AuthProvider>
+      </Router>
+    </CookiesProvider>
   )
 }
 
