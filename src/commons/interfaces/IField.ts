@@ -34,4 +34,5 @@ export default interface IField {
   styles: React.CSSProperties,
   required: boolean,
   isResizable?: boolean,
+  useRichText?: boolean
 }

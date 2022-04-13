@@ -52,7 +52,8 @@
                 "color": "#fff",
                 "borderRadius": 5
               },
-              "required": false
+              "required": false,
+              "useRichText": true
             },
             {
               "_id": "0de74290-b15c-11ec-8a81-8f0dbfe5d20b",
@@ -72,7 +73,8 @@
                 "color": "#fff",
                 "borderRadius": 5
               },
-              "required": false
+              "required": false,
+              "useRichText": true
             },
             {
               "_id": "18582460-b15c-11ec-8a81-8f0dbfe5d20b",
@@ -92,7 +94,8 @@
                 "color": "#fff",
                 "borderRadius": 5
               },
-              "required": false
+              "required": false,
+              "useRichText": true
             },
             {
               "_id": "217e5dc0-b15c-11ec-8a81-8f0dbfe5d20b",
@@ -111,7 +114,8 @@
                 "color": "#fff",
                 "borderRadius": 5
               },
-              "required": false
+              "required": false,
+              "useRichText": true
             },
             {
               "_id": "4b9cfd50-b15c-11ec-8a81-8f0dbfe5d20b",
@@ -131,7 +135,8 @@
                 "color": "#fff",
                 "borderRadius": 5
               },
-              "required": false
+              "required": false,
+              "useRichText": true
             },
             {
               "_id": "aadb9e70-b15c-11ec-8a81-8f0dbfe5d20b",
@@ -151,7 +156,8 @@
                 "color": "#fff",
                 "borderRadius": 5
               },
-              "required": false
+              "required": false,
+              "useRichText": true
             },
             {
               "_id": "0b88da10-b808-11ec-b42e-914b36c23d8c",
@@ -171,7 +177,8 @@
                 "color": "#fff",
                 "borderRadius": 5
               },
-              "required": false
+              "required": false,
+              "useRichText": true
             },
             {
               "_id": "504a2b90-b808-11ec-b42e-914b36c23d8c",
@@ -190,7 +197,8 @@
                 "color": "#fff",
                 "borderRadius": 5
               },
-              "required": false
+              "required": false,
+              "useRichText": true
             },
             {
               "_id": "98710e20-b9e8-11ec-b91d-7d9371f2b701",
@@ -210,7 +218,8 @@
                 "color": "#fff",
                 "borderRadius": 5
               },
-              "required": false
+              "required": false,
+              "useRichText": true
             },
             {
               "_id": "9b50ae70-b9e8-11ec-b91d-7d9371f2b701",
@@ -230,7 +239,8 @@
                 "color": "#fff",
                 "borderRadius": 5
               },
-              "required": false
+              "required": false,
+              "useRichText": true
             },
             {
               "_id": "fb3d4500-b9f7-11ec-bbeb-5395acc347ba",
@@ -249,7 +259,8 @@
                 "color": "#fff",
                 "borderRadius": 5
               },
-              "required": false
+              "required": false,
+              "useRichText": true
             },
             {
               "_id": "ec3fdbf0-ba54-11ec-8784-3d21b0adbf83",
@@ -268,7 +279,8 @@
                 "color": "#fff",
                 "borderRadius": 5
               },
-              "required": false
+              "required": false,
+              "useRichText": true
             },
             {
               "_id": "0923a440-ba55-11ec-8784-3d21b0adbf83",
@@ -287,7 +299,8 @@
                 "color": "#fff",
                 "borderRadius": 5
               },
-              "required": false
+              "required": false,
+              "useRichText": true
             },
             {
               "_id": "e7147aa0-bac7-11ec-8c75-15c85854df91",
@@ -306,7 +319,8 @@
                 "color": "#fff",
                 "borderRadius": 5
               },
-              "required": false
+              "required": false,
+              "useRichText": true
             },
             {
               "_id": "85d2e9b0-bb2c-11ec-901a-cd912624111d",
@@ -326,7 +340,24 @@
                 "color": "#fff",
                 "borderRadius": 5
               },
-              "required": false
+              "required": false,
+              "useRichText": true
+            },
+            {
+              "_id": "5482cd80-bb7c-11ec-9550-95871a6fb583",
+              "label": "Pergunta?",
+              "type": "yesOrNot",
+              "position": {
+                "x": 438,
+                "y": 777
+              },
+              "size": {
+                "width": 155,
+                "height": 50
+              },
+              "styles": {},
+              "required": false,
+              "useRichText": false
             }
           ],
           "status": "published",

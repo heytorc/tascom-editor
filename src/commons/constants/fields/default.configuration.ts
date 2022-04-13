@@ -18,7 +18,8 @@ const text: IField = {
     color: "#fff",
     borderRadius: 5
   },
-  required: false
+  required: false,
+  useRichText: true,
 }
 
 const date: IField = {
@@ -39,7 +40,8 @@ const date: IField = {
     color: "#fff",
     borderRadius: 5
   },
-  required: false
+  required: false,
+  useRichText: true,
 }
 
 const number: IField = {
@@ -60,7 +62,8 @@ const number: IField = {
     color: "#fff",
     borderRadius: 5
   },
-  required: false
+  required: false,
+  useRichText: true,
 }
 
 const textarea: IField = {
@@ -81,7 +84,8 @@ const textarea: IField = {
     color: "#fff",
     borderRadius: 5
   },
-  required: false
+  required: false,
+  useRichText: true,
 }
 
 const label: IField = {
@@ -101,7 +105,8 @@ const label: IField = {
     color: "#fff",
     borderRadius: 5
   },
-  required: false
+  required: false,
+  useRichText: true,
 }
 
 const checkbox: IField = {
@@ -117,7 +122,8 @@ const checkbox: IField = {
     height: 80
   },
   styles: {},
-  required: false
+  required: false,
+  useRichText: false,
 }
 
 const radio: IField = {
@@ -133,7 +139,25 @@ const radio: IField = {
     height: 80
   },
   styles: {},
-  required: false
+  required: false,
+  useRichText: false,
+}
+
+const yesOrNot: IField = {
+  _id: "",
+  label: "Pergunta?",
+  type: "yesOrNot",
+  position: {
+    x: 0,
+    y: 20
+  },
+  size: {
+    width: 155,
+    height: 50
+  },
+  styles: {},
+  required: false,
+  useRichText: false,
 }
 
 const select: IField = {
@@ -149,7 +173,8 @@ const select: IField = {
     height: 80
   },
   styles: {},
-  required: false
+  required: false,
+  useRichText: false,
 }
 
 export default {
@@ -160,5 +185,6 @@ export default {
   label,
   radio,
   checkbox,
-  select
+  select,
+  yesOrNot
 }

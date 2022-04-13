@@ -5,7 +5,10 @@ import {
   TextFieldsOutlined,
   WrapTextOutlined,
   ShortTextOutlined,
-  FormatShapesOutlined
+  CheckBoxOutlined,
+  ToggleOnOutlined,
+  RadioButtonCheckedOutlined,
+  ArrowDropDownCircleOutlined
 } from '@mui/icons-material';
 
 import { useDocument } from "@/commons/contexts/document.context";
@@ -100,6 +103,58 @@ export default function EditorElements() {
                 fullWidth
               >
                 Data
+              </ElementTypeButton>
+            </Stack>
+
+            <Text>Elementos de Seleção</Text>
+            
+            <Stack
+              flex={1}
+              flexDirection={'row'}
+              flexWrap={'wrap'}
+              alignItems={'center'}
+              justifyContent={'space-between'}
+              gap={2}
+              marginY={3}
+            >
+              <ElementTypeButton
+                color="primary"
+                onClick={() => createField('checkbox')}
+                startIcon={<CheckBoxOutlined />}
+                style={{ justifyContent: 'flex-start' }}
+                fullWidth
+              >
+                Multipla Escolha
+              </ElementTypeButton>
+
+              <ElementTypeButton
+                color="primary"
+                onClick={() => createField('yesOrNot')}
+                startIcon={<ToggleOnOutlined />}
+                style={{ justifyContent: 'flex-start' }}
+                fullWidth
+              >
+                Sim/Não
+              </ElementTypeButton>
+
+              <ElementTypeButton
+                color="primary"
+                onClick={() => createField('radio')}
+                startIcon={<RadioButtonCheckedOutlined />}
+                style={{ justifyContent: 'flex-start' }}
+                fullWidth
+              >
+                Radio
+              </ElementTypeButton>
+
+              <ElementTypeButton
+                color="primary"
+                onClick={() => createField('select')}
+                startIcon={<ArrowDropDownCircleOutlined />}
+                style={{ justifyContent: 'flex-start' }}
+                fullWidth
+              >
+                Seleção
               </ElementTypeButton>
             </Stack>
           </Stack>

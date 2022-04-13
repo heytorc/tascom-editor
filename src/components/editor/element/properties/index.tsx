@@ -36,7 +36,7 @@ export default function ElementProperties() {
     <Box
       bgcolor={'white'}
       height={'90vh'}
-      width={600}
+      width={500}
       paddingY={2}
     >
       <Stack>
@@ -60,11 +60,22 @@ export default function ElementProperties() {
                   <Stack paddingY={1} mb={3}>
                     <Text fontWeight={'bold'} mb={2}>Rótulo:</Text>
 
-                    <ReactQuill
-                      theme="snow"
-                      value={selectedField?.label}
-                      onChange={updateFieldLabel}
-                    />
+                    {selectedField.useRichText ? (
+                      <ReactQuill
+                        theme="snow"
+                        value={selectedField?.label}
+                        onChange={updateFieldLabel}
+                      />
+                    ) : (
+                      <TextField
+                        onChange={(element) => updateFieldLabel(element.target.value)}
+                        name={`${selectedField?.label}-label`}
+                        value={selectedField?.label}
+                        // multiline={selectedField && selectedField?.label.length > 10}
+                        // rows={selectedField && selectedField?.label.length > 10 ? 10 : undefined}
+                        size="small"
+                      />
+                    )}
                   </Stack>
 
                   {selectedField?.placeholder && (

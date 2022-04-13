@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { Button, Typography, TextField } from '@mui/material';
+import { Button, Typography, TextField, Switch } from '@mui/material';
+import { blue } from '@mui/material/colors';
 
 export const ElementTypeButton = styled(Button)`
   justify-content: flex-start;
@@ -23,6 +24,22 @@ export const EditorBuildInputText = styled(TextField)`
   }
 
   &.inputSelected input, &.inputSelected textarea {
+    cursor: move;
+  }
+`;
+
+export const EditorBuildSwitch = styled(Switch)`
+  cursor: pointer;
+
+  & .MuiSwitch-switchBase:not(.Mui-checked) {
+    color: ${blue[100]};
+  }
+  
+  & span {
+    cursor: pointer;
+  }
+
+  &.inputSelected span, &.inputSelected label {
     cursor: move;
   }
 `;

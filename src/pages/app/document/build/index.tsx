@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Rnd, DraggableData, Position, ResizableDelta } from "react-rnd";
-import { Box, Stack, TextField, Paper } from "@mui/material";
+import { Box, Stack, Paper, FormGroup, FormControlLabel, Switch } from "@mui/material";
 import { DatePicker, LocalizationProvider } from '@mui/lab';
 import DateAdapter from '@mui/lab/AdapterDayjs';
 
@@ -9,7 +9,7 @@ import { useDocument } from "@/commons/contexts/document.context";
 import EditorHeader from "@/components/editor/header";
 import EditorElementsList from "@/components/editor/element/list";
 import ElementProperties from "@/components/editor/element/properties";
-import { EditorLabel, EditorBuildInputText } from '@/commons/styles/editor';
+import { EditorLabel, EditorBuildInputText, EditorBuildSwitch } from '@/commons/styles/editor';
 
 import IField from "@/commons/interfaces/IField";
 
@@ -63,7 +63,7 @@ export default function BuildDocument() {
       borderColor: '#4FD1C5',
       transition: '.1s ease-in-out',
       height: '100%',
-      cursor: 'move'
+      cursor: 'move',
     };
 
     if (selectedField?._id === field._id) {
@@ -143,6 +143,14 @@ export default function BuildDocument() {
           </>
         );
         break;
+
+      case 'yesOrNot':
+        fieldComponent = (
+          <FormGroup style={{ cursor: 'move' }}>
+            <FormControlLabel control={<EditorBuildSwitch className={`${selectedClass}`} defaultChecked disabled />} label={field.label} />
+          </FormGroup>
+        );
+      break;
 
       default:
         fieldComponent = (
