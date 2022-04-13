@@ -37,7 +37,7 @@
             {
               "_id": "99ce7ff0-b150-11ec-98b2-7592572f6de7",
               "label": "<p><em>﻿</em><strong>Nome do paciente</strong></p>",
-              "placeholder": "Texto",
+              "placeholder": "Ex: Heytor Cavalcanti de Moura",
               "type": "text",
               "position": {
                 "x": 0,
@@ -97,7 +97,6 @@
             {
               "_id": "217e5dc0-b15c-11ec-8a81-8f0dbfe5d20b",
               "label": "<p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Facilis magni ipsum nostrum. Reiciendis odio harum quas perferendis architecto ipsum voluptatum unde nihil placeat voluptates impedit, ducimus nulla! Eaque, hic nisi?</p>",
-              "placeholder": "Rótulo",
               "type": "label",
               "position": {
                 "x": 0,
@@ -177,7 +176,6 @@
             {
               "_id": "504a2b90-b808-11ec-b42e-914b36c23d8c",
               "label": "<ol><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li></ol>",
-              "placeholder": "Rótulo",
               "type": "label",
               "position": {
                 "x": 0,
@@ -237,7 +235,6 @@
             {
               "_id": "fb3d4500-b9f7-11ec-bbeb-5395acc347ba",
               "label": "<p>Rótulo</p><p><br></p><p>teste test teste teasa asdasd asd asd asd as</p>",
-              "placeholder": "Rótulo",
               "type": "label",
               "position": {
                 "x": 0,
@@ -257,7 +254,6 @@
             {
               "_id": "ec3fdbf0-ba54-11ec-8784-3d21b0adbf83",
               "label": "<ol><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li></ol>",
-              "placeholder": "Rótulo",
               "type": "label",
               "position": {
                 "x": 108,
@@ -277,7 +273,6 @@
             {
               "_id": "0923a440-ba55-11ec-8784-3d21b0adbf83",
               "label": "<ol><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li></ol>",
-              "placeholder": "Rótulo",
               "type": "label",
               "position": {
                 "x": 220,
@@ -297,7 +292,6 @@
             {
               "_id": "e7147aa0-bac7-11ec-8c75-15c85854df91",
               "label": "<ol><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li></ol>",
-              "placeholder": "Rótulo",
               "type": "label",
               "position": {
                 "x": 330,

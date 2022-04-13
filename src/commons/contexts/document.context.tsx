@@ -23,6 +23,7 @@ interface IDocumentContext {
   createField: (type: FieldType) => void,
   deleteField: () => void,
   updateFieldLabel: (value: string) => void,
+  updateFieldPlaceholder: (value: string) => void,
   updateFieldPosition: (position: IFieldPosition, only?: "x" | "y") => void,
   updateFieldSize: (size: IElementSize, only?: "width" | "height") => void,
   documents: IDocument[],
@@ -88,6 +89,18 @@ export const DocumentProvider: FC = ({ children }) => {
 
       const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
       fieldsCopy[fieldKey].label = value;
+
+      setSelectedField(fieldsCopy[fieldKey]);
+      setFields(fieldsCopy);
+    }
+  };
+
+  const updateFieldPlaceholder = (value: string) => {
+    if (selectedField) {
+      let fieldsCopy = [...fields];
+
+      const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
+      fieldsCopy[fieldKey].placeholder = value;
 
       setSelectedField(fieldsCopy[fieldKey]);
       setFields(fieldsCopy);
@@ -208,6 +221,7 @@ export const DocumentProvider: FC = ({ children }) => {
         createField,
         deleteField,
         updateFieldLabel,
+        updateFieldPlaceholder,
         updateFieldPosition,
         updateFieldSize,
         handleDocuments,

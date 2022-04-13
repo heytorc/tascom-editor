@@ -28,7 +28,8 @@ export default function ElementProperties() {
     updateFieldSize,
     deleteField,
     document,
-    updateDocumentSize
+    updateDocumentSize,
+    updateFieldPlaceholder
   } = useDocument();
 
   return (
@@ -65,6 +66,19 @@ export default function ElementProperties() {
                       onChange={updateFieldLabel}
                     />
                   </Stack>
+
+                  {selectedField?.placeholder && (
+                    <Stack paddingY={1} mb={3}>
+                      <TextField
+                        label="Placeholder"
+                        onChange={(element) => updateFieldPlaceholder(element.currentTarget.value)}
+                        name={`${selectedField?.label}-placeholder`}
+                        value={selectedField?.placeholder}
+                        size="small"
+                      />
+                    </Stack>
+                  )}
+
 
                   <Stack paddingY={1} mb={3}>
                     <Text fontWeight={'bold'} marginBottom={2}>Tamanho:</Text>

@@ -87,7 +87,6 @@ const textarea: IField = {
 const label: IField = {
   _id: "",
   label: "Rótulo",
-  placeholder: "Rótulo",
   type: "label",
   position: {
     x: 0,
