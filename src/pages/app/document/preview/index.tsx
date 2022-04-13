@@ -78,7 +78,6 @@ const PreviewDocument = () => {
                 onChange={(date: unknown, keyboardInputValue?: string) => { }}
                 renderInput={(params) => <TextField size="small" {...params} />}
                 value={undefined}
-                disabled
               />
             </LocalizationProvider>
           </Stack>
