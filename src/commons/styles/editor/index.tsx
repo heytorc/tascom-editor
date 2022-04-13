@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Button, Typography } from '@mui/material';
+import { Button, Typography, TextField } from '@mui/material';
 
 export const ElementTypeButton = styled(Button)`
   justify-content: flex-start;
@@ -12,5 +12,17 @@ export const ElementTypeButton = styled(Button)`
 export const EditorLabel = styled(Typography)`
   & p, & ul, & ol {
     margin: 0;
+  }
+`;
+
+export const EditorBuildInputText = styled(TextField)`
+  cursor: pointer;
+  
+  & input, & textarea {
+    cursor: pointer;
+  }
+
+  &.inputSelected input, &.inputSelected textarea {
+    cursor: move;
   }
 `;

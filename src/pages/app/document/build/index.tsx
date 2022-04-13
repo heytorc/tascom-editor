@@ -9,7 +9,7 @@ import { useDocument } from "@/commons/contexts/document.context";
 import EditorHeader from "@/components/editor/header";
 import EditorElementsList from "@/components/editor/element/list";
 import ElementProperties from "@/components/editor/element/properties";
-import { EditorLabel } from '@/commons/styles/editor';
+import { EditorLabel, EditorBuildInputText } from '@/commons/styles/editor';
 
 import IField from "@/commons/interfaces/IField";
 
@@ -41,6 +41,7 @@ export default function BuildDocument() {
 
   const handleBuildField = (field: IField, index: number) => {
     let fieldComponent = <></>;
+    let selectedClass: string | undefined;
 
     let styles: React.CSSProperties = {
       width: field.size.width,
@@ -51,6 +52,7 @@ export default function BuildDocument() {
       flexDirection: "column",
       transition: '.1s ease-in-out',
       padding: 5,
+      cursor: 'pointer'
     };
 
     const selectedFieldStyles: React.CSSProperties = {
@@ -60,11 +62,13 @@ export default function BuildDocument() {
       borderStyle: 'dashed',
       borderColor: '#4FD1C5',
       transition: '.1s ease-in-out',
-      height: '100%'
+      height: '100%',
+      cursor: 'move'
     };
 
     if (selectedField?._id === field._id) {
       styles = { ...styles, ...selectedFieldStyles };
+      selectedClass = 'inputSelected';
     }
 
     const label = (
@@ -76,11 +80,11 @@ export default function BuildDocument() {
         fieldComponent = (
           <>
             {label}
-            <TextField
+            <EditorBuildInputText
               size="small"
               name={`${field.label}-text`}
               placeholder={field.placeholder}
-              style={{ cursor: 'move' }}
+              className={`${selectedClass}`}
               fullWidth
               disabled
             />
@@ -95,7 +99,7 @@ export default function BuildDocument() {
             <LocalizationProvider dateAdapter={DateAdapter}>
               <DatePicker
                 onChange={(date: unknown, keyboardInputValue?: string) => { }}
-                renderInput={(params) => <TextField size="small" {...params} />}
+                renderInput={(params) => <EditorBuildInputText size="small" className={`${selectedClass}`} {...params} />}
                 value={undefined}
                 disabled
               />
@@ -108,12 +112,13 @@ export default function BuildDocument() {
         fieldComponent = (
           <>
             {label}
-            <TextField
+            <EditorBuildInputText
               size="small"
               inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
               name={`${field.label}-number`}
               placeholder={field.placeholder}
               style={{ width: field.size.width, cursor: "move" }}
+              className={`${selectedClass}`}
               fullWidth
               disabled
             />
@@ -125,12 +130,11 @@ export default function BuildDocument() {
         fieldComponent = (
           <>
             {label}
-            <TextField
+            <EditorBuildInputText
               size="small"
               name={`${field.label}-textarea`}
               placeholder={field.placeholder}
-              style={{ cursor: "move" }}
-              InputProps={{ style: { cursor: "move", flex: 1 } }}
+              className={`${selectedClass}`}
               rows={5}
               multiline
               fullWidth

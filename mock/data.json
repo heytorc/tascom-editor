@@ -275,7 +275,7 @@
               "label": "<ol><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li></ol>",
               "type": "label",
               "position": {
-                "x": 220,
+                "x": 218,
                 "y": 677
               },
               "size": {
@@ -294,12 +294,32 @@
               "label": "<ol><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li></ol>",
               "type": "label",
               "position": {
-                "x": 330,
-                "y": 679
+                "x": 322,
+                "y": 677
               },
               "size": {
-                "width": 111,
+                "width": 101,
                 "height": 156
+              },
+              "styles": {
+                "fontSize": 14,
+                "color": "#fff",
+                "borderRadius": 5
+              },
+              "required": false
+            },
+            {
+              "_id": "85d2e9b0-bb2c-11ec-901a-cd912624111d",
+              "label": "<p>CID</p>",
+              "placeholder": "EX: A90",
+              "type": "text",
+              "position": {
+                "x": 434,
+                "y": 661
+              },
+              "size": {
+                "width": 366,
+                "height": 80
               },
               "styles": {
                 "fontSize": 14,
