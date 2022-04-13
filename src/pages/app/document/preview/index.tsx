@@ -1,11 +1,15 @@
 import React, { useEffect } from "react";
 import { useParams } from 'react-router-dom';
-import { Box, Typography, Stack, Button, TextField } from "@mui/material"
-
-import { useDocument } from "@/commons/contexts/document.context";
+import { Box, Typography, Stack, Button, TextField } from "@mui/material";
+import { DatePicker, LocalizationProvider } from '@mui/lab';
+import DateAdapter from '@mui/lab/AdapterDayjs';
 import { Rnd } from "react-rnd";
 
+import { useDocument } from "@/commons/contexts/document.context";
+import { EditorLabel } from '@/commons/styles/editor';
+
 import IField from "@/commons/interfaces/IField";
+
 
 interface IPreviewDocumentParams {
   id: string | undefined;
@@ -31,26 +35,35 @@ const PreviewDocument = () => {
     let fieldComponent = <></>;
     let value;
 
+    let styles: React.CSSProperties = {
+      width: field.size.width,
+      height: field.size.height,
+      display: "flex",
+      alignItems: "flex-start",
+      justifyContent: "flex-start",
+      flexDirection: "column",
+      padding: 5,
+    };
+
     if (documentData) {
       value = documentData.fields.find((item: any) => item.field_id === field._id)?.value;
     }
 
     const label = (
-      <Typography>
-        {field.label}
-      </Typography>
+      <EditorLabel dangerouslySetInnerHTML={{ __html: field.label }} />
     );
 
     switch (field.type) {
       case 'text':
         fieldComponent = (
-          <Stack style={{ ...field.size }}>
+          <Stack style={{ ...styles }}>
             {label}
             <TextField
-              size="medium"
+              size="small"
               name={`${field.label}-text`}
               placeholder={field.placeholder}
-              value={value}
+              style={{ cursor: 'move' }}
+              fullWidth
             />
           </Stack>
         )
@@ -58,22 +71,23 @@ const PreviewDocument = () => {
 
       case 'date':
         fieldComponent = (
-          <Stack style={{ ...field.size }}>
+          <Stack style={{ ...styles }}>
             {label}
-            <input
-              type="date"
-              name={`${field.label}-date`}
-              placeholder={field.placeholder}
-              value={value}
-            // style={{ width: field.size.width, height: field.size.height }}
-            />
+            <LocalizationProvider dateAdapter={DateAdapter}>
+              <DatePicker
+                onChange={(date: unknown, keyboardInputValue?: string) => { }}
+                renderInput={(params) => <TextField size="small" {...params} />}
+                value={undefined}
+                disabled
+              />
+            </LocalizationProvider>
           </Stack>
         );
         break;
 
       case 'number':
         fieldComponent = (
-          <Stack style={{ ...field.size }}>
+          <Stack style={{ ...styles }}>
             {label}
             <TextField
               name={`${field.label}-number`}
@@ -88,13 +102,16 @@ const PreviewDocument = () => {
 
       case 'textarea':
         fieldComponent = (
-          <Stack style={{ ...field.size }}>
+          <Stack style={{ ...styles }}>
             {label}
             <TextField
-              multiline
+              size="small"
               name={`${field.label}-textarea`}
               placeholder={field.placeholder}
               value={value}
+              rows={5}
+              fullWidth
+              multiline
             />
           </Stack>
         );
@@ -102,9 +119,7 @@ const PreviewDocument = () => {
 
       default:
         fieldComponent = (
-          <Typography style={{ ...field.size }}>
-            {field.label}
-          </Typography>
+          <EditorLabel m={0} style={{ ...field.size }} dangerouslySetInnerHTML={{ __html: field.label }} />
         );
         break;
     }
@@ -121,7 +136,7 @@ const PreviewDocument = () => {
         disableDragging
         bounds="parent"
       >
-        <div>
+        <div style={{ ...styles }}>
           {fieldComponent}
         </div>
       </Rnd>
@@ -147,8 +162,8 @@ const PreviewDocument = () => {
           {document && (
             <Stack
               style={{
-                width: 800,
-                height: 1000,
+                width: document?.size.width,
+                height: document?.size.height,
                 position: 'relative',
               }}>
               {fields.map((field: any, index: number) => handleBuildField(field, index))}

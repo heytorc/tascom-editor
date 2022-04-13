@@ -22,9 +22,12 @@ interface IDocumentContext {
   handleDocumentData: (id: number | string) => void,
   createField: (type: FieldType) => void,
   deleteField: () => void,
-  updateLabel: (value: string) => void,
-  updatePosition: (position: IFieldPosition, only?: "x" | "y") => void,
-  updateSize: (size: IFieldSize, only?: "width" | "height") => void,
+  updateFieldLabel: (value: string) => void,
+  updateFieldPosition: (position: IFieldPosition, only?: "x" | "y") => void,
+  updateFieldSize: (size: IElementSize, only?: "width" | "height") => void,
+  documents: IDocument[],
+  handleDocuments: () => void,
+  updateDocumentSize: (size: IElementSize, only?: "width" | "height") => void,
 }
 
 interface IFieldPosition {
@@ -32,7 +35,7 @@ interface IFieldPosition {
   y: number;
 }
 
-interface IFieldSize {
+interface IElementSize {
   width: number;
   height: number;
 }
@@ -42,13 +45,12 @@ export const DocumentContext = createContext({} as IDocumentContext);
 export const DocumentProvider: FC = ({ children }) => {
   const [pages, setPages] = useState<IPage[]>();
 
+  const [documents, setDocuments] = useState<IDocument[]>([]);
   const [document, setDocument] = useState<IDocument>();
   const [documentData, setDocumentData] = useState<any>();
 
   const [fields, setFields] = useState<IField[]>([])
   const [selectedField, setSelectedField] = useState<IField>();
-
-  useEffect(() => console.log(fields), [fields]);
 
   useEffect(() => {
     fillDocumentFields();
@@ -80,7 +82,7 @@ export const DocumentProvider: FC = ({ children }) => {
     }
   };
 
-  const updateLabel = (value: string) => {
+  const updateFieldLabel = (value: string) => {
     if (selectedField) {
       let fieldsCopy = [...fields];
 
@@ -92,7 +94,7 @@ export const DocumentProvider: FC = ({ children }) => {
     }
   };
 
-  const updatePosition = (position: IFieldPosition, only?: "x" | "y") => {
+  const updateFieldPosition = (position: IFieldPosition, only?: "x" | "y") => {
     if (selectedField) {
       let fieldsCopy = [...fields];
 
@@ -108,7 +110,7 @@ export const DocumentProvider: FC = ({ children }) => {
     }
   };
 
-  const updateSize = (size: IFieldSize, only?: "width" | "height") => {
+  const updateFieldSize = (size: IElementSize, only?: "width" | "height") => {
     if (selectedField) {
       let fieldsCopy = [...fields];
 
@@ -167,11 +169,32 @@ export const DocumentProvider: FC = ({ children }) => {
       }
     }
   };
+  
+  const handleDocuments = async () => {
+    const { data } = await api.get<any[]>(`/documents`);
+
+    setDocuments(data);
+  };
+
+  const updateDocumentSize = (size: IElementSize, only?: "width" | "height") => {
+    if (document) {
+      let documentCopy = {...document };
+
+      if (only) {
+        documentCopy.size[only] = isNaN(size[only]) ? 0 : size[only] ;
+      } else {
+        documentCopy.size = size;
+      }
+
+      setDocument(documentCopy);
+    }
+  };
 
   return (
     <DocumentContext.Provider
       value={{
         document,
+        documents,
         setDocument,
         fields,
         setFields,
@@ -184,9 +207,11 @@ export const DocumentProvider: FC = ({ children }) => {
         setDocumentData,
         createField,
         deleteField,
-        updateLabel,
-        updatePosition,
-        updateSize
+        updateFieldLabel,
+        updateFieldPosition,
+        updateFieldSize,
+        handleDocuments,
+        updateDocumentSize
       }}
     >
       {children}

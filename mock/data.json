@@ -26,7 +26,7 @@
       "pages": 2,
       "size": {
         "width": 800,
-        "height": 1000
+        "height": 1500
       },
       "versions": [
         {
@@ -36,7 +36,7 @@
           "fields": [
             {
               "_id": "99ce7ff0-b150-11ec-98b2-7592572f6de7",
-              "label": "Nome",
+              "label": "<p><em>﻿</em><strong>Nome do paciente</strong></p>",
               "placeholder": "Texto",
               "type": "text",
               "position": {
@@ -44,7 +44,7 @@
                 "y": 0
               },
               "size": {
-                "width": 428,
+                "width": 396,
                 "height": 80
               },
               "styles": {
@@ -56,16 +56,16 @@
             },
             {
               "_id": "0de74290-b15c-11ec-8a81-8f0dbfe5d20b",
-              "label": "Atendimento",
+              "label": "<p><strong>Atendimento﻿</strong></p>",
               "placeholder": "Texto",
               "type": "text",
               "position": {
-                "x": 435,
+                "x": 411,
                 "y": 0
               },
               "size": {
-                "width": 173,
-                "height": 80
+                "width": 170,
+                "height": 76
               },
               "styles": {
                 "fontSize": 14,
@@ -76,7 +76,7 @@
             },
             {
               "_id": "18582460-b15c-11ec-8a81-8f0dbfe5d20b",
-              "label": "Descricao",
+              "label": "<p><strong>Descricao</strong></p>",
               "placeholder": "Caixa de texto",
               "type": "textarea",
               "position": {
@@ -85,7 +85,7 @@
               },
               "size": {
                 "width": 800,
-                "height": 200
+                "height": 168
               },
               "styles": {
                 "fontSize": 14,
@@ -96,12 +96,12 @@
             },
             {
               "_id": "217e5dc0-b15c-11ec-8a81-8f0dbfe5d20b",
-              "label": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Facilis magni ipsum nostrum. Reiciendis odio harum quas perferendis architecto ipsum voluptatum unde nihil placeat voluptates impedit, ducimus nulla! Eaque, hic nisi?",
+              "label": "<p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Facilis magni ipsum nostrum. Reiciendis odio harum quas perferendis architecto ipsum voluptatum unde nihil placeat voluptates impedit, ducimus nulla! Eaque, hic nisi?</p>",
               "placeholder": "Rótulo",
               "type": "label",
               "position": {
                 "x": 0,
-                "y": 310
+                "y": 279
               },
               "size": {
                 "width": 800,
@@ -116,16 +116,16 @@
             },
             {
               "_id": "4b9cfd50-b15c-11ec-8a81-8f0dbfe5d20b",
-              "label": "Data de nascimento",
+              "label": "<p><strong>Data de nascimento</strong></p>",
               "placeholder": "Data",
               "type": "date",
               "position": {
-                "x": 620,
+                "x": 588,
                 "y": 0
               },
               "size": {
-                "width": 180,
-                "height": 80
+                "width": 212,
+                "height": 76
               },
               "styles": {
                 "fontSize": 14,
@@ -136,16 +136,176 @@
             },
             {
               "_id": "aadb9e70-b15c-11ec-8a81-8f0dbfe5d20b",
-              "label": "Diagnostico",
+              "label": "<p><strong>Diagnostico</strong></p>",
               "placeholder": "Texto",
               "type": "text",
               "position": {
                 "x": 0,
-                "y": 400
+                "y": 382
               },
               "size": {
                 "width": 800,
                 "height": 80
+              },
+              "styles": {
+                "fontSize": 14,
+                "color": "#fff",
+                "borderRadius": 5
+              },
+              "required": false
+            },
+            {
+              "_id": "0b88da10-b808-11ec-b42e-914b36c23d8c",
+              "label": "<p><strong>Caixa de texto</strong></p>",
+              "placeholder": "Caixa de texto",
+              "type": "textarea",
+              "position": {
+                "x": 0,
+                "y": 468
+              },
+              "size": {
+                "width": 797,
+                "height": 191
+              },
+              "styles": {
+                "fontSize": 14,
+                "color": "#fff",
+                "borderRadius": 5
+              },
+              "required": false
+            },
+            {
+              "_id": "504a2b90-b808-11ec-b42e-914b36c23d8c",
+              "label": "<ol><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li></ol>",
+              "placeholder": "Rótulo",
+              "type": "label",
+              "position": {
+                "x": 0,
+                "y": 678
+              },
+              "size": {
+                "width": 102,
+                "height": 170
+              },
+              "styles": {
+                "fontSize": 14,
+                "color": "#fff",
+                "borderRadius": 5
+              },
+              "required": false
+            },
+            {
+              "_id": "98710e20-b9e8-11ec-b91d-7d9371f2b701",
+              "label": "<p><strong>Data</strong></p>",
+              "placeholder": "Data",
+              "type": "date",
+              "position": {
+                "x": 0,
+                "y": 865
+              },
+              "size": {
+                "width": 274,
+                "height": 80
+              },
+              "styles": {
+                "fontSize": 14,
+                "color": "#fff",
+                "borderRadius": 5
+              },
+              "required": false
+            },
+            {
+              "_id": "9b50ae70-b9e8-11ec-b91d-7d9371f2b701",
+              "label": "<p><strong>Texto</strong></p>",
+              "placeholder": "Texto",
+              "type": "text",
+              "position": {
+                "x": 284,
+                "y": 865
+              },
+              "size": {
+                "width": 516,
+                "height": 80
+              },
+              "styles": {
+                "fontSize": 14,
+                "color": "#fff",
+                "borderRadius": 5
+              },
+              "required": false
+            },
+            {
+              "_id": "fb3d4500-b9f7-11ec-bbeb-5395acc347ba",
+              "label": "<p>Rótulo</p><p><br></p><p>teste test teste teasa asdasd asd asd asd as</p>",
+              "placeholder": "Rótulo",
+              "type": "label",
+              "position": {
+                "x": 0,
+                "y": 985
+              },
+              "size": {
+                "width": 800,
+                "height": 100
+              },
+              "styles": {
+                "fontSize": 14,
+                "color": "#fff",
+                "borderRadius": 5
+              },
+              "required": false
+            },
+            {
+              "_id": "ec3fdbf0-ba54-11ec-8784-3d21b0adbf83",
+              "label": "<ol><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li></ol>",
+              "placeholder": "Rótulo",
+              "type": "label",
+              "position": {
+                "x": 108,
+                "y": 678
+              },
+              "size": {
+                "width": 99,
+                "height": 173
+              },
+              "styles": {
+                "fontSize": 14,
+                "color": "#fff",
+                "borderRadius": 5
+              },
+              "required": false
+            },
+            {
+              "_id": "0923a440-ba55-11ec-8784-3d21b0adbf83",
+              "label": "<ol><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li></ol>",
+              "placeholder": "Rótulo",
+              "type": "label",
+              "position": {
+                "x": 220,
+                "y": 677
+              },
+              "size": {
+                "width": 102,
+                "height": 170
+              },
+              "styles": {
+                "fontSize": 14,
+                "color": "#fff",
+                "borderRadius": 5
+              },
+              "required": false
+            },
+            {
+              "_id": "e7147aa0-bac7-11ec-8c75-15c85854df91",
+              "label": "<ol><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li></ol>",
+              "placeholder": "Rótulo",
+              "type": "label",
+              "position": {
+                "x": 330,
+                "y": 679
+              },
+              "size": {
+                "width": 111,
+                "height": 156
               },
               "styles": {
                 "fontSize": 14,
@@ -202,6 +362,7 @@
       "name": "Administrador",
       "username": "admin",
       "password": "admin",
+      "system_id": 1,
       "token": "test",
       "active": true
     }

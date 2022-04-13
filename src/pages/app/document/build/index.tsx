@@ -1,36 +1,39 @@
 import { useEffect } from "react";
 import { Rnd, DraggableData, Position, ResizableDelta } from "react-rnd";
-import { Box, Stack, Typography, TextField } from "@mui/material";
+import { Box, Stack, TextField, Paper } from "@mui/material";
 import { DatePicker, LocalizationProvider } from '@mui/lab';
 import DateAdapter from '@mui/lab/AdapterDayjs';
 
 import { useDocument } from "@/commons/contexts/document.context";
 
+import EditorHeader from "@/components/editor/header";
 import EditorElementsList from "@/components/editor/element/list";
 import ElementProperties from "@/components/editor/element/properties";
+import { EditorLabel } from '@/commons/styles/editor';
 
 import IField from "@/commons/interfaces/IField";
 
 export default function BuildDocument() {
   const {
+    document,
     findDocument,
     fields,
     setFields,
     selectedField,
     setSelectedField,
-    updateLabel,
-    updatePosition,
-    updateSize
+    updateFieldLabel,
+    updateFieldPosition,
+    updateFieldSize
   } = useDocument();
 
   useEffect(() => { findDocument(1) }, []);
 
   const handleDragStop = (event: any, { x, y }: DraggableData) => {
-    updatePosition({ x, y });
+    updateFieldPosition({ x, y });
   };
 
   const handleResize = (e: MouseEvent | TouchEvent, dir: any, elementRef: HTMLElement, delta: ResizableDelta, position: Position) => {
-    updateSize({
+    updateFieldSize({
       width: parseFloat(elementRef.style.width),
       height: parseFloat(elementRef.style.height)
     })
@@ -46,7 +49,8 @@ export default function BuildDocument() {
       alignItems: "flex-start",
       justifyContent: "flex-start",
       flexDirection: "column",
-      transition: '.2s ease',
+      transition: '.1s ease-in-out',
+      padding: 5,
     };
 
     const selectedFieldStyles: React.CSSProperties = {
@@ -55,26 +59,23 @@ export default function BuildDocument() {
       border: 1,
       borderStyle: 'dashed',
       borderColor: '#4FD1C5',
-      padding: 5,
-      transition: '.2s ease',
+      transition: '.1s ease-in-out',
+      height: '100%'
     };
 
     if (selectedField?._id === field._id) {
       styles = { ...styles, ...selectedFieldStyles };
     }
 
+    const label = (
+      <EditorLabel m={0} dangerouslySetInnerHTML={{ __html: field.label }} />
+    );
+
     switch (field.type) {
       case 'text':
         fieldComponent = (
           <>
-            {/* <Editable defaultValue={field.label} onChange={(value: string) => updateLabel(value)}>
-              <EditablePreview />
-              <EditableInput
-                onDoubleClick={(element) => element.currentTarget.select()}
-                w={field.size.width}
-              />
-            </Editable> */}
-            <Typography>{field.label}</Typography>
+            {label}
             <TextField
               size="small"
               name={`${field.label}-text`}
@@ -90,14 +91,7 @@ export default function BuildDocument() {
       case 'date':
         fieldComponent = (
           <>
-            {/* <Editable defaultValue={field.label} onChange={(value: string) => updateLabel(value)}>
-              <EditablePreview />
-              <EditableInput
-                onDoubleClick={(element) => element.currentTarget.select()}
-                w={field.size.width}
-              />
-            </Editable> */}
-            <Typography>{field.label}</Typography>
+            {label}
             <LocalizationProvider dateAdapter={DateAdapter}>
               <DatePicker
                 onChange={(date: unknown, keyboardInputValue?: string) => { }}
@@ -113,14 +107,7 @@ export default function BuildDocument() {
       case 'number':
         fieldComponent = (
           <>
-            {/* <Editable defaultValue={field.label} onChange={(value: string) => updateLabel(value)}>
-              <EditablePreview />
-              <EditableInput
-                onDoubleClick={(element) => element.currentTarget.select()}
-                w={field.size.width}
-              />
-            </Editable> */}
-            <Typography>{field.label}</Typography>
+            {label}
             <TextField
               size="small"
               inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
@@ -137,21 +124,15 @@ export default function BuildDocument() {
       case 'textarea':
         fieldComponent = (
           <>
-            {/* <Editable defaultValue={field.label} onChange={(value: string) => updateLabel(value)}>
-              <EditablePreview />
-              <EditableInput
-                onDoubleClick={(element) => element.currentTarget.select()}
-                w={field.size.width}
-              />
-            </Editable> */}
-            <Typography>{field.label}</Typography>
+            {label}
             <TextField
-              multiline
               size="small"
               name={`${field.label}-textarea`}
               placeholder={field.placeholder}
               style={{ cursor: "move" }}
               InputProps={{ style: { cursor: "move", flex: 1 } }}
+              rows={5}
+              multiline
               fullWidth
               disabled
             />
@@ -161,18 +142,7 @@ export default function BuildDocument() {
 
       default:
         fieldComponent = (
-          // <Editable
-          //   defaultValue={field.label}
-          //   style={{ width: field.size.width, height: field.size.height, cursor: "move" }}
-          //   onChange={(value: string) => updateLabel(value)}
-          // >
-          //   <EditablePreview style={{ cursor: "move" }} />
-          //   <EditableTextarea
-          //     onDoubleClick={(element) => element.currentTarget.select()}
-          //     style={{ height: field.size.height, padding: 0 }}
-          //   />
-          // </Editable>
-          <Typography>{field.label}</Typography>
+          <EditorLabel m={0} dangerouslySetInnerHTML={{ __html: field.label }} />
         );
         break;
     }
@@ -187,10 +157,14 @@ export default function BuildDocument() {
         maxWidth={800}
         onDragStop={handleDragStop}
         onResize={handleResize}
+        enableResizing={(selectedField?._id === field._id)}
         disableDragging={!(selectedField?._id === field._id)}
         bounds="parent"
       >
-        <div className="handle" style={{ ...styles }} onClick={() => setSelectedField(field)}>
+        <div className="handle" style={{ ...styles }} onClick={() => {
+          setSelectedField(undefined);
+          setTimeout(() => setSelectedField(field), 10)
+        }}>
           {fieldComponent}
         </div>
       </Rnd>
@@ -199,43 +173,47 @@ export default function BuildDocument() {
 
   return (
     <Stack
-      direction={'row'}
-      justifyContent={'space-between'}
+      flex={1}
     >
-      <EditorElementsList
-        fields={fields}
-        setFields={setFields}
-      />
-      {/* {documents.map((document: any, index: number) => <p key={index}>{document.name}</p>)} */}
-      <Box
+      <EditorHeader />
+      <Stack
         flex={1}
-        display={'flex'}
-        justifyContent={'center'}
-        alignItems={'flex-start'}
-        height={'100vh'}
-        paddingY={5}
-        style={{ overflowX: 'hidden' }}
+        direction={'row'}
+        justifyContent={'space-between'}
       >
-        <Stack
-          padding={5}
-          style={{
-            background: '#fff',
-            borderRadius: 5,
-          }}>
-          <Stack
-            style={{
-              width: 800,
-              height: 1000,
-              position: 'relative',
-            }}>
-            {fields.map((field: any, index: number) => handleBuildField(field, index))}
-          </Stack>
-        </Stack>
-      </Box>
+        <EditorElementsList />
+        {/* {documents.map((document: any, index: number) => <p key={index}>{document.name}</p>)} */}
 
-      {selectedField && (
+        <Box
+          flex={1}
+          display={'flex'}
+          justifyContent={'center'}
+          alignItems={'flex-start'}
+          paddingY={5}
+          height={'92vh'}
+          style={{ overflowX: 'hidden' }}
+        >
+          <Paper elevation={2}>
+            <Stack
+              padding={5}
+              style={{
+                background: '#fff',
+                borderRadius: 5,
+              }}>
+              <Stack
+                style={{
+                  width: document?.size.width,
+                  height: document?.size.height,
+                  position: 'relative',
+                }}>
+                {fields.map((field: any, index: number) => handleBuildField(field, index))}
+              </Stack>
+            </Stack>
+          </Paper>
+        </Box>
+
         <ElementProperties />
-      )}
+      </Stack>
     </Stack>
   )
 }

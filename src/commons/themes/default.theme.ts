@@ -18,6 +18,9 @@ let theme = createTheme(
         light: "#F5FBFF",
         // medium: "#0899BA",
       },
+      text: {
+        secondary: '#cccccc',
+      }
     },
     shadows: [
       "none",

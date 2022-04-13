@@ -11,6 +11,7 @@ import { DocumentProvider } from '@/commons/contexts/document.context';
 import LoginPage from "@/pages/login";
 import AppPage from "@/pages/app";
 
+import DocumentPage from "@/pages/app/document";
 import BuildDocument from "@/pages/app/document/build";
 import CreateDocument from "@/pages/app/document/create";
 import PreviewDocument from "@/pages/app/document/preview";
@@ -27,9 +28,10 @@ function App() {
           <DocumentProvider>
             <Routes>
               <Route index element={<LoginPage />} />
-              <Route path="app">
+              <Route path="app" element={<AuthMiddleware />}>
                 <Route index element={<AppPage />} />
                 <Route path="document" element={<AuthMiddleware />}>
+                  <Route index element={<DocumentPage />} />
                   <Route path="build" element={<BuildDocument />}>
                     <Route path=":record_id" element={<BuildDocument />} />
                   </Route>
