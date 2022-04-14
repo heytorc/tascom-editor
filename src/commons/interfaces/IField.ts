@@ -1,4 +1,9 @@
-import { FieldType } from "../types/field.types"
+import { FieldType, FieldOrientationType } from "../types/field.types";
+
+export interface IFieldOptions {
+  label: string;
+  value: string;
+}
 
 export interface IFieldProps {
   _id?: string,
@@ -22,6 +27,7 @@ export default interface IField {
   _id: string,
   label: string,
   placeholder?: string,
+  tag: string;
   type: FieldType,
   position: {
     x: number,
@@ -34,5 +40,7 @@ export default interface IField {
   styles: React.CSSProperties,
   required: boolean,
   isResizable?: boolean,
-  useRichText?: boolean
+  useRichText?: boolean,
+  options?: IFieldOptions[],
+  orientation?: FieldOrientationType
 }

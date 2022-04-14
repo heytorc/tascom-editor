@@ -5,6 +5,7 @@ const text: IField = {
   label: "Texto",
   placeholder: "Texto",
   type: "text",
+  tag: "texto",
   position: {
     x: 0,
     y: 20
@@ -27,6 +28,7 @@ const date: IField = {
   label: "Data",
   placeholder: "Data",
   type: "date",
+  tag: "date",
   position: {
     x: 0,
     y: 20
@@ -49,6 +51,7 @@ const number: IField = {
   label: "Numero",
   placeholder: "Numero",
   type: "number",
+  tag: "number",
   position: {
     x: 0,
     y: 20
@@ -71,6 +74,7 @@ const textarea: IField = {
   label: "Caixa de texto",
   placeholder: "Caixa de texto",
   type: "textarea",
+  tag: "textarea",
   position: {
     x: 0,
     y: 20
@@ -92,6 +96,7 @@ const label: IField = {
   _id: "",
   label: "Rótulo",
   type: "label",
+  tag: "label",
   position: {
     x: 0,
     y: 20
@@ -113,6 +118,7 @@ const checkbox: IField = {
   _id: "",
   label: "Checkbox",
   type: "checkbox",
+  tag: "checkbox",
   position: {
     x: 0,
     y: 20
@@ -130,23 +136,30 @@ const radio: IField = {
   _id: "",
   label: "Radio",
   type: "radio",
+  tag: "radio",
   position: {
     x: 0,
     y: 20
   },
   size: {
     width: 300,
-    height: 80
+    height: 95
   },
   styles: {},
   required: false,
   useRichText: false,
+  options: [
+    { label: 'Opção 1', value: '1' },
+    { label: 'Opção 2', value: '2' },
+  ],
+  orientation: 'row',
 }
 
 const yesOrNot: IField = {
   _id: "",
   label: "Pergunta?",
   type: "yesOrNot",
+  tag: "yes-or-not",
   position: {
     x: 0,
     y: 20
@@ -164,6 +177,7 @@ const select: IField = {
   _id: "",
   label: "Select",
   type: "select",
+  tag: "select",
   position: {
     x: 0,
     y: 20

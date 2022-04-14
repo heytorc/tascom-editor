@@ -1,8 +1,8 @@
 import React, { createContext, FC, useContext, useEffect, useState } from "react";
 import { v1 as uuidv1 } from 'uuid';
 
-import IField from "@/commons/interfaces/IField";
-import { FieldType } from "@/commons/types/field.types";
+import IField, { IFieldOptions } from "@/commons/interfaces/IField";
+import { FieldType, FieldOrientationType } from "@/commons/types/field.types";
 import IPage from "@/commons/interfaces/IPage";
 import FieldsDefaultProps from "@/commons/constants/fields/default.configuration";
 import IDocument from "@/commons/interfaces/IDocument";
@@ -23,12 +23,17 @@ interface IDocumentContext {
   createField: (type: FieldType) => void,
   deleteField: () => void,
   updateFieldLabel: (value: string) => void,
+  updateFieldTag: (value: string) => void,
   updateFieldPlaceholder: (value: string) => void,
   updateFieldPosition: (position: IFieldPosition, only?: "x" | "y") => void,
   updateFieldSize: (size: IElementSize, only?: "width" | "height") => void,
   documents: IDocument[],
   handleDocuments: () => void,
   updateDocumentSize: (size: IElementSize, only?: "width" | "height") => void,
+  addFieldOptions: (option: IFieldOptions) => void,
+  updateFieldOptions: (options: IFieldOptions[]) => void,
+  deleteFieldOption: (index: number) => void,
+  updateFieldOrientation: (orientation: FieldOrientationType) => void,
 }
 
 interface IFieldPosition {
@@ -89,6 +94,18 @@ export const DocumentProvider: FC = ({ children }) => {
 
       const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
       fieldsCopy[fieldKey].label = value;
+
+      setSelectedField(fieldsCopy[fieldKey]);
+      setFields(fieldsCopy);
+    }
+  };
+
+  const updateFieldTag = (value: string) => {
+    if (selectedField) {
+      let fieldsCopy = [...fields];
+
+      const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
+      fieldsCopy[fieldKey].tag = value;
 
       setSelectedField(fieldsCopy[fieldKey]);
       setFields(fieldsCopy);
@@ -202,6 +219,58 @@ export const DocumentProvider: FC = ({ children }) => {
       setDocument(documentCopy);
     }
   };
+  
+  const addFieldOptions = (option: IFieldOptions) => {
+    if (selectedField) {
+      let fieldsCopy = [...fields];
+
+      const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
+      fieldsCopy[fieldKey].options?.push(option);
+
+      setSelectedField(fieldsCopy[fieldKey]);
+      setFields(fieldsCopy);
+    }
+  };
+
+  const updateFieldOptions = (options: IFieldOptions[]) => {
+    if (selectedField) {
+      let fieldsCopy = [...fields];
+
+      const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
+      fieldsCopy[fieldKey].options = options;
+
+      setSelectedField(fieldsCopy[fieldKey]);
+      setFields(fieldsCopy);
+    }
+  };
+
+  const deleteFieldOption = (index: number) => {
+    if (selectedField) {
+      let fieldsCopy = [...fields];
+
+      const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id);
+      
+      let { options } = fieldsCopy[fieldKey];
+      options?.splice(index, 1);
+
+      fieldsCopy[fieldKey].options = options;
+
+      setSelectedField(fieldsCopy[fieldKey]);
+      setFields(fieldsCopy);
+    }
+  };
+  
+  const updateFieldOrientation = (orientation: FieldOrientationType) => {
+    if (selectedField) {
+      let fieldsCopy = [...fields];
+
+      const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id);
+      fieldsCopy[fieldKey].orientation = orientation;
+
+      setSelectedField(fieldsCopy[fieldKey]);
+      setFields(fieldsCopy);
+    }
+  };
 
   return (
     <DocumentContext.Provider
@@ -225,7 +294,12 @@ export const DocumentProvider: FC = ({ children }) => {
         updateFieldPosition,
         updateFieldSize,
         handleDocuments,
-        updateDocumentSize
+        updateDocumentSize,
+        addFieldOptions,
+        updateFieldOptions,
+        deleteFieldOption,
+        updateFieldOrientation,
+        updateFieldTag
       }}
     >
       {children}

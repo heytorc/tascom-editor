@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Button, Typography, TextField, Switch, Checkbox } from '@mui/material';
+import { Button, Typography, TextField, Switch, Checkbox, Radio } from '@mui/material';
 import { blue } from '@mui/material/colors';
 
 export const ElementTypeButton = styled(Button)`
@@ -49,5 +49,33 @@ export const EditorBuildCheckbox = styled(Checkbox)`
 
   & span, & label {
     cursor: move;
+  }
+`;
+
+export const EditorBuildRadio = styled(Radio)`
+  cursor: pointer;
+
+  & span, & label {
+    cursor: move;
+  }
+`;
+
+export const EditorReorderGroup = styled.ul`
+  list-style-type: none;
+  padding: 0;
+`;
+
+export const EditorReorderItem = styled.li`
+  padding: .8rem;
+  border-radius: 6px;
+  border: 2px solid #eee;
+  margin-bottom: 1rem;
+  cursor: move;
+
+  & div.reorder-item-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
   }
 `;

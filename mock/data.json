@@ -53,7 +53,8 @@
                 "borderRadius": 5
               },
               "required": false,
-              "useRichText": true
+              "useRichText": true,
+              "tag": "nome-paciente"
             },
             {
               "_id": "0de74290-b15c-11ec-8a81-8f0dbfe5d20b",
@@ -74,7 +75,8 @@
                 "borderRadius": 5
               },
               "required": false,
-              "useRichText": true
+              "useRichText": true,
+              "tag": "cod-atendimento"
             },
             {
               "_id": "18582460-b15c-11ec-8a81-8f0dbfe5d20b",
@@ -136,7 +138,8 @@
                 "borderRadius": 5
               },
               "required": false,
-              "useRichText": true
+              "useRichText": true,
+              "tag": "paciente-dt-nascimento"
             },
             {
               "_id": "aadb9e70-b15c-11ec-8a81-8f0dbfe5d20b",
@@ -368,7 +371,7 @@
                 "y": 1087
               },
               "size": {
-                "width": 300,
+                "width": 135,
                 "height": 50
               },
               "styles": {},
@@ -384,12 +387,51 @@
                 "y": 1133
               },
               "size": {
-                "width": 300,
+                "width": 136,
                 "height": 50
               },
               "styles": {},
               "required": false,
               "useRichText": false
+            },
+            {
+              "_id": "4cdb6e20-bb8b-11ec-aa51-c79594e9c0b3",
+              "label": "Radio",
+              "type": "radio",
+              "position": {
+                "x": 151,
+                "y": 1087
+              },
+              "size": {
+                "width": 649,
+                "height": 53
+              },
+              "styles": {},
+              "required": false,
+              "useRichText": false,
+              "options": [
+                {
+                  "label": "Opção 1",
+                  "value": "1"
+                },
+                {
+                  "label": "Opção 2",
+                  "value": "2"
+                },
+                {
+                  "label": "Opção 3",
+                  "value": "3"
+                },
+                {
+                  "label": "Opção 4",
+                  "value": "4"
+                },
+                {
+                  "label": "Opção 5",
+                  "value": "5"
+                }
+              ],
+              "orientation": "row"
             }
           ],
           "status": "published",

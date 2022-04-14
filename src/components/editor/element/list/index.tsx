@@ -27,6 +27,8 @@ export default function EditorElements() {
         width={'20rem'}
         paddingX={5}
         paddingY={5}
+        style={{ overflowX: 'hidden' }}
+        height={'100vh'}
       >
         <Stack>
           <Stack>

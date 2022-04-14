@@ -1,12 +1,26 @@
 import React, { useEffect } from "react";
 import { useParams } from 'react-router-dom';
-import { Box, Stack, TextField, FormGroup, FormControlLabel } from "@mui/material";
+import {
+  Box,
+  Stack,
+  TextField,
+  FormGroup,
+  FormControlLabel,
+  FormControl,
+  RadioGroup,
+  Paper,
+} from "@mui/material";
 import { DatePicker, LocalizationProvider } from '@mui/lab';
 import DateAdapter from '@mui/lab/AdapterDayjs';
 import { Rnd } from "react-rnd";
 
 import { useDocument } from "@/commons/contexts/document.context";
-import { EditorLabel, EditorBuildSwitch, EditorBuildCheckbox } from '@/commons/styles/editor';
+import {
+  EditorLabel,
+  EditorBuildSwitch,
+  EditorBuildCheckbox,
+  EditorBuildRadio
+} from '@/commons/styles/editor';
 
 import IField from "@/commons/interfaces/IField";
 
@@ -119,18 +133,45 @@ const PreviewDocument = () => {
       case 'yesOrNot':
         fieldComponent = (
           <FormGroup>
-            <FormControlLabel control={<EditorBuildSwitch color="secondary" />} label={field.label} />
+            <FormControlLabel
+              control={<EditorBuildSwitch color="secondary" />}
+              label={field.label}
+            />
           </FormGroup>
         );
-      break;
+        break;
 
       case 'checkbox':
         fieldComponent = (
           <FormGroup>
-            <FormControlLabel control={<EditorBuildCheckbox color="secondary" />} label={field.label} />
+            <FormControlLabel
+              control={<EditorBuildCheckbox color="secondary" />}
+              label={field.label}
+            />
           </FormGroup>
         );
-      break;
+        break;
+
+      case 'radio':
+        fieldComponent = (
+          <FormControl>
+            <RadioGroup
+              row={field?.orientation === 'row'}
+              aria-labelledby="demo-radio-buttons-group-label"
+              name={field.tag}
+            >
+              {field.options?.map(({ label, value }, index) => (
+                <FormControlLabel
+                  key={`field_${field._id}_radio_option_${index}`}
+                  control={<EditorBuildRadio color="secondary" />}
+                  label={label}
+                  value={value}
+                />
+              ))}
+            </RadioGroup>
+          </FormControl>
+        );
+        break;
 
       default:
         fieldComponent = (
@@ -159,7 +200,7 @@ const PreviewDocument = () => {
   };
 
   return (
-    <Stack display={'flex'} bgcolor={'#ccc'} justifyContent={'space-between'}>
+    <Stack display={'flex'} justifyContent={'space-between'}>
       <Box
         flex={1}
         display={'flex'}
@@ -168,23 +209,25 @@ const PreviewDocument = () => {
         height={'100vh'}
         paddingY={10}
       >
-        <Stack
-          padding={5}
-          style={{
-            background: '#fff',
-            borderRadius: 5,
-          }}>
-          {document && (
-            <Stack
-              style={{
-                width: document?.size.width,
-                height: document?.size.height,
-                position: 'relative',
-              }}>
-              {fields.map((field: any, index: number) => handleBuildField(field, index))}
-            </Stack>
-          )}
-        </Stack>
+        <Paper elevation={2}>
+          <Stack
+            padding={5}
+            style={{
+              background: '#fff',
+              borderRadius: 5,
+            }}>
+            {document && (
+              <Stack
+                style={{
+                  width: document?.size.width,
+                  height: document?.size.height,
+                  position: 'relative',
+                }}>
+                {fields.map((field: any, index: number) => handleBuildField(field, index))}
+              </Stack>
+            )}
+          </Stack>
+        </Paper>
       </Box>
     </Stack>
   );

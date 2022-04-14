@@ -8,7 +8,10 @@ import Image from "@/commons/assets/img/bgTexture.png";
 
 const BodyBackground = styled("div")({
   backgroundImage: `url(${Image})`,
-  height: "100vh",
+  backgroundRepeat: 'repeat',
+  padding: 0,
+  margin: 0,
+
 });
 
 import App from './App'
@@ -18,7 +21,7 @@ ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={DefaultTheme}>
       <CssBaseline>
-        <BodyBackground>
+        <BodyBackground className="editor-app">
           <App />
         </BodyBackground>
       </CssBaseline>
