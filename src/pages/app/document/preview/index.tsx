@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { useParams } from 'react-router-dom';
-import { Box, Stack, TextField, FormGroup, FormControlLabel, Switch } from "@mui/material";
+import { Box, Stack, TextField, FormGroup, FormControlLabel } from "@mui/material";
 import { DatePicker, LocalizationProvider } from '@mui/lab';
 import DateAdapter from '@mui/lab/AdapterDayjs';
 import { Rnd } from "react-rnd";
 
 import { useDocument } from "@/commons/contexts/document.context";
-import { EditorLabel, EditorBuildSwitch } from '@/commons/styles/editor';
+import { EditorLabel, EditorBuildSwitch, EditorBuildCheckbox } from '@/commons/styles/editor';
 
 import IField from "@/commons/interfaces/IField";
 
@@ -120,6 +120,14 @@ const PreviewDocument = () => {
         fieldComponent = (
           <FormGroup>
             <FormControlLabel control={<EditorBuildSwitch color="secondary" />} label={field.label} />
+          </FormGroup>
+        );
+      break;
+
+      case 'checkbox':
+        fieldComponent = (
+          <FormGroup>
+            <FormControlLabel control={<EditorBuildCheckbox color="secondary" />} label={field.label} />
           </FormGroup>
         );
       break;

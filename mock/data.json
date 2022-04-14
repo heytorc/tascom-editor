@@ -358,6 +358,38 @@
               "styles": {},
               "required": false,
               "useRichText": false
+            },
+            {
+              "_id": "ae67c210-bb86-11ec-a204-e1cd46e40a27",
+              "label": "Teste 1",
+              "type": "checkbox",
+              "position": {
+                "x": 0,
+                "y": 1087
+              },
+              "size": {
+                "width": 300,
+                "height": 50
+              },
+              "styles": {},
+              "required": false,
+              "useRichText": false
+            },
+            {
+              "_id": "b45bf560-bb86-11ec-a204-e1cd46e40a27",
+              "label": "Teste 2",
+              "type": "checkbox",
+              "position": {
+                "x": 0,
+                "y": 1133
+              },
+              "size": {
+                "width": 300,
+                "height": 50
+              },
+              "styles": {},
+              "required": false,
+              "useRichText": false
             }
           ],
           "status": "published",

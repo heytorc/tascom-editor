@@ -119,7 +119,7 @@ const checkbox: IField = {
   },
   size: {
     width: 300,
-    height: 80
+    height: 50
   },
   styles: {},
   required: false,

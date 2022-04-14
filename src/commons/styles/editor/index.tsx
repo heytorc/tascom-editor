@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Button, Typography, TextField, Switch } from '@mui/material';
+import { Button, Typography, TextField, Switch, Checkbox } from '@mui/material';
 import { blue } from '@mui/material/colors';
 
 export const ElementTypeButton = styled(Button)`
@@ -40,6 +40,14 @@ export const EditorBuildSwitch = styled(Switch)`
   }
 
   &.inputSelected span, &.inputSelected label {
+    cursor: move;
+  }
+`;
+
+export const EditorBuildCheckbox = styled(Checkbox)`
+  cursor: pointer;
+
+  & span, & label {
     cursor: move;
   }
 `;
