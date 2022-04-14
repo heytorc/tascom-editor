@@ -318,11 +318,19 @@ Armazena os dados preenchidos nos documentos.
 
 :white_medium_square: Implementar do remoção do campo ao pressionar 'del'
 
-:white_medium_square: Gerenciamento de fontes (cor, tamanho e familia)
+:white_check_mark: Gerenciamento de fontes (cor, tamanho e familia)
 
-:white_medium_square: Mudar o placeholder
+:white_check_mark: Mudar o placeholder
 
 :white_medium_square: Adicionar o https://react-hook-form.com/
 
-:white_medium_square: Adicionar e testar os tipos de campos restantes: radio, check e select
+:white_medium_square: Adicionar e testar os tipos de campos restantes:
+
+> :white_check_mark: radio
+
+> :white_check_mark: check
+
+> :white_check_mark: switch
+
+> :white_medium_square: select
 
