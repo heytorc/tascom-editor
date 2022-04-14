@@ -67,9 +67,9 @@ export default function BuildDocument() {
       alignItems: "flex-start",
       justifyContent: "flex-start",
       flexDirection: 'column',
-      transition: '.1s ease-in-out',
+      transition: '.5s ease',
       padding: 5,
-      cursor: 'pointer'
+      cursor: 'pointer',
     };
 
     const selectedFieldStyles: React.CSSProperties = {
@@ -78,7 +78,7 @@ export default function BuildDocument() {
       border: 1,
       borderStyle: 'dashed',
       borderColor: '#4FD1C5',
-      transition: '.1s ease-in-out',
+      transition: '.5s ease',
       height: '100%',
       cursor: 'move',
     };
@@ -248,8 +248,9 @@ export default function BuildDocument() {
           display={'flex'}
           justifyContent={'center'}
           alignItems={'flex-start'}
-          paddingY={5}
-          height={'92vh'}
+          paddingTop={15}
+          paddingBottom={10}
+          height={'100vh'}
           style={{ overflowX: 'hidden' }}
         >
           <Paper elevation={2}>

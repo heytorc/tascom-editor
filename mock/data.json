@@ -81,7 +81,7 @@
             {
               "_id": "18582460-b15c-11ec-8a81-8f0dbfe5d20b",
               "label": "<p><strong>Descricao</strong></p>",
-              "placeholder": "Caixa de texto",
+              "placeholder": "Descrição do paciente",
               "type": "textarea",
               "position": {
                 "x": 0,
@@ -97,7 +97,8 @@
                 "borderRadius": 5
               },
               "required": false,
-              "useRichText": true
+              "useRichText": true,
+              "tag": "paciente-descricao"
             },
             {
               "_id": "217e5dc0-b15c-11ec-8a81-8f0dbfe5d20b",
@@ -173,7 +174,7 @@
               },
               "size": {
                 "width": 797,
-                "height": 191
+                "height": 173
               },
               "styles": {
                 "fontSize": 14,

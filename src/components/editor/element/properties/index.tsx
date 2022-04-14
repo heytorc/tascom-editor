@@ -59,13 +59,13 @@ export default function ElementProperties() {
   return (
     <Box
       bgcolor={'white'}
-      height={'92vh'}
+      height={'100vh'}
       width={500}
-      paddingY={2}
+      paddingTop={12}
       style={{ overflowX: 'hidden' }}
     >
       <Stack>
-        <Stack padding={2} display={'flex'} gap={2} flexDirection={'row'} alignItems={'center'}>
+        <Stack paddingX={2} mb={2} display={'flex'} gap={2} flexDirection={'row'} alignItems={'center'}>
           <DisplaySettingsOutlined color="primary" />
           <Text variant="h6">Propriedades</Text>
         </Stack>

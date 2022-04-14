@@ -10,7 +10,7 @@ export default function EditorHeader() {
   const { document, saveDocument } = useDocument();
 
   return (
-    <Box zIndex={1} position={'relative'}>
+    <Box zIndex={1} position={'fixed'} width={'100%'}>
       <Paper elevation={2}>
         <Box bgcolor={'white'} padding={2}>
           <Stack

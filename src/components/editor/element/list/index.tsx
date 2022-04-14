@@ -26,7 +26,7 @@ export default function EditorElements() {
         bgcolor={'white'}
         width={'20rem'}
         paddingX={5}
-        paddingY={5}
+        paddingTop={12}
         style={{ overflowX: 'hidden' }}
         height={'100vh'}
       >
