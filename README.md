@@ -312,7 +312,7 @@ Armazena os dados preenchidos nos documentos.
 
 ### TODO
 
-:white_medium_square: Adicionar opção de aumentar a página
+:white_check_mark: Adicionar opção de aumentar a página
 
 :white_medium_square: Testar geração do PDF
 
@@ -324,7 +324,7 @@ Armazena os dados preenchidos nos documentos.
 
 :white_medium_square: Adicionar o https://react-hook-form.com/
 
-:white_medium_square: Adicionar e testar os tipos de campos restantes:
+:white_check_mark: Adicionar e testar os tipos de campos restantes:
 
 > :white_check_mark: radio
 
