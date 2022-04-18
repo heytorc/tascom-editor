@@ -184,8 +184,12 @@ const select: IField = {
   },
   size: {
     width: 300,
-    height: 80
+    height: 52
   },
+  options: [
+    { label: 'Opção 1', value: '1' },
+    { label: 'Opção 2', value: '2' },
+  ],
   styles: {},
   required: false,
   useRichText: false,

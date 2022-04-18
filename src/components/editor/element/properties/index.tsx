@@ -53,7 +53,8 @@ export default function ElementProperties() {
     addFieldOptions,
     updateFieldOptions,
     deleteFieldOption,
-    updateFieldOrientation
+    updateFieldOrientation,
+    updateFieldOptionData
   } = useDocument();
 
   return (
@@ -193,6 +194,7 @@ export default function ElementProperties() {
                                 size="small"
                                 name={`${selectedField?.label}-option-label-${index}`}
                                 value={value.label}
+                                onChange={({ currentTarget: { value } }) => updateFieldOptionData(index || 0, 'label', value)}
                               />
 
                               <TextField
@@ -200,6 +202,7 @@ export default function ElementProperties() {
                                 size="small"
                                 name={`${selectedField?.label}-option-value-${index}`}
                                 value={value.value}
+                                onChange={({ currentTarget: { value } }) => updateFieldOptionData(index || 0, 'value', value)}
                               />
 
                               <IconButton color={'error'} onClick={() => {

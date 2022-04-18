@@ -332,5 +332,5 @@ Armazena os dados preenchidos nos documentos.
 
 > :white_check_mark: switch
 
-> :white_medium_square: select
+> :white_check_mark: select
 

@@ -412,27 +412,54 @@
               "useRichText": false,
               "options": [
                 {
-                  "label": "Opção 1",
+                  "label": "Opção 12",
                   "value": "1"
                 },
                 {
-                  "label": "Opção 2",
+                  "label": "Opção 23",
                   "value": "2"
                 },
                 {
-                  "label": "Opção 3",
+                  "label": "Opção 34",
                   "value": "3"
                 },
                 {
-                  "label": "Opção 4",
+                  "label": "Opção 45",
                   "value": "4"
                 },
                 {
-                  "label": "Opção 5",
+                  "label": "Opção 56",
                   "value": "5"
                 }
               ],
               "orientation": "row"
+            },
+            {
+              "_id": "563d9ec0-bf5f-11ec-a881-1d7a4c31b01d",
+              "label": "Tipo de Alta",
+              "type": "select",
+              "tag": "select-tipo-alta",
+              "position": {
+                "x": 0,
+                "y": 1199
+              },
+              "size": {
+                "width": 800,
+                "height": 52
+              },
+              "options": [
+                {
+                  "label": "Médica",
+                  "value": "1"
+                },
+                {
+                  "label": "Óbito",
+                  "value": "2"
+                }
+              ],
+              "styles": {},
+              "required": false,
+              "useRichText": false
             }
           ],
           "status": "published",

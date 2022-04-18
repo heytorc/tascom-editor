@@ -9,6 +9,7 @@ import {
   FormControl,
   RadioGroup,
   Paper,
+  Autocomplete,
 } from "@mui/material";
 import { DatePicker, LocalizationProvider } from '@mui/lab';
 import DateAdapter from '@mui/lab/AdapterDayjs';
@@ -19,7 +20,8 @@ import {
   EditorLabel,
   EditorBuildSwitch,
   EditorBuildCheckbox,
-  EditorBuildRadio
+  EditorBuildRadio,
+  EditorBuildInputText
 } from '@/commons/styles/editor';
 
 import IField from "@/commons/interfaces/IField";
@@ -170,6 +172,18 @@ const PreviewDocument = () => {
               ))}
             </RadioGroup>
           </FormControl>
+        );
+        break;
+
+      case 'select':
+        fieldComponent = (
+          <Autocomplete
+            options={field.options || []}
+            renderInput={(params) => <EditorBuildInputText {...params} name={field.tag} label={field.label} />}
+            size="small"
+            disablePortal
+            fullWidth
+          />
         );
         break;
 

@@ -34,6 +34,7 @@ interface IDocumentContext {
   updateFieldOptions: (options: IFieldOptions[]) => void,
   deleteFieldOption: (index: number) => void,
   updateFieldOrientation: (orientation: FieldOrientationType) => void,
+  updateFieldOptionData: (optionIndex: number, prop: 'value' | 'label', value: string) => void,
 }
 
 interface IFieldPosition {
@@ -272,6 +273,22 @@ export const DocumentProvider: FC = ({ children }) => {
     }
   };
 
+  const updateFieldOptionData = (optionIndex: number, prop: 'value' | 'label', value: string) => {
+    if (selectedField) {
+      let fieldsCopy = [...fields];
+
+      const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id);
+      let optionsCopy = fieldsCopy[fieldKey].options;
+      
+      if (optionsCopy) {
+        optionsCopy[optionIndex][prop] = value;  
+      }
+
+      setSelectedField(fieldsCopy[fieldKey]);
+      setFields(fieldsCopy);
+    }
+  }
+
   return (
     <DocumentContext.Provider
       value={{
@@ -299,7 +316,8 @@ export const DocumentProvider: FC = ({ children }) => {
         updateFieldOptions,
         deleteFieldOption,
         updateFieldOrientation,
-        updateFieldTag
+        updateFieldTag,
+        updateFieldOptionData
       }}
     >
       {children}

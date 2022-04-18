@@ -9,6 +9,7 @@ import {
   FormControl,
   FormLabel,
   RadioGroup,
+  Autocomplete,
 } from "@mui/material";
 import { DatePicker, LocalizationProvider } from '@mui/lab';
 import DateAdapter from '@mui/lab/AdapterDayjs';
@@ -196,7 +197,20 @@ export default function BuildDocument() {
             </RadioGroup>
           </FormControl>
         );
-      break;
+        break;
+
+      case 'select':
+        fieldComponent = (
+          <Autocomplete
+            options={field.options || []}
+            renderInput={(params) => <EditorBuildInputText {...params} name={field.tag} label={field.label} />}
+            size="small"
+            disablePortal
+            fullWidth
+            disabled
+          />
+        );
+        break;
 
       default:
         fieldComponent = (
