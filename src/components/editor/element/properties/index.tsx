@@ -20,11 +20,16 @@ import 'react-quill/dist/quill.snow.css';
 
 import { useDocument } from "@/commons/contexts/document.context";
 
+import useEventListener from "@/commons/hooks/useEventListener";
+
+import DialogComponent from '@/components/dialog';
+
 import { EditorReorderGroup, EditorReorderItem, EditorBuildRadio } from "@/commons/styles/editor";
 
 export default function ElementProperties() {
 
   const [currentTab, setCurrentTab] = useState<string>('1');
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
 
   const handleChangeCurrentTab = (event: React.SyntheticEvent, newValue: string) => {
     setCurrentTab(newValue);
@@ -57,6 +62,14 @@ export default function ElementProperties() {
     updateFieldOptionData
   } = useDocument();
 
+  const handleDeleteField = (keyCode?: number) => {
+    if (keyCode && keyCode === 46) {
+      setDeleteModalIsOpen(true);
+    }
+  };
+
+  useEventListener('keyup', (handler: any) => handleDeleteField(handler.keyCode))
+
   return (
     <Box
       bgcolor={'white'}
@@ -70,6 +83,14 @@ export default function ElementProperties() {
           <DisplaySettingsOutlined color="primary" />
           <Text variant="h6">Propriedades</Text>
         </Stack>
+
+        <DialogComponent
+          isOpen={deleteModalIsOpen}
+          changeState={setDeleteModalIsOpen}
+          title="Remover campo"
+          description="Tem certeza que deseja remover este campo?"
+          confirmCallback={deleteField}
+        />
 
         <Box sx={{ width: '100%', typography: 'body1' }}>
           <TabContext value={currentTab}>
@@ -255,7 +276,7 @@ export default function ElementProperties() {
                       startIcon={<DeleteIcon />}
                       color="error"
                       variant="contained"
-                      onClick={deleteField}
+                      onClick={() => setDeleteModalIsOpen(true)}
                     >
                       Excluir
                     </Button>

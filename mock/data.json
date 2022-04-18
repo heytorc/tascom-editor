@@ -435,13 +435,13 @@
               "orientation": "row"
             },
             {
-              "_id": "563d9ec0-bf5f-11ec-a881-1d7a4c31b01d",
-              "label": "Tipo de Alta",
+              "_id": "e51d83e0-bf6d-11ec-be87-6dee43b2c900",
+              "label": "Tipo de alta",
               "type": "select",
               "tag": "select-tipo-alta",
               "position": {
                 "x": 0,
-                "y": 1199
+                "y": 1200
               },
               "size": {
                 "width": 800,
@@ -453,8 +453,16 @@
                   "value": "1"
                 },
                 {
-                  "label": "Óbito",
+                  "label": "A pedido",
                   "value": "2"
+                },
+                {
+                  "label": "Após procedimento",
+                  "value": "3"
+                },
+                {
+                  "label": "Óbito",
+                  "value": "4"
                 }
               ],
               "styles": {},
