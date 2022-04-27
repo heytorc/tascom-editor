@@ -441,7 +441,7 @@
               "tag": "select-tipo-alta",
               "position": {
                 "x": 0,
-                "y": 1200
+                "y": 1344
               },
               "size": {
                 "width": 800,
@@ -463,8 +463,29 @@
                 {
                   "label": "Óbito",
                   "value": "4"
+                },
+                {
+                  "label": "Opção 5",
+                  "value": "5"
                 }
               ],
+              "styles": {},
+              "required": false,
+              "useRichText": false
+            },
+            {
+              "_id": "2158fd70-bfec-11ec-bc9a-d3fe3170e5e0",
+              "label": "Paciente?",
+              "type": "yesOrNot",
+              "tag": "yes-or-not",
+              "position": {
+                "x": 0,
+                "y": 1237
+              },
+              "size": {
+                "width": 462,
+                "height": 50
+              },
               "styles": {},
               "required": false,
               "useRichText": false

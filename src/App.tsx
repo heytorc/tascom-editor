@@ -18,6 +18,8 @@ import PreviewDocument from "@/pages/app/document/preview";
 
 import { AuthMiddleware } from "@/commons/middlewares/auth.middleware";
 
+import Layout from '@/components/layout/default';
+
 import './App.css'
 
 function App() {
@@ -29,9 +31,9 @@ function App() {
             <Routes>
               <Route index element={<LoginPage />} />
               <Route path="app" element={<AuthMiddleware />}>
-                <Route index element={<AppPage />} />
+                <Route index element={<Layout><AppPage /></Layout>} />
                 <Route path="document" element={<AuthMiddleware />}>
-                  <Route index element={<DocumentPage />} />
+                  <Route index element={<Layout><DocumentPage /></Layout>} />
                   <Route path="build" element={<BuildDocument />}>
                     <Route path=":record_id" element={<BuildDocument />} />
                   </Route>

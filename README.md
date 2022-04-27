@@ -425,28 +425,37 @@ Armazena os dados preenchidos nos documentos.
 
 ---
 
-### TODO
+# TODO
 
-:white_check_mark: Adicionar opção de aumentar a página
+## Backend
 
-:white_medium_square: Testar geração do PDF
+- :white_medium_square: Autenticação JWT
+- Rotas
+  - Autenticação
+    - :white_medium_square: Gerar token
+    - :white_medium_square: Validar token
+    - :white_medium_square: Autenticar usuario
+  - :white_medium_square: CRUD Usuários
+  - :white_medium_square: CRUD Sistema
+  - CRUD Estrutura Documento
+    - :white_medium_square: Versionamento
+    - :white_medium_square: API para retorno dos campos
+    - :white_medium_square: Validação dos tipos dos campos
+  - :white_medium_square: CRUD Preenchimento Documento
 
-:white_check_mark: Implementar dialog para deletar um elemento
+## Frontend
 
-:white_check_mark: Implementar do remoção do campo ao pressionar 'del'
-
-:white_check_mark: Gerenciamento de fontes (cor, tamanho e familia)
-
-:white_check_mark: Mudar o placeholder
-
-:white_medium_square: Adicionar o https://react-hook-form.com/
-
-:white_check_mark: Adicionar e testar os tipos de campos restantes:
-
-> :white_check_mark: radio
-
-> :white_check_mark: check
-
-> :white_check_mark: switch
-
-> :white_check_mark: select
+- :white_medium_square: Autenticação
+- :white_medium_square: Permissões
+- :white_medium_square: Menu
+- (CRUD) Lista, formulários e visualiação:
+  - :white_medium_square: Usuários
+  - :white_medium_square: Sistemas
+  - :white_medium_square: Estrutura do Documento
+  - :white_medium_square: Preenchimento do Documento (Salvar, Concluir e Cancelar)
+- :white_medium_square: Impressão do documento
+- :white_medium_square: Tela para preenchimento do documento
+- :white_medium_square: Tela integrada para preenchimento do documento por sistemas externos
+- :white_medium_square: Validações dos campos do documento
+- :white_medium_square: Adptação do layout para tablets
+- :white_medium_square: Adaptar preenchimento do documento baseado na versão atual
