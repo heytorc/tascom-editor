@@ -1,4 +1,5 @@
 export interface IMenu {
   title: string;
-  icon: React.ReactElement
+  icon: React.ReactElement;
+  route: string;
 }
