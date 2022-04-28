@@ -452,10 +452,14 @@ Armazena os dados preenchidos nos documentos.
   - :white_medium_square: Usuários
   - :white_medium_square: Sistemas
   - :white_medium_square: Estrutura do Documento
+    - :white_medium_square: Alterar nome do documento
+    - :white_medium_square: Publicar documento
+    - :white_medium_square: Exibir lista de campos
+    - :white_medium_square: Desativar documento
   - :white_medium_square: Preenchimento do Documento (Salvar, Concluir e Cancelar)
 - :white_medium_square: Impressão do documento
 - :white_medium_square: Tela para preenchimento do documento
 - :white_medium_square: Tela integrada para preenchimento do documento por sistemas externos
 - :white_medium_square: Validações dos campos do documento
-- :white_medium_square: Adptação do layout para tablets
+- :white_medium_square: Adaptação do layout para tablets
 - :white_medium_square: Adaptar preenchimento do documento baseado na versão atual
