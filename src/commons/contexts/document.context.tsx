@@ -21,6 +21,7 @@ interface IDocumentContext {
   saveDocument: () => void,
   handleDocumentData: (id: number | string) => void,
   updateDocumentName: (name: string) => void,
+  toggleActiveDocument: (isActived: boolean) => void,
   createField: (type: FieldType) => void,
   deleteField: () => void,
   updateFieldLabel: (value: string) => void,
@@ -300,6 +301,16 @@ export const DocumentProvider: FC = ({ children }) => {
     }
   };
 
+  const toggleActiveDocument = (isActived: boolean) => {
+    if (document) {
+      let documentCopy = { ...document };
+
+      documentCopy.active = isActived;
+
+      setDocument(documentCopy);
+    }
+  };
+
   return (
     <DocumentContext.Provider
       value={{
@@ -316,6 +327,7 @@ export const DocumentProvider: FC = ({ children }) => {
         documentData,
         setDocumentData,
         updateDocumentName,
+        toggleActiveDocument,
         createField,
         deleteField,
         updateFieldLabel,

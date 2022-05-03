@@ -429,37 +429,40 @@ Armazena os dados preenchidos nos documentos.
 
 ## Backend
 
-- :white_medium_square: Autenticação JWT
+- ⬜ Autenticação JWT
 - Rotas
   - Autenticação
-    - :white_medium_square: Gerar token
-    - :white_medium_square: Validar token
-    - :white_medium_square: Autenticar usuario
-  - :white_medium_square: CRUD Usuários
-  - :white_medium_square: CRUD Sistema
+    - ⬜ Gerar token
+    - ⬜ Validar token
+    - ⬜ Autenticar usuario
+  - ⬜ CRUD Usuários
+  - ⬜ CRUD Sistema
   - CRUD Estrutura Documento
-    - :white_medium_square: Versionamento
-    - :white_medium_square: API para retorno dos campos
-    - :white_medium_square: Validação dos tipos dos campos
-  - :white_medium_square: CRUD Preenchimento Documento
+    - ⬜ Versionamento
+    - ⬜ API para retorno dos campos
+    - ⬜ Validação dos tipos dos campos
+  - ⬜ CRUD Preenchimento Documento
 
 ## Frontend
 
-- :white_medium_square: Autenticação
-- :white_medium_square: Permissões
-- :white_medium_square: Menu
-- (CRUD) Lista, formulários e visualiação:
-  - :white_medium_square: Usuários
-  - :white_medium_square: Sistemas
-  - :white_medium_square: Estrutura do Documento
-    - :white_medium_square: Alterar nome do documento
-    - :white_medium_square: Publicar documento
-    - :white_medium_square: Exibir lista de campos
-    - :white_medium_square: Desativar documento
-  - :white_medium_square: Preenchimento do Documento (Salvar, Concluir e Cancelar)
-- :white_medium_square: Impressão do documento
-- :white_medium_square: Tela para preenchimento do documento
-- :white_medium_square: Tela integrada para preenchimento do documento por sistemas externos
-- :white_medium_square: Validações dos campos do documento
-- :white_medium_square: Adaptação do layout para tablets
-- :white_medium_square: Adaptar preenchimento do documento baseado na versão atual
+- ⬜ Autenticação
+- ⬜ Permissões
+- ⬜ Menu
+- (CRUD) Lista, formulários e visualização:
+  - ⬜ Usuários
+  - ⬜ Sistemas
+  - ⬜ Estrutura do Documento
+    - ✅ Alterar nome do documento
+    - ⬜ Publicar documento
+    - ⬜ Exibir lista de campos
+    - ✅ Desativar documento
+  - ⬜ Preenchimento do Documento
+    - ⬜ Salvar
+    - ⬜ Concluir
+    - ⬜ Cancelar
+- ⬜ Impressão do documento
+- ⬜ Tela para preenchimento do documento
+- ⬜ Tela integrada para preenchimento do documento por sistemas externos
+- ⬜ Validações dos campos do documento
+- ⬜ Adaptação do layout para tablets
+- ⬜ Adaptar preenchimento do documento baseado na versão atual

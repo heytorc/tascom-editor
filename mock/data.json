@@ -328,7 +328,7 @@
             },
             {
               "_id": "85d2e9b0-bb2c-11ec-901a-cd912624111d",
-              "label": "<p>CID</p>",
+              "label": "<p><strong>CID</strong></p>",
               "placeholder": "EX: A90",
               "type": "text",
               "position": {

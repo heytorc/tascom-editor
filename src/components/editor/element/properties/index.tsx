@@ -5,7 +5,7 @@ import {
   Typography as Text,
   Button,
   IconButton,
-  Divider,
+  FormGroup,
   TextField,
   Tab,
   FormControl,
@@ -24,7 +24,7 @@ import useEventListener from "@/commons/hooks/useEventListener";
 
 import DialogComponent from '@/components/dialog';
 
-import { EditorReorderGroup, EditorReorderItem, EditorBuildRadio } from "@/commons/styles/editor";
+import { EditorReorderGroup, EditorReorderItem, EditorBuildRadio, EditorBuildSwitch } from "@/commons/styles/editor";
 
 export default function ElementProperties() {
 
@@ -60,7 +60,8 @@ export default function ElementProperties() {
     deleteFieldOption,
     updateFieldOrientation,
     updateFieldOptionData,
-    updateDocumentName
+    updateDocumentName,
+    toggleActiveDocument
   } = useDocument();
 
   const handleDeleteField = (keyCode?: number) => {
@@ -302,7 +303,7 @@ export default function ElementProperties() {
 
                 <Text fontWeight={'bold'} marginBottom={2}>Tamanho:</Text>
 
-                <Stack direction={'row'} gap={2} alignItems={'baseline'}>
+                <Stack direction={'row'} gap={2} marginBottom={2} alignItems={'baseline'}>
 
                   <TextField
                     label="Largura"
@@ -324,6 +325,22 @@ export default function ElementProperties() {
                     size="small"
                   />
 
+                </Stack>
+
+                <Stack>
+                  <Text fontWeight={'bold'} marginBottom={2}>Ativo?</Text>
+
+                  <FormGroup>
+                    <FormControlLabel
+                      control={(
+                        <EditorBuildSwitch
+                          checked={document?.active}
+                          onChange={(element, checked) => toggleActiveDocument(checked)}
+                        />
+                      )}
+                      label={`Ativo?`}
+                    />
+                  </FormGroup>
                 </Stack>
               </Stack>
             </TabPanel>
