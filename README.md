@@ -472,3 +472,7 @@ Armazena os dados preenchidos nos documentos.
 - ⬜ Validações dos campos do documento
 - ⬜ Adaptação do layout para tablets
 - ⬜ Adaptar preenchimento do documento baseado na versão atual
+- ⬜ Incluir debounce nos campos de pesquisa
+- ⬜ Incluir loading quando o backend estiver funcionando
+- ⬜ Incluir componentes de feedback (toasts e messages)
+- ⬜ Armazenar a última página antes de deslogar por sessão expirada
