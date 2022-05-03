@@ -59,7 +59,8 @@ export default function ElementProperties() {
     updateFieldOptions,
     deleteFieldOption,
     updateFieldOrientation,
-    updateFieldOptionData
+    updateFieldOptionData,
+    updateDocumentName
   } = useDocument();
 
   const handleDeleteField = (keyCode?: number) => {
@@ -101,8 +102,8 @@ export default function ElementProperties() {
               </TabList>
             </Box>
 
+            {/* Field Props */}
             <TabPanel value="1">
-              {/* Field Props */}
               {selectedField && (
                 <Stack>
 
@@ -285,9 +286,20 @@ export default function ElementProperties() {
               )}
             </TabPanel>
 
+            {/* Document Props */}
             <TabPanel value="2">
-              {/* Document Props */}
               <Stack paddingY={1} mb={3}>
+                <Text fontWeight={'bold'} marginBottom={2}>Nome do documento:</Text>
+                <TextField
+                  onChange={(element) => updateDocumentName(element.target.value)}
+                  name={`${document?.name}-label`}
+                  value={document?.name}
+                  // multiline={selectedField && selectedField?.label.length > 10}
+                  // rows={selectedField && selectedField?.label.length > 10 ? 10 : undefined}
+                  size="small"
+                  style={{ marginBottom: '1rem' }}
+                />
+
                 <Text fontWeight={'bold'} marginBottom={2}>Tamanho:</Text>
 
                 <Stack direction={'row'} gap={2} alignItems={'baseline'}>

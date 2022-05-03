@@ -20,6 +20,7 @@ interface IDocumentContext {
   findDocument: (id: number | string) => void,
   saveDocument: () => void,
   handleDocumentData: (id: number | string) => void,
+  updateDocumentName: (name: string) => void,
   createField: (type: FieldType) => void,
   deleteField: () => void,
   updateFieldLabel: (value: string) => void,
@@ -289,6 +290,16 @@ export const DocumentProvider: FC = ({ children }) => {
     }
   }
 
+  const updateDocumentName = (value: string) => {
+    if (document) {
+      let documentCopy = { ...document };
+
+      documentCopy.name = value;
+
+      setDocument(documentCopy);
+    }
+  };
+
   return (
     <DocumentContext.Provider
       value={{
@@ -304,6 +315,7 @@ export const DocumentProvider: FC = ({ children }) => {
         handleDocumentData,
         documentData,
         setDocumentData,
+        updateDocumentName,
         createField,
         deleteField,
         updateFieldLabel,
