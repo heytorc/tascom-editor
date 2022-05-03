@@ -4,7 +4,8 @@ interface IDocumentVersion {
   number: number,
   created_at: Date,
   updated_at: Date,
-  fields: IField[]
+  fields: IField[],
+  status: 'published' | 'building' | 'canceled'
 }
 
 export default interface IDocument {

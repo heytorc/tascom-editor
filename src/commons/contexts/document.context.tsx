@@ -22,6 +22,7 @@ interface IDocumentContext {
   handleDocumentData: (id: number | string) => void,
   updateDocumentName: (name: string) => void,
   toggleActiveDocument: (isActived: boolean) => void,
+  publishDocument: () => void,
   createField: (type: FieldType) => void,
   deleteField: () => void,
   updateFieldLabel: (value: string) => void,
@@ -64,6 +65,165 @@ export const DocumentProvider: FC = ({ children }) => {
   useEffect(() => {
     fillDocumentFields();
   }, [document]);
+
+  const handleBuildingVersion = () => {
+    if (document) {
+      const { version, versions } = document;
+
+      const buildingVersionIndex = versions.findIndex(item => item.status === 'building' && item.number >= version);
+
+      if (buildingVersionIndex > -1) return { data: versions[buildingVersionIndex], index: buildingVersionIndex };
+
+      const actualIndexVersion = versions.findIndex(item => item.number === version);
+
+      if (actualIndexVersion > -1) return { data: versions[actualIndexVersion], index: actualIndexVersion };
+    }
+  }
+
+
+  const findDocument = async (id: number | string) => {
+    const { data: document }: any = await api.get(`/documents?id=${id}`);
+
+    if (document[0]) {
+      setDocument(document[0]);
+    }
+  };
+
+  const handleDocumentData = async (id: number | string) => {
+    const { data: document }: any = await api.get(`/completed_documents?id=${id}`);
+
+    if (document) {
+      setDocumentData(document);
+    }
+  };
+
+  const saveDocument = async () => {
+    if (document) {
+      let version = handleBuildingVersion();
+
+      if (!version) return;
+
+      const { data: currentVersion, index } = version;
+
+      if (currentVersion) {
+        const data = { ...document };
+
+        console.log(currentVersion.status);
+
+        if (currentVersion.status === 'building') {
+          currentVersion.fields = fields;
+          currentVersion.updated_at = new Date;
+
+          data.versions[index] = currentVersion;
+          data.updated_at = new Date;
+
+          debugger;
+
+          const { data: documentSaved }: { data: IDocument } = await api.put(`/documents/${document._id}`, data);
+          console.log(documentSaved);
+          setDocument(documentSaved);
+
+        } else if (currentVersion.status === 'published') {
+          const documentCopy = { ...document };
+          const newVersion = documentCopy.version + 1;
+
+          const { data: [documentData] }: { data: IDocument[] } = await api.get(`/documents?id=${document._id}`);
+
+          documentData.updated_at = new Date;
+          documentData.versions.push({
+            fields,
+            number: newVersion,
+            created_at: new Date,
+            updated_at: new Date,
+            status: 'building'
+          });
+
+          const { data: documentSaved }: { data: IDocument } = await api.put(`/documents/${document._id}`, documentData);
+          console.log(documentSaved);
+          setDocument(documentSaved);
+        }
+      }
+    }
+  };
+
+  const handleDocuments = async () => {
+    const { data } = await api.get<any[]>(`/documents`);
+
+    setDocuments(data);
+  };
+
+  const updateDocumentName = (value: string) => {
+    if (document) {
+      let documentCopy = { ...document };
+
+      documentCopy.name = value;
+
+      setDocument(documentCopy);
+    }
+  };
+
+  const toggleActiveDocument = (isActived: boolean) => {
+    if (document) {
+      let documentCopy = { ...document };
+
+      documentCopy.active = isActived;
+
+      setDocument(documentCopy);
+    }
+  };
+
+  const fillDocumentFields = () => {
+    if (document) {
+      const { version, versions } = document;
+
+      const buildingVersion = versions.find(item => item.status === 'building' && item.number >= version);
+
+      if (buildingVersion) {
+        setFields(buildingVersion.fields);
+        return;
+      }
+
+      const actualVersion = versions.find(item => item.number === version);
+
+      if (actualVersion)
+        setFields(actualVersion.fields);
+    }
+  };
+
+  const updateDocumentSize = (size: IElementSize, only?: "width" | "height") => {
+    if (document) {
+      let documentCopy = { ...document };
+
+      if (only) {
+        documentCopy.size[only] = isNaN(size[only]) ? 0 : size[only];
+      } else {
+        documentCopy.size = size;
+      }
+
+      setDocument(documentCopy);
+    }
+  };
+
+  const publishDocument = async () => {
+    if (document) {
+      const documentCopy = { ...document };
+      const newVersion = documentCopy.version + 1;
+
+      const { data: [documentData] }: { data: IDocument[] } = await api.get(`/documents?id=${document._id}`);
+
+      documentData.version = newVersion;
+      documentData.versions.push({
+        fields,
+        number: newVersion,
+        created_at: new Date,
+        updated_at: new Date,
+        status: 'published'
+      });
+
+      const documentSaved = await api.put(`/documents/${document._id}`, documentData);
+      console.log(documentSaved);
+    }
+  };
 
   const createField = (type: FieldType) => {
     let field = FieldsDefaultProps[type];
@@ -150,7 +310,7 @@ export const DocumentProvider: FC = ({ children }) => {
       const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
 
       if (only) {
-        fieldsCopy[fieldKey].size[only] = isNaN(size[only]) ? 0 : size[only] ;
+        fieldsCopy[fieldKey].size[only] = isNaN(size[only]) ? 0 : size[only];
       } else {
         fieldsCopy[fieldKey].size = size;
       }
@@ -159,70 +319,6 @@ export const DocumentProvider: FC = ({ children }) => {
     }
   };
 
-  const fillDocumentFields = () => {
-    if (document) {
-      const { version, versions } = document;
-
-      const actualVersion = versions.find(item => item.number === version);
-
-      if (actualVersion)
-        setFields(actualVersion.fields);
-    }
-  };
-
-  const findDocument = async (id: number | string) => {
-    const { data: document }: any = await api.get(`/documents?id=${id}`);
-
-    if (document[0]) {
-      setDocument(document[0]);
-    }
-  };
-
-  const handleDocumentData = async (id: number | string) => {
-    const { data: document }: any = await api.get(`/completed_documents?id=${id}`);
-
-    if (document) {
-      setDocumentData(document);
-    }
-  };
-
-  const saveDocument = async () => {
-    if (document) {
-      const { version, versions } = document;
-
-      const actualIndexVersion = versions.findIndex(item => item.number === version);
-
-      if (actualIndexVersion > -1) {
-        const data = { ...document };
-        data.versions[actualIndexVersion].fields = fields;
-
-        const documentSaved = await api.put(`/documents/${document._id}`, data);
-
-        console.log(documentSaved);
-      }
-    }
-  };
-  
-  const handleDocuments = async () => {
-    const { data } = await api.get<any[]>(`/documents`);
-
-    setDocuments(data);
-  };
-
-  const updateDocumentSize = (size: IElementSize, only?: "width" | "height") => {
-    if (document) {
-      let documentCopy = {...document };
-
-      if (only) {
-        documentCopy.size[only] = isNaN(size[only]) ? 0 : size[only] ;
-      } else {
-        documentCopy.size = size;
-      }
-
-      setDocument(documentCopy);
-    }
-  };
-  
   const addFieldOptions = (option: IFieldOptions) => {
     if (selectedField) {
       let fieldsCopy = [...fields];
@@ -252,7 +348,7 @@ export const DocumentProvider: FC = ({ children }) => {
       let fieldsCopy = [...fields];
 
       const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id);
-      
+
       let { options } = fieldsCopy[fieldKey];
       options?.splice(index, 1);
 
@@ -262,7 +358,7 @@ export const DocumentProvider: FC = ({ children }) => {
       setFields(fieldsCopy);
     }
   };
-  
+
   const updateFieldOrientation = (orientation: FieldOrientationType) => {
     if (selectedField) {
       let fieldsCopy = [...fields];
@@ -281,35 +377,15 @@ export const DocumentProvider: FC = ({ children }) => {
 
       const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id);
       let optionsCopy = fieldsCopy[fieldKey].options;
-      
+
       if (optionsCopy) {
-        optionsCopy[optionIndex][prop] = value;  
+        optionsCopy[optionIndex][prop] = value;
       }
 
       setSelectedField(fieldsCopy[fieldKey]);
       setFields(fieldsCopy);
     }
   }
-
-  const updateDocumentName = (value: string) => {
-    if (document) {
-      let documentCopy = { ...document };
-
-      documentCopy.name = value;
-
-      setDocument(documentCopy);
-    }
-  };
-
-  const toggleActiveDocument = (isActived: boolean) => {
-    if (document) {
-      let documentCopy = { ...document };
-
-      documentCopy.active = isActived;
-
-      setDocument(documentCopy);
-    }
-  };
 
   return (
     <DocumentContext.Provider
@@ -328,6 +404,7 @@ export const DocumentProvider: FC = ({ children }) => {
         setDocumentData,
         updateDocumentName,
         toggleActiveDocument,
+        publishDocument,
         createField,
         deleteField,
         updateFieldLabel,

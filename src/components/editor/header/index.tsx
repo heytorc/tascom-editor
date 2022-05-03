@@ -1,14 +1,51 @@
-import { Box, Stack, Typography as Text, Paper, IconButton, Divider, Button } from '@mui/material';
-import { ChevronLeftOutlined, VisibilityOutlined } from '@mui/icons-material';
+import React, { useState } from 'react';
+import {
+  Box,
+  Stack,
+  Typography as Text,
+  Paper,
+  IconButton,
+  Divider,
+  Button,
+  Menu,
+  MenuItem,
+  ListItemText,
+  ListItemIcon
+} from '@mui/material';
+import { ChevronLeftOutlined, VisibilityOutlined, SendOutlined, MoreVertOutlined } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
+
 import { useDocument } from '@/commons/contexts/document.context';
 
-import { useNavigate } from 'react-router-dom';
+import DialogComponent from '@/components/dialog';
 
 export default function EditorHeader() {
   const navigate = useNavigate();
 
-  const { document, saveDocument } = useDocument();
+  const { document, saveDocument, publishDocument } = useDocument();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [publishModalIsOpen, setPublishModalIsOpen] = useState<boolean>(false);
 
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const previewDocument = () => {
+    handleClose();
+    window.open(`/app/document/${document?._id}/preview`);
+  };
+
+  const handlePublishDocument = () => {
+    handleClose();
+    setPublishModalIsOpen(true);
+  };
+  
   return (
     <Box zIndex={1} position={'fixed'} width={'100%'}>
       <Paper elevation={2}>
@@ -32,25 +69,13 @@ export default function EditorHeader() {
               </Stack>
               <Divider orientation="vertical" flexItem />
               <Stack>
-                <Text>{document?.name}</Text>
+                <Text>{document?.name} <small>(v{document?.version})</small></Text>
               </Stack>
             </Stack>
 
             <Stack flexDirection={'row'} gap={3} alignItems={'center'}>
               <Stack>
                 <Text color={'text.secondary'}>Últimas mudanças salvas em {document?.updated_at}</Text>
-              </Stack>
-              <Stack>
-                <Button
-                  type="button"
-                  variant="text"
-                  color="secondary"
-                  href={`/app/document/${document?._id}/preview`}
-                  target="_blank"
-                  startIcon={<VisibilityOutlined />}
-                >
-                  Pré-visualizar
-                </Button>
               </Stack>
 
               <Stack>
@@ -63,8 +88,50 @@ export default function EditorHeader() {
                   Salvar
                 </Button>
               </Stack>
+
+              <Stack>
+                <IconButton
+                  aria-controls={open ? 'basic-menu' : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={open ? 'true' : undefined}
+                  onClick={handleClick}
+                >
+                  <MoreVertOutlined />
+                </IconButton>
+
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                >
+                  <MenuItem
+                    onClick={previewDocument}
+                    href={`/app/document/${document?._id}/preview`}
+                    target="_blank"
+                  >
+                    <ListItemIcon><VisibilityOutlined /></ListItemIcon>
+                    <ListItemText>Pré-Visualizar</ListItemText>
+                  </MenuItem>
+                  <Divider />
+                  <MenuItem onClick={handlePublishDocument}>
+                    <ListItemIcon>
+                      <SendOutlined color={'success'} style={{ transform: 'rotate(-25deg)', marginTop: '-5px' }} />
+                    </ListItemIcon>
+                    <ListItemText>Publicar</ListItemText>
+                  </MenuItem>
+                </Menu>
+              </Stack>
             </Stack>
           </Stack>
+
+          <DialogComponent
+            isOpen={publishModalIsOpen}
+            changeState={setPublishModalIsOpen}
+            title="Publicar Documento"
+            description="Ao publicar um documento todas as alterações ficarão visíveis para preechimento. Tem certeza que deseja continuar?"
+            confirmCallback={publishDocument}
+          />
         </Box>
       </Paper>
     </Box>

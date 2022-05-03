@@ -453,13 +453,19 @@ Armazena os dados preenchidos nos documentos.
   - ⬜ Sistemas
   - ⬜ Estrutura do Documento
     - ✅ Alterar nome do documento
-    - ⬜ Publicar documento
+    - ✅ Publicar documento
     - ⬜ Exibir lista de campos
     - ✅ Desativar documento
+    - ⬜ Listar versões do documento
+    - ⬜ Visualizar versões anteriores
+    - ✅ Iniciar uma nova versão com status de 'building' ao salvar o documento
+    - ✅ Exibir última data/hora que foi salvo
+    - ✅ Carregar a versão com o status de 'building' se tiver, se não, carregar a atual
   - ⬜ Preenchimento do Documento
     - ⬜ Salvar
     - ⬜ Concluir
     - ⬜ Cancelar
+    - ⬜ Exibir para preenchimento o documento da versão atual (com status de 'published')
 - ⬜ Impressão do documento
 - ⬜ Tela para preenchimento do documento
 - ⬜ Tela integrada para preenchimento do documento por sistemas externos
