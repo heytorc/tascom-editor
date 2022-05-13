@@ -10,9 +10,9 @@ import {
   Menu,
   MenuItem,
   ListItemText,
-  ListItemIcon
+  ListItemIcon,
 } from '@mui/material';
-import { ChevronLeftOutlined, VisibilityOutlined, SendOutlined, MoreVertOutlined } from '@mui/icons-material';
+import { ChevronLeftOutlined, VisibilityOutlined, SendOutlined, MoreVertOutlined, DeleteOutline } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
 import { useDocument } from '@/commons/contexts/document.context';
@@ -22,9 +22,10 @@ import DialogComponent from '@/components/dialog';
 export default function EditorHeader() {
   const navigate = useNavigate();
 
-  const { document, saveDocument, publishDocument } = useDocument();
+  const { document, saveDocument, publishDocument, currentVersion, deleteVersion } = useDocument();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [publishModalIsOpen, setPublishModalIsOpen] = useState<boolean>(false);
+  const [deleteVersionModalIsOpen, setDeleteVersionModalIsOpen] = useState<boolean>(false);
 
   const open = Boolean(anchorEl);
 
@@ -45,7 +46,33 @@ export default function EditorHeader() {
     handleClose();
     setPublishModalIsOpen(true);
   };
-  
+
+  const handleOpenDeleteDocumentVersionModal = () => {
+    handleClose();
+    setDeleteVersionModalIsOpen(true);
+  };
+
+  const handleDeleteDocumentVersion = () => {
+    try {
+      deleteVersion();
+      navigate(`/app/document/build/${document?._id}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSaveDocument = async () => {
+    const documentData = await saveDocument();
+
+    if (documentData) {
+      const buildingVersion = documentData.versions.find(item => item.status === 'building');
+
+      if (buildingVersion)
+        navigate(`/app/document/build/${document?._id}?version=${buildingVersion.number}`);
+    }
+
+  };
+
   return (
     <Box zIndex={1} position={'fixed'} width={'100%'}>
       <Paper elevation={2}>
@@ -83,7 +110,7 @@ export default function EditorHeader() {
                   type="button"
                   variant="contained"
                   color="secondary"
-                  onClick={saveDocument}
+                  onClick={handleSaveDocument}
                 >
                   Salvar
                 </Button>
@@ -114,11 +141,24 @@ export default function EditorHeader() {
                     <ListItemText>Pré-Visualizar</ListItemText>
                   </MenuItem>
                   <Divider />
-                  <MenuItem onClick={handlePublishDocument}>
+                  <MenuItem
+                    disabled={!(currentVersion && currentVersion?.status === 'building')}
+                    onClick={handlePublishDocument}
+                  >
                     <ListItemIcon>
                       <SendOutlined color={'success'} style={{ transform: 'rotate(-25deg)', marginTop: '-5px' }} />
                     </ListItemIcon>
                     <ListItemText>Publicar</ListItemText>
+                  </MenuItem>
+                  <Divider />
+                  <MenuItem
+                    disabled={!(currentVersion && currentVersion?.status === 'building')}
+                    onClick={handleOpenDeleteDocumentVersionModal}
+                  >
+                    <ListItemIcon>
+                      <DeleteOutline color={'error'} />
+                    </ListItemIcon>
+                    <ListItemText primaryTypographyProps={{ color: 'error' }}>Excluir</ListItemText>
                   </MenuItem>
                 </Menu>
               </Stack>
@@ -131,6 +171,14 @@ export default function EditorHeader() {
             title="Publicar Documento"
             description="Ao publicar um documento todas as alterações ficarão visíveis para preechimento. Tem certeza que deseja continuar?"
             confirmCallback={publishDocument}
+          />
+
+          <DialogComponent
+            isOpen={deleteVersionModalIsOpen}
+            changeState={setDeleteVersionModalIsOpen}
+            title="Excluir Versão"
+            description={`Tem certeza que deseja excluir a versão ${currentVersion?.number} deste documento? Depois de realizada ESTA OPERAÇÃO NÃO PODERÁ SER DESFEITA!`}
+            confirmCallback={handleDeleteDocumentVersion}
           />
         </Box>
       </Paper>

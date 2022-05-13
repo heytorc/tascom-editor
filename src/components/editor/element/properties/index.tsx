@@ -11,22 +11,53 @@ import {
   FormControl,
   RadioGroup,
   FormControlLabel,
+  List as ListComponent,
+  ListItemButton,
+  ListItem,
 } from "@mui/material";
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { Delete as DeleteIcon, DisplaySettingsOutlined, Add, DeleteOutlineOutlined } from "@mui/icons-material";
+import {
+  Delete as DeleteIcon,
+  DisplaySettingsOutlined,
+  Add,
+  DeleteOutlineOutlined
+} from "@mui/icons-material";
+import { GitMerge } from "phosphor-react";
 import { List, arrayMove } from 'react-movable';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 import { useDocument } from "@/commons/contexts/document.context";
-
 import useEventListener from "@/commons/hooks/useEventListener";
 
 import DialogComponent from '@/components/dialog';
+import VersionBadgeComponent from '@/components/editor/document/version.badge';
 
 import { EditorReorderGroup, EditorReorderItem, EditorBuildRadio, EditorBuildSwitch } from "@/commons/styles/editor";
+import { useNavigate } from 'react-router-dom';
 
 export default function ElementProperties() {
+  const {
+    selectedField,
+    updateFieldTag,
+    updateFieldLabel,
+    updateFieldSize,
+    deleteField,
+    document,
+    currentVersion,
+    updateDocumentSize,
+    updateFieldPlaceholder,
+    addFieldOptions,
+    updateFieldOptions,
+    deleteFieldOption,
+    updateFieldOrientation,
+    updateFieldOptionData,
+    updateDocumentName,
+    toggleActiveDocument,
+    setTargetVersion,
+  } = useDocument();
+
+  const navigate = useNavigate();
 
   const [currentTab, setCurrentTab] = useState<string>('1');
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
@@ -45,32 +76,20 @@ export default function ElementProperties() {
     })
   };
 
-  const {
-    selectedField,
-    setSelectedField,
-    updateFieldTag,
-    updateFieldLabel,
-    updateFieldSize,
-    deleteField,
-    document,
-    updateDocumentSize,
-    updateFieldPlaceholder,
-    addFieldOptions,
-    updateFieldOptions,
-    deleteFieldOption,
-    updateFieldOrientation,
-    updateFieldOptionData,
-    updateDocumentName,
-    toggleActiveDocument
-  } = useDocument();
-
   const handleDeleteField = (keyCode?: number) => {
     if (keyCode && keyCode === 46) {
       setDeleteModalIsOpen(true);
     }
   };
 
-  useEventListener('keyup', (handler: any) => handleDeleteField(handler.keyCode))
+  useEventListener('keyup', (handler: any) => handleDeleteField(handler.keyCode));
+
+  const handleOpenVersion = (versionNumber: number) => {
+    if (document) {
+      navigate(`/app/document/build/${document?._id}?version=${versionNumber}`);
+      setTargetVersion(versionNumber);
+    }
+  };
 
   return (
     <Box
@@ -100,6 +119,7 @@ export default function ElementProperties() {
               <TabList onChange={handleChangeCurrentTab} aria-label="lab API tabs example">
                 <Tab label="Campo" value="1" />
                 <Tab label="Documento" value="2" />
+                <Tab label="Versões" value="3" />
               </TabList>
             </Box>
 
@@ -343,6 +363,51 @@ export default function ElementProperties() {
                   </FormGroup>
                 </Stack>
               </Stack>
+            </TabPanel>
+
+            {/* Document Versions */}
+            <TabPanel value="3">
+              <ListComponent>
+                {document?.versions.reverse().map((version, index) => (
+                  <Stack
+                    key={`document_version_${index}`}
+                    bgcolor={(theme) => version.number === currentVersion?.number ? theme.palette.secondary.light : ''}
+                    mb={2}
+                    borderRadius={1}
+                    >
+                    <ListItem disablePadding>
+                      <ListItemButton onClick={() => handleOpenVersion(version.number)}>
+                        <Stack
+                          width={'100%'}
+                          flexDirection={'row'}
+                          alignItems={'center'}
+                          justifyContent={'space-between'}
+                        >
+                          <Stack flexDirection={'row'} alignItems={'center'} gap={2}>
+                            <Stack>
+                              <GitMerge color={'#337EAD'} size={32} />
+                            </Stack>
+                            <Stack>
+                              <Text><small>Versão:</small> {version.number}</Text>
+                              <Text><small>Campos:</small> {version.fields.length}</Text>
+                            </Stack>
+                          </Stack>
+                          <Stack flexDirection={'row'} alignItems={'center'} gap={2}>
+                            {document.version === version.number && (
+                              <Stack>
+                                <VersionBadgeComponent status="current" />
+                              </Stack>
+                            )}
+                            <Stack>
+                              <VersionBadgeComponent status={version.status} />
+                            </Stack>
+                          </Stack>
+                        </Stack>
+                      </ListItemButton>
+                    </ListItem>
+                  </Stack>
+                ))}
+              </ListComponent>
             </TabPanel>
           </TabContext>
         </Box>

@@ -1,11 +1,11 @@
-import React, { createContext, FC, useContext, useEffect, useState } from "react";
+import React, { createContext, FC, useCallback, useContext, useEffect, useState } from "react";
 import { v1 as uuidv1 } from 'uuid';
 
 import IField, { IFieldOptions } from "@/commons/interfaces/IField";
 import { FieldType, FieldOrientationType } from "@/commons/types/field.types";
 import IPage from "@/commons/interfaces/IPage";
 import FieldsDefaultProps from "@/commons/constants/fields/default.configuration";
-import IDocument from "@/commons/interfaces/IDocument";
+import IDocument, { IDocumentVersion } from "@/commons/interfaces/IDocument";
 import api from "../services/api";
 
 interface IDocumentContext {
@@ -16,9 +16,12 @@ interface IDocumentContext {
   document: IDocument | undefined,
   setDocument: React.Dispatch<React.SetStateAction<IDocument | undefined>>,
   documentData: any,
+  currentVersion: IDocumentVersion | undefined,
   setDocumentData: React.Dispatch<React.SetStateAction<any>>,
-  findDocument: (id: number | string) => void,
-  saveDocument: () => void,
+  targetVersion: any,
+  setTargetVersion: React.Dispatch<React.SetStateAction<number | string | undefined>>,
+  findDocument: (id: number | string, version?: number | string) => void,
+  saveDocument: () => Promise<IDocument | undefined>,
   handleDocumentData: (id: number | string) => void,
   updateDocumentName: (name: string) => void,
   toggleActiveDocument: (isActived: boolean) => void,
@@ -38,6 +41,8 @@ interface IDocumentContext {
   deleteFieldOption: (index: number) => void,
   updateFieldOrientation: (orientation: FieldOrientationType) => void,
   updateFieldOptionData: (optionIndex: number, prop: 'value' | 'label', value: string) => void,
+  handleBuildingVersion: (currentDocument?: IDocument) => ICurrentDocument | undefined,
+  deleteVersion: () => void,
 }
 
 interface IFieldPosition {
@@ -50,6 +55,11 @@ interface IElementSize {
   height: number;
 }
 
+interface ICurrentDocument {
+  data: IDocumentVersion;
+  index: number;
+}
+
 export const DocumentContext = createContext({} as IDocumentContext);
 
 export const DocumentProvider: FC = ({ children }) => {
@@ -58,17 +68,21 @@ export const DocumentProvider: FC = ({ children }) => {
   const [documents, setDocuments] = useState<IDocument[]>([]);
   const [document, setDocument] = useState<IDocument>();
   const [documentData, setDocumentData] = useState<any>();
+  const [targetVersion, setTargetVersion] = useState<number | string>();
 
-  const [fields, setFields] = useState<IField[]>([])
+  const [currentVersion, setCurrentVersion] = useState<IDocumentVersion>();
+  const [fields, setFields] = useState<IField[]>([]);
   const [selectedField, setSelectedField] = useState<IField>();
 
   useEffect(() => {
     fillDocumentFields();
-  }, [document]);
+  }, [document, targetVersion]);
 
-  const handleBuildingVersion = () => {
-    if (document) {
-      const { version, versions } = document;
+  const handleBuildingVersion = useCallback((currentDocument?: IDocument): ICurrentDocument | undefined => {
+    const doc = document || currentDocument;
+
+    if (doc) {
+      const { version, versions } = doc;
 
       const buildingVersionIndex = versions.findIndex(item => item.status === 'building' && item.number >= version);
 
@@ -78,14 +92,21 @@ export const DocumentProvider: FC = ({ children }) => {
 
       if (actualIndexVersion > -1) return { data: versions[actualIndexVersion], index: actualIndexVersion };
     }
-  }
+  }, [document]);
 
-
-  const findDocument = async (id: number | string) => {
+  const findDocument = async (id: number | string, version?: number | string) => {
     const { data: document }: any = await api.get(`/documents?id=${id}`);
 
     if (document[0]) {
       setDocument(document[0]);
+
+      if (version) {
+        setTargetVersion(version);
+      } else {
+        const currentVersion = handleBuildingVersion(document[0]);
+        if (currentVersion)
+          setTargetVersion(currentVersion.data.number);
+      }
     }
   };
 
@@ -97,7 +118,7 @@ export const DocumentProvider: FC = ({ children }) => {
     }
   };
 
-  const saveDocument = async () => {
+  const saveDocument = async (): Promise<IDocument | undefined> => {
     if (document) {
       let version = handleBuildingVersion();
 
@@ -107,8 +128,6 @@ export const DocumentProvider: FC = ({ children }) => {
 
       if (currentVersion) {
         const data = { ...document };
-
-        console.log(currentVersion.status);
 
         if (currentVersion.status === 'building') {
           currentVersion.fields = fields;
@@ -139,8 +158,10 @@ export const DocumentProvider: FC = ({ children }) => {
           });
 
           const { data: documentSaved }: { data: IDocument } = await api.put(`/documents/${document._id}`, documentData);
-          console.log(documentSaved);
           setDocument(documentSaved);
+          setTargetVersion(newVersion);
+
+          return documentSaved;
         }
       }
     }
@@ -174,19 +195,36 @@ export const DocumentProvider: FC = ({ children }) => {
 
   const fillDocumentFields = () => {
     if (document) {
-      const { version, versions } = document;
+      const { versions, version: actualVersionNumber } = document;
 
-      const buildingVersion = versions.find(item => item.status === 'building' && item.number >= version);
+      // Se o parâmetro da versão por passado na url, carrega os campos da versão correspondente
+      if (targetVersion) {
+        const version = versions.find(item => item.number === targetVersion);
+
+        if (version) {
+          setCurrentVersion(version);
+          setFields(version.fields);
+          return;
+        }
+      }
+
+      // Se não tiver parâmetro de versão, carrega os campos da versão com o status de 'building' que seja maior ou igual a versão atual do documento
+      const buildingVersion = versions.find(item => item.status === 'building' && item.number >= actualVersionNumber);
 
       if (buildingVersion) {
+        setCurrentVersion(buildingVersion);
         setFields(buildingVersion.fields);
         return;
       }
 
-      const actualVersion = versions.find(item => item.number === version);
+      // Em último caso, pega a versão atual do documento
+      const actualVersion = versions.find(item => item.number === actualVersionNumber);
 
-      if (actualVersion)
+      if (actualVersion) {
+        setCurrentVersion(actualVersion);
         setFields(actualVersion.fields);
+        return;
+      }
     }
   };
 
@@ -205,20 +243,23 @@ export const DocumentProvider: FC = ({ children }) => {
   };
 
   const publishDocument = async () => {
-    if (document) {
-      const documentCopy = { ...document };
-      const newVersion = documentCopy.version + 1;
+    debugger;
+    if (document && targetVersion) {
 
       const { data: [documentData] }: { data: IDocument[] } = await api.get(`/documents?id=${document._id}`);
 
-      documentData.version = newVersion;
-      documentData.versions.push({
-        fields,
-        number: newVersion,
-        created_at: new Date,
-        updated_at: new Date,
-        status: 'published'
-      });
+      documentData.version = parseInt(`${targetVersion}`);
+      
+      let versionKey = documentData.versions.findIndex(item => item.number === targetVersion);
+
+      if (versionKey > -1) {
+        documentData.versions[versionKey] = {
+          ...documentData.versions[versionKey],
+          created_at: new Date,
+          updated_at: new Date,
+          status: 'published'
+        }
+      }
 
       const documentSaved = await api.put(`/documents/${document._id}`, documentData);
       console.log(documentSaved);
@@ -387,16 +428,41 @@ export const DocumentProvider: FC = ({ children }) => {
     }
   }
 
+  const deleteVersion = async () => {
+    if (currentVersion) {
+      if (currentVersion.status !== 'building') throw { message: 'VERSION_IS_NOT_BUILDING' };
+
+      const currentVersionIndex = document?.versions.findIndex(item => item.number === currentVersion.number);
+
+      const documentCopy = { ...document };
+
+      if (currentVersionIndex && currentVersionIndex > -1) {
+        documentCopy.versions?.splice(currentVersionIndex, 1);
+
+        const { data: documentSaved } = await api.put(`/documents/${documentCopy._id}`, documentCopy);
+
+        setDocument(documentSaved);
+      } else {
+        throw { message: 'VERSION_NOT_FOUND' };
+      }
+    } else {
+      throw { message: 'VERSION_NOT_FOUND' };
+    }
+  }
+
   return (
     <DocumentContext.Provider
       value={{
         document,
         documents,
+        currentVersion,
         setDocument,
         fields,
         setFields,
         selectedField,
         setSelectedField,
+        targetVersion,
+        setTargetVersion,
         findDocument,
         saveDocument,
         handleDocumentData,
@@ -418,7 +484,9 @@ export const DocumentProvider: FC = ({ children }) => {
         deleteFieldOption,
         updateFieldOrientation,
         updateFieldTag,
-        updateFieldOptionData
+        updateFieldOptionData,
+        handleBuildingVersion,
+        deleteVersion,
       }}
     >
       {children}

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, version } from "react";
 import { Rnd, DraggableData, Position, ResizableDelta } from "react-rnd";
 import {
   Box,
@@ -7,7 +7,6 @@ import {
   FormGroup,
   FormControlLabel,
   FormControl,
-  FormLabel,
   RadioGroup,
   Autocomplete,
 } from "@mui/material";
@@ -15,6 +14,7 @@ import { DatePicker, LocalizationProvider } from '@mui/lab';
 import DateAdapter from '@mui/lab/AdapterDayjs';
 
 import { useDocument } from "@/commons/contexts/document.context";
+import useQuery from "@/commons/hooks/useQuery";
 
 import EditorHeader from "@/components/editor/header";
 import EditorElementsList from "@/components/editor/element/list";
@@ -36,15 +36,19 @@ export default function BuildDocument() {
     document,
     findDocument,
     fields,
-    setFields,
     selectedField,
     setSelectedField,
-    updateFieldLabel,
     updateFieldPosition,
-    updateFieldSize
+    updateFieldSize,
   } = useDocument();
+  
+  const queryParams = useQuery();
 
-  useEffect(() => { findDocument(1) }, []);
+  useEffect(() => {
+    let version = queryParams.get("version") ?? undefined;
+
+    findDocument(1, version);
+  }, []);
 
   const handleDragStop = (event: any, { x, y }: DraggableData) => {
     updateFieldPosition({ x, y });
@@ -255,8 +259,6 @@ export default function BuildDocument() {
         overflow={'none'}
       >
         <EditorElementsList />
-        {/* {documents.map((document: any, index: number) => <p key={index}>{document.name}</p>)} */}
-
         <Box
           flex={1}
           display={'flex'}

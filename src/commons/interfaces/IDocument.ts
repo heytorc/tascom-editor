@@ -1,6 +1,6 @@
 import IField from "./IField";
 
-interface IDocumentVersion {
+export interface IDocumentVersion {
   number: number,
   created_at: Date,
   updated_at: Date,
