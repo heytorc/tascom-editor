@@ -1,4 +1,4 @@
-import { useEffect, version } from "react";
+import { useEffect } from "react";
 import { Rnd, DraggableData, Position, ResizableDelta } from "react-rnd";
 import {
   Box,
@@ -40,9 +40,15 @@ export default function BuildDocument() {
     setSelectedField,
     updateFieldPosition,
     updateFieldSize,
+    setScrollPosition
   } = useDocument();
-  
+
   const queryParams = useQuery();
+
+  const handleScroll = (currentTarget: EventTarget & HTMLDivElement) => {
+    const { scrollTop } = currentTarget;
+    setScrollPosition(scrollTop);
+  };
 
   useEffect(() => {
     let version = queryParams.get("version") ?? undefined;
@@ -248,9 +254,7 @@ export default function BuildDocument() {
   };
 
   return (
-    <Stack
-      flex={1}
-    >
+    <Stack flex={1}>
       <EditorHeader />
       <Stack
         flex={1}
@@ -268,6 +272,7 @@ export default function BuildDocument() {
           paddingBottom={10}
           height={'100vh'}
           style={{ overflowX: 'hidden' }}
+          onScroll={(event) => handleScroll(event.currentTarget)}
         >
           <Paper elevation={2}>
             <Stack

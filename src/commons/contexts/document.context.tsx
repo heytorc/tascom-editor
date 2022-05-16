@@ -43,6 +43,8 @@ interface IDocumentContext {
   updateFieldOptionData: (optionIndex: number, prop: 'value' | 'label', value: string) => void,
   handleBuildingVersion: (currentDocument?: IDocument) => ICurrentDocument | undefined,
   deleteVersion: () => void,
+  scrollPosition: number,
+  setScrollPosition: React.Dispatch<React.SetStateAction<number>>
 }
 
 interface IFieldPosition {
@@ -64,6 +66,7 @@ export const DocumentContext = createContext({} as IDocumentContext);
 
 export const DocumentProvider: FC = ({ children }) => {
   const [pages, setPages] = useState<IPage[]>();
+  const [scrollPosition, setScrollPosition] = useState<number>(0);
 
   const [documents, setDocuments] = useState<IDocument[]>([]);
   const [document, setDocument] = useState<IDocument>();
@@ -270,6 +273,10 @@ export const DocumentProvider: FC = ({ children }) => {
     let field = FieldsDefaultProps[type];
     field = {
       ...field,
+      position: {
+        x: 0,
+        y: scrollPosition ?? field.position.y
+      },
       _id: uuidv1()
     };
 
@@ -487,6 +494,8 @@ export const DocumentProvider: FC = ({ children }) => {
         updateFieldOptionData,
         handleBuildingVersion,
         deleteVersion,
+        scrollPosition,
+        setScrollPosition
       }}
     >
       {children}
