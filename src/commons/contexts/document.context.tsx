@@ -15,10 +15,10 @@ interface IDocumentContext {
   setSelectedField: React.Dispatch<React.SetStateAction<IField | undefined>>,
   document: IDocument | undefined,
   setDocument: React.Dispatch<React.SetStateAction<IDocument | undefined>>,
-  documentData: any,
+  documentData: IDocument | undefined,
   currentVersion: IDocumentVersion | undefined,
   setDocumentData: React.Dispatch<React.SetStateAction<any>>,
-  targetVersion: any,
+  targetVersion: number | string | undefined,
   setTargetVersion: React.Dispatch<React.SetStateAction<number | string | undefined>>,
   findDocument: (id: number | string, version?: number | string) => void,
   saveDocument: () => Promise<IDocument | undefined>,
@@ -44,7 +44,7 @@ interface IDocumentContext {
   handleBuildingVersion: (currentDocument?: IDocument) => ICurrentDocument | undefined,
   deleteVersion: () => void,
   scrollPosition: number,
-  setScrollPosition: React.Dispatch<React.SetStateAction<number>>
+  setScrollPosition: React.Dispatch<React.SetStateAction<number>>,
 }
 
 interface IFieldPosition {
@@ -102,6 +102,7 @@ export const DocumentProvider: FC = ({ children }) => {
 
     if (document[0]) {
       setDocument(document[0]);
+      setDocumentData(document[0]);
 
       if (version) {
         setTargetVersion(version);
@@ -171,7 +172,7 @@ export const DocumentProvider: FC = ({ children }) => {
   };
 
   const handleDocuments = async () => {
-    const { data } = await api.get<any[]>(`/documents`);
+    const { data } = await api.get<IDocument[]>(`/documents`);
 
     setDocuments(data);
   };

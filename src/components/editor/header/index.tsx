@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Stack,
@@ -19,10 +19,21 @@ import { useDocument } from '@/commons/contexts/document.context';
 
 import DialogComponent from '@/components/dialog';
 
+import dayjs from '@/commons/utils/date.utils';
+
 export default function EditorHeader() {
   const navigate = useNavigate();
 
-  const { document, saveDocument, publishDocument, currentVersion, deleteVersion } = useDocument();
+  const {
+    document,
+    documentData,
+    saveDocument,
+    publishDocument,
+    currentVersion,
+    deleteVersion,
+    fields
+  } = useDocument();
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [publishModalIsOpen, setPublishModalIsOpen] = useState<boolean>(false);
   const [deleteVersionModalIsOpen, setDeleteVersionModalIsOpen] = useState<boolean>(false);
@@ -73,6 +84,20 @@ export default function EditorHeader() {
 
   };
 
+  const handleDisableSaveButton = (): boolean => {
+    const compareData = JSON.stringify(documentData) === JSON.stringify(document);
+    let compareFields = true;
+
+    if (documentData) {
+      let actualVersion = documentData.versions.find(item => item.number === documentData.version);
+      if (actualVersion) {
+        compareFields = JSON.stringify(actualVersion.fields) === JSON.stringify(fields);
+      }
+    }
+
+    return (compareData && compareFields);
+  }
+
   return (
     <Box zIndex={1} position={'fixed'} width={'100%'}>
       <Paper elevation={2}>
@@ -102,7 +127,7 @@ export default function EditorHeader() {
 
             <Stack flexDirection={'row'} gap={3} alignItems={'center'}>
               <Stack>
-                <Text color={'text.secondary'}>Últimas mudanças salvas em {document?.updated_at}</Text>
+                <Text color={'text.secondary'}>Últimas mudanças salvas em {dayjs(document?.updated_at).format('DD/MM/YYYY HH:mm:ss')}</Text>
               </Stack>
 
               <Stack>
@@ -111,6 +136,7 @@ export default function EditorHeader() {
                   variant="contained"
                   color="secondary"
                   onClick={handleSaveDocument}
+                  disabled={handleDisableSaveButton()}
                 >
                   Salvar
                 </Button>

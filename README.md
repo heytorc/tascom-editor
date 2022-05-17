@@ -451,7 +451,7 @@ Armazena os dados preenchidos nos documentos.
 - (CRUD) Lista, formulários e visualização:
   - ⬜ Usuários
   - ⬜ Sistemas
-  - ⬜ Estrutura do Documento
+  - ✅ Estrutura do Documento
     - ✅ Alterar nome do documento
     - ✅ Publicar documento
     - ✅ Desativar documento
@@ -464,7 +464,7 @@ Armazena os dados preenchidos nos documentos.
     - ✅ Criar versão a partir de uma versão antiga selecionada
     - ✅ Publicar ou excluir somente versões com status 'building'
     - ✅ Ao criar um campo, adiciona-lo em uma posição x e y que o usuário possa ver em tela~
-    - ⬜ Comparar estados do documento que está sendo preenchido e o salvo no banco para verificar se existem alterações não salvas
+    - ✅ Comparar estados do documento que está sendo preenchido e o salvo no banco para verificar se existem alterações não salvas
   - ⬜ Preenchimento do Documento
     - ⬜ Salvar
     - ⬜ Concluir
