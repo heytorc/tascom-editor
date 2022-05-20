@@ -463,19 +463,19 @@ Armazena os dados preenchidos nos documentos.
     - ✅ Excluir versão em construção do documento
     - ✅ Criar versão a partir de uma versão antiga selecionada
     - ✅ Publicar ou excluir somente versões com status 'building'
-    - ✅ Ao criar um campo, adiciona-lo em uma posição x e y que o usuário possa ver em tela~
+    - ✅ Ao criar um campo, adiciona-lo em uma posição x e y que o usuário possa ver em tela
     - ✅ Comparar estados do documento que está sendo preenchido e o salvo no banco para verificar se existem alterações não salvas
   - ⬜ Preenchimento do Documento
-    - ⬜ Salvar
+    - ⚙️ Tela para preenchimento do documento
+    - ⚙️ Salvar
     - ⬜ Concluir
     - ⬜ Cancelar
-    - ⬜ Exibir para preenchimento o documento da versão atual (com status de 'published')
+    - ✅ Exibir para preenchimento o documento da versão atual (com status de 'published')
+    - ✅ Adaptar preenchimento do documento baseado na versão atual
+    - ⬜ Adaptação do layout para tablets
 - ⬜ Impressão do documento
-- ⬜ Tela para preenchimento do documento
 - ⬜ Tela integrada para preenchimento do documento por sistemas externos
 - ⬜ Validações dos campos do documento
-- ⬜ Adaptação do layout para tablets
-- ⬜ Adaptar preenchimento do documento baseado na versão atual
 - ⬜ Incluir debounce nos campos de pesquisa
 - ⬜ Incluir loading quando o backend estiver funcionando
 - ⬜ Incluir componentes de feedback (toasts e messages)

@@ -3,9 +3,13 @@ import { v1 as uuidv1 } from 'uuid';
 
 import IField, { IFieldOptions } from "@/commons/interfaces/IField";
 import { FieldType, FieldOrientationType } from "@/commons/types/field.types";
+
 import IPage from "@/commons/interfaces/IPage";
-import FieldsDefaultProps from "@/commons/constants/fields/default.configuration";
 import IDocument, { IDocumentVersion } from "@/commons/interfaces/IDocument";
+import { ICompletedDocument } from "@/commons/interfaces/document/ICompletedDocument";
+
+import FieldsDefaultProps from "@/commons/constants/fields/default.configuration";
+
 import api from "../services/api";
 
 interface IDocumentContext {
@@ -15,7 +19,9 @@ interface IDocumentContext {
   setSelectedField: React.Dispatch<React.SetStateAction<IField | undefined>>,
   document: IDocument | undefined,
   setDocument: React.Dispatch<React.SetStateAction<IDocument | undefined>>,
-  documentData: IDocument | undefined,
+  documentData: ICompletedDocument | undefined,
+  documentLastVersionData: IDocument | undefined,
+  setDocumentLastVersionData: React.Dispatch<React.SetStateAction<IDocument | undefined>>,
   currentVersion: IDocumentVersion | undefined,
   setDocumentData: React.Dispatch<React.SetStateAction<any>>,
   targetVersion: number | string | undefined,
@@ -45,6 +51,7 @@ interface IDocumentContext {
   deleteVersion: () => void,
   scrollPosition: number,
   setScrollPosition: React.Dispatch<React.SetStateAction<number>>,
+  createDocument: () => void,
 }
 
 interface IFieldPosition {
@@ -70,12 +77,15 @@ export const DocumentProvider: FC = ({ children }) => {
 
   const [documents, setDocuments] = useState<IDocument[]>([]);
   const [document, setDocument] = useState<IDocument>();
-  const [documentData, setDocumentData] = useState<any>();
+  const [documentLastVersionData, setDocumentLastVersionData] = useState<IDocument>();
   const [targetVersion, setTargetVersion] = useState<number | string>();
 
   const [currentVersion, setCurrentVersion] = useState<IDocumentVersion>();
   const [fields, setFields] = useState<IField[]>([]);
   const [selectedField, setSelectedField] = useState<IField>();
+
+  // States to fill document
+  const [documentData, setDocumentData] = useState<ICompletedDocument>();
 
   useEffect(() => {
     fillDocumentFields();
@@ -102,7 +112,7 @@ export const DocumentProvider: FC = ({ children }) => {
 
     if (document[0]) {
       setDocument(document[0]);
-      setDocumentData(document[0]);
+      setDocumentLastVersionData(document[0]);
 
       if (version) {
         setTargetVersion(version);
@@ -115,10 +125,10 @@ export const DocumentProvider: FC = ({ children }) => {
   };
 
   const handleDocumentData = async (id: number | string) => {
-    const { data: document }: any = await api.get(`/completed_documents?id=${id}`);
+    const { data: document }: { data: ICompletedDocument[] } = await api.get(`/completed_documents?id=${id}`);
 
-    if (document) {
-      setDocumentData(document);
+    if (document.length) {
+      setDocumentData(document[0]);
     }
   };
 
@@ -139,8 +149,6 @@ export const DocumentProvider: FC = ({ children }) => {
 
           data.versions[index] = currentVersion;
           data.updated_at = new Date;
-
-          debugger;
 
           const { data: documentSaved }: { data: IDocument } = await api.put(`/documents/${document._id}`, data);
           console.log(documentSaved);
@@ -247,13 +255,12 @@ export const DocumentProvider: FC = ({ children }) => {
   };
 
   const publishDocument = async () => {
-    debugger;
     if (document && targetVersion) {
 
       const { data: [documentData] }: { data: IDocument[] } = await api.get(`/documents?id=${document._id}`);
 
       documentData.version = parseInt(`${targetVersion}`);
-      
+
       let versionKey = documentData.versions.findIndex(item => item.number === targetVersion);
 
       if (versionKey > -1) {
@@ -458,6 +465,26 @@ export const DocumentProvider: FC = ({ children }) => {
     }
   }
 
+  // Document Fill
+  const createDocument = async () => {
+    if (!document) throw { message: 'DOCUMENT_NOT_FOUND' };
+
+    const { _id, version } = document;
+
+    const { data: documentCreated } : { data: ICompletedDocument } = await api.post('/completed_documents', {
+      document_id: _id,
+      system_id: 1,
+      company_id: 1,
+      version,
+      fields: [],
+      status: "filling",
+      created_by: 1,
+      created_at: new Date(),
+    });
+    
+    setDocumentData(documentCreated);
+  };
+
   return (
     <DocumentContext.Provider
       value={{
@@ -476,6 +503,8 @@ export const DocumentProvider: FC = ({ children }) => {
         handleDocumentData,
         documentData,
         setDocumentData,
+        documentLastVersionData,
+        setDocumentLastVersionData,
         updateDocumentName,
         toggleActiveDocument,
         publishDocument,
@@ -496,7 +525,8 @@ export const DocumentProvider: FC = ({ children }) => {
         handleBuildingVersion,
         deleteVersion,
         scrollPosition,
-        setScrollPosition
+        setScrollPosition,
+        createDocument
       }}
     >
       {children}

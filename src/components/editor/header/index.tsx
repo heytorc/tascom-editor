@@ -12,7 +12,7 @@ import {
   ListItemText,
   ListItemIcon,
 } from '@mui/material';
-import { ChevronLeftOutlined, VisibilityOutlined, SendOutlined, MoreVertOutlined, DeleteOutline } from '@mui/icons-material';
+import { ChevronLeftOutlined, VisibilityOutlined, SendOutlined, MoreVertOutlined, DeleteOutline, Edit as EditIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
 import { useDocument } from '@/commons/contexts/document.context';
@@ -27,6 +27,7 @@ export default function EditorHeader() {
   const {
     document,
     documentData,
+    documentLastVersionData,
     saveDocument,
     publishDocument,
     currentVersion,
@@ -51,6 +52,11 @@ export default function EditorHeader() {
   const previewDocument = () => {
     handleClose();
     window.open(`/app/document/${document?._id}/preview`);
+  };
+
+  const createDocument = () => {
+    handleClose();
+    window.open(`/app/document/${document?._id}/create`);
   };
 
   const handlePublishDocument = () => {
@@ -85,14 +91,13 @@ export default function EditorHeader() {
   };
 
   const handleDisableSaveButton = (): boolean => {
-    const compareData = JSON.stringify(documentData) === JSON.stringify(document);
+    const compareData = JSON.stringify(documentLastVersionData) === JSON.stringify(document);
     let compareFields = true;
 
-    if (documentData) {
-      let actualVersion = documentData.versions.find(item => item.number === documentData.version);
-      if (actualVersion) {
-        compareFields = JSON.stringify(actualVersion.fields) === JSON.stringify(fields);
-      }
+    let actualVersion = documentLastVersionData?.versions.find(item => item.number === document?.version);
+
+    if (actualVersion) {
+      compareFields = JSON.stringify(actualVersion.fields) === JSON.stringify(fields);
     }
 
     return (compareData && compareFields);
@@ -158,13 +163,14 @@ export default function EditorHeader() {
                   open={open}
                   onClose={handleClose}
                 >
-                  <MenuItem
-                    onClick={previewDocument}
-                    href={`/app/document/${document?._id}/preview`}
-                    target="_blank"
-                  >
+                  <MenuItem onClick={previewDocument}>
                     <ListItemIcon><VisibilityOutlined /></ListItemIcon>
                     <ListItemText>Pré-Visualizar</ListItemText>
+                  </MenuItem>
+                  <Divider />
+                  <MenuItem onClick={createDocument}>
+                    <ListItemIcon><EditIcon /></ListItemIcon>
+                    <ListItemText>Preencher</ListItemText>
                   </MenuItem>
                   <Divider />
                   <MenuItem

@@ -37,7 +37,9 @@ function App() {
                   <Route path="build" element={<BuildDocument />}>
                     <Route path=":record_id" element={<BuildDocument />} />
                   </Route>
-                  <Route path=":id/create/:record_id" element={<CreateDocument />} />
+                  <Route path=":id/create" element={<CreateDocument />}>
+                    <Route path=":record_id" element={<CreateDocument />} />
+                  </Route>
                   <Route path=":id/preview" element={<PreviewDocument />}>
                     <Route path=":record_id" element={<PreviewDocument />} />
                   </Route>
