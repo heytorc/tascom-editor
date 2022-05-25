@@ -163,17 +163,15 @@ export default function ElementProperties() {
 
 
                   {/* Field Placeholder */}
-                  {selectedField?.placeholder && (
-                    <Stack paddingY={1} mb={1}>
-                      <TextField
-                        label="Placeholder"
-                        onChange={(element) => updateFieldPlaceholder(element.currentTarget.value)}
-                        name={`${selectedField?.label}-placeholder`}
-                        value={selectedField?.placeholder}
-                        size="small"
-                      />
-                    </Stack>
-                  )}
+                  <Stack paddingY={1} mb={1}>
+                    <TextField
+                      label="Placeholder"
+                      onChange={(element) => updateFieldPlaceholder(element.currentTarget.value)}
+                      name={`${selectedField?.label}-placeholder`}
+                      value={selectedField?.placeholder}
+                      size="small"
+                    />
+                  </Stack>
 
                   {/* Field Size */}
                   <Stack paddingY={1} mb={1}>
@@ -374,7 +372,7 @@ export default function ElementProperties() {
                     bgcolor={(theme) => version.number === currentVersion?.number ? theme.palette.secondary.light : ''}
                     mb={2}
                     borderRadius={1}
-                    >
+                  >
                     <ListItem disablePadding>
                       <ListItemButton onClick={() => handleOpenVersion(version.number)}>
                         <Stack
