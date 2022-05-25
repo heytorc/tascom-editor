@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   Autocomplete,
@@ -15,13 +15,15 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle
+  DialogTitle,
+  Divider
 } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
-import { Check as CheckIcon } from '@mui/icons-material';
+import { Info as InfoIcon } from '@mui/icons-material';
 import { DatePicker, LocalizationProvider } from '@mui/lab';
 import DateAdapter from '@mui/lab/AdapterDayjs';
 import { Rnd } from "react-rnd";
+import { debounce } from "lodash";
 
 import IField from "@/commons/interfaces/IField";
 
@@ -34,6 +36,8 @@ import {
   EditorBuildRadio,
   EditorBuildInputText
 } from '@/commons/styles/editor';
+import dayjs from "dayjs";
+import { ICompletedDocumentField } from "@/commons/interfaces/document/ICompletedDocument";
 
 interface IPreviewDocumentParams {
   id: string | undefined;
@@ -45,9 +49,21 @@ const CreateDocument = () => {
   const theme = useTheme();
 
   const { id, record_id } = useParams();
-  const { document, documentData, findDocument, fields, handleDocumentData, createDocument } = useDocument();
+  const {
+    document,
+    documentData,
+    findDocument,
+    fields,
+    handleDocumentData,
+    createDocument,
+    saveDocumentFill,
+  } = useDocument();
+
+  const [documentCurrentData, setDocumentCurrentData] = useState(documentData);
 
   const [optionsIsOpen, setOptionsIsOpen] = useState<boolean>(false);
+  const [finishDialogIsOpen, setFinishDialogIsOpen] = useState<boolean>(false);
+  const [quitDialogIsOpen, setQuitDialogIsOpen] = useState<boolean>(false);
 
   const transitionDuration = {
     enter: theme.transitions.duration.enteringScreen,
@@ -55,8 +71,7 @@ const CreateDocument = () => {
   };
 
   useEffect(() => {
-    if (id)
-      findDocument(id);
+    if (id) findDocument(id);
   }, []);
 
   useEffect(() => {
@@ -68,13 +83,40 @@ const CreateDocument = () => {
   }, [document]);
 
   useEffect(() => {
-    if (documentData?.id)
+    if (documentData?.id && !record_id) {
       navigate(`/app/document/${documentData.document_id}/create/${documentData.id}`);
+    }
+    setDocumentCurrentData(documentData);
   }, [documentData]);
+
+  const handleFieldValue = useCallback((id: string) => (
+    documentCurrentData?.fields.find(item => item.field_id === id)?.value
+  ), [documentCurrentData]);
+
+  const handleFieldChangeValue = useCallback(({ field_id, value }: ICompletedDocumentField) => {
+    const documentCurrentDataCopy: any = { ...documentCurrentData };
+
+    const fieldIndex = documentCurrentDataCopy.fields?.findIndex((item: any) => item.field_id === field_id) ?? -1;
+
+    if (documentCurrentDataCopy?.fields) {
+      if (fieldIndex > -1) {
+        documentCurrentDataCopy.fields[fieldIndex].value = value;
+      } else {
+        documentCurrentDataCopy.fields.push({ field_id, value })
+      }
+
+      setDocumentCurrentData(documentCurrentDataCopy);
+      
+      if (record_id) {
+        saveDocumentFill(record_id, undefined, documentCurrentDataCopy);
+      }
+    }
+  }, [documentCurrentData]);
+
+  const debounceFieldChangeValue = debounce(handleFieldChangeValue, 500);
 
   const handleBuildField = (field: IField, index: number) => {
     let fieldComponent = <></>;
-    let value;
 
     let styles: React.CSSProperties = {
       width: field.size.width,
@@ -86,13 +128,11 @@ const CreateDocument = () => {
       padding: 5,
     };
 
-    if (documentData) {
-      value = documentData.fields.find(item => item.field_id === field._id)?.value;
-    }
-
     const label = (
       <EditorLabel dangerouslySetInnerHTML={{ __html: field.label }} />
     );
+
+    const value = handleFieldValue(field._id);
 
     switch (field.type) {
       case 'text':
@@ -103,7 +143,8 @@ const CreateDocument = () => {
               size="small"
               name={`${field.label}-text`}
               placeholder={field.placeholder}
-              style={{ cursor: 'move' }}
+              onChange={(element) => debounceFieldChangeValue({ field_id: field._id, value: element.target.value })}
+              value={value}
               fullWidth
             />
           </Stack>
@@ -116,9 +157,9 @@ const CreateDocument = () => {
             {label}
             <LocalizationProvider dateAdapter={DateAdapter}>
               <DatePicker
-                onChange={(date: unknown, keyboardInputValue?: string) => { }}
+                onChange={(date: Date | null, keyboardInputValue?: string) => { handleFieldChangeValue({ field_id: field._id, value: dayjs(date).toISOString() }) }}
                 renderInput={(params) => <TextField size="small" {...params} />}
-                value={undefined}
+                value={`${value}`}
               />
             </LocalizationProvider>
           </Stack>
@@ -133,6 +174,7 @@ const CreateDocument = () => {
               name={`${field.label}-number`}
               placeholder={field.placeholder}
               style={{ width: field.size.width, cursor: "move" }}
+              onChange={(element) => debounceFieldChangeValue({ field_id: field._id, value: element.target.value })}
               value={value}
               disabled
             />
@@ -148,6 +190,7 @@ const CreateDocument = () => {
               size="small"
               name={`${field.label}-textarea`}
               placeholder={field.placeholder}
+              onChange={(element) => debounceFieldChangeValue({ field_id: field._id, value: element.target.value })}
               value={value}
               rows={5}
               fullWidth
@@ -161,7 +204,13 @@ const CreateDocument = () => {
         fieldComponent = (
           <FormGroup>
             <FormControlLabel
-              control={<EditorBuildSwitch color="secondary" />}
+              control={(
+                <EditorBuildSwitch
+                  color="secondary"
+                  onChange={(element, checked) => handleFieldChangeValue({ field_id: field._id, value: checked })}
+                  checked={!!value}
+                />
+              )}
               label={field.label}
             />
           </FormGroup>
@@ -172,7 +221,13 @@ const CreateDocument = () => {
         fieldComponent = (
           <FormGroup>
             <FormControlLabel
-              control={<EditorBuildCheckbox color="secondary" />}
+              control={(
+                <EditorBuildCheckbox
+                  color="secondary"
+                  onChange={(element, checked) => handleFieldChangeValue({ field_id: field._id, value: checked })}
+                  checked={!!value}
+                />
+              )}
               label={field.label}
             />
           </FormGroup>
@@ -187,12 +242,18 @@ const CreateDocument = () => {
               aria-labelledby="demo-radio-buttons-group-label"
               name={field.tag}
             >
-              {field.options?.map(({ label, value }, index) => (
+              {field.options?.map(({ label, value: fieldValue }, index) => (
                 <FormControlLabel
                   key={`field_${field._id}_radio_option_${index}`}
-                  control={<EditorBuildRadio color="secondary" />}
+                  control={(
+                    <EditorBuildRadio
+                      color="secondary"
+                      onChange={(element, checked) => handleFieldChangeValue({ field_id: field._id, value: fieldValue })}
+                    />
+                  )}
                   label={label}
-                  value={value}
+                  checked={fieldValue === value}
+                  value={fieldValue}
                 />
               ))}
             </RadioGroup>
@@ -206,6 +267,9 @@ const CreateDocument = () => {
             options={field.options || []}
             renderInput={(params) => <EditorBuildInputText {...params} name={field.tag} label={field.label} />}
             size="small"
+            onChange={(event, fieldOption) => {
+              if (fieldOption?.value) debounceFieldChangeValue({ field_id: field._id, value: fieldOption?.value })
+            }}
             disablePortal
             fullWidth
           />
@@ -240,6 +304,16 @@ const CreateDocument = () => {
 
   const toggleOptionDialog = () => setOptionsIsOpen(!optionsIsOpen);
 
+  const toggleFinishDialog = () => setFinishDialogIsOpen(!finishDialogIsOpen);
+
+  const toggleQuitDialog = () => setQuitDialogIsOpen(!quitDialogIsOpen);
+
+  const handleSaveDocument = () => { };
+
+  const handleFinishDocument = () => { };
+
+  const handleQuitDocument = () => { };
+
   return (
     <>
       <Stack display={'flex'} flex={1} alignItems={'center'} style={{ background: '#fff' }}>
@@ -251,25 +325,27 @@ const CreateDocument = () => {
             position: 'relative',
           }}
         >
-          {fields.map((field: any, index: number) => handleBuildField(field, index))}
-        </Stack>
-
-        <Stack style={{ position: 'fixed', right: 30, bottom: 30 }}>
-          <Zoom
-            in
-            timeout={transitionDuration}
-            style={{
-              transitionDelay: `${transitionDuration.exit}ms`,
-            }}
-            unmountOnExit
-          >
-            <Fab color="success" aria-label="add" onClick={toggleOptionDialog}>
-              <CheckIcon />
-            </Fab>
-          </Zoom>
+          {fields?.map((field, index: number) => handleBuildField(field, index))}
         </Stack>
       </Stack>
 
+      {/* FAB Button */}
+      <Stack style={{ position: 'fixed', right: 30, bottom: 30 }}>
+        <Zoom
+          in
+          timeout={transitionDuration}
+          style={{
+            transitionDelay: `${transitionDuration.exit}ms`,
+          }}
+          unmountOnExit
+        >
+          <Fab color="secondary" aria-label="more_options" onClick={toggleOptionDialog}>
+            <InfoIcon />
+          </Fab>
+        </Zoom>
+      </Stack>
+
+      {/* Options Dialog */}
       <Dialog
         open={optionsIsOpen}
         onClose={toggleOptionDialog}
@@ -279,16 +355,66 @@ const CreateDocument = () => {
         <DialogTitle id="alert-dialog-title">
           Opções
         </DialogTitle>
+        <Divider />
         <DialogContent>
           <Stack gap={3}>
             <Button variant="contained" color="secondary">Salvar</Button>
-            <Button variant="contained">Finalizar</Button>
-            <Button variant="outlined" color="error">Desistir</Button>
+            <Button variant="contained" onClick={toggleFinishDialog} color="success">Finalizar</Button>
+            <Button variant="outlined" onClick={toggleQuitDialog} color="error">Desistir</Button>
           </Stack>
         </DialogContent>
         <DialogActions>
           {/* <Button onClick={handleCancel} autoFocus>{cancelButtonLabel}</Button> */}
           {/* <Button onClick={handleConfirm}>{confirmButtonLabel}</Button> */}
+        </DialogActions>
+      </Dialog>
+
+      {/* Finish Dialog */}
+      <Dialog
+        open={finishDialogIsOpen}
+        onClose={toggleFinishDialog}
+        aria-labelledby="finish-dialog-title"
+        aria-describedby="finish-dialog-description"
+      >
+        <DialogTitle id="finish-dialog-title">
+          Finalizar Documento
+        </DialogTitle>
+        <Divider />
+        <DialogContent>
+          <DialogContentText id="finish-dialog-description">
+            Deseja finalizar este documento?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => { }}>Não</Button>
+          <Button onClick={() => { }} autoFocus>Sim</Button>
+        </DialogActions>
+      </Dialog>
+
+
+      {/* Quit Dialog */}
+      <Dialog
+        open={quitDialogIsOpen}
+        onClose={toggleQuitDialog}
+        aria-labelledby="quit-dialog-title"
+        aria-describedby="quit-dialog-description"
+      >
+        <DialogTitle id="quit-dialog-title">
+          Desistir do Documento
+        </DialogTitle>
+        <Divider />
+        <DialogContent>
+          <DialogContentText id="quit-dialog-description">
+            Deseja desistir do preenchimento deste documento?
+          </DialogContentText>
+
+          <DialogContentText color="error" id="quit-dialog-alert">
+            Esta operação não poderá ser desfeita!
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => { }}>Não</Button>
+          <Button onClick={() => { }} autoFocus>Sim</Button>
         </DialogActions>
       </Dialog>
     </>

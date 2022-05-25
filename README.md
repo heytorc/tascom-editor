@@ -473,9 +473,9 @@ Armazena os dados preenchidos nos documentos.
     - ✅ Exibir para preenchimento o documento da versão atual (com status de 'published')
     - ✅ Adaptar preenchimento do documento baseado na versão atual
     - ⬜ Adaptação do layout para tablets
-- ⬜ Impressão do documento
-- ⬜ Tela integrada para preenchimento do documento por sistemas externos
-- ⬜ Validações dos campos do documento
+    - ⬜ Impressão do documento
+    - ⬜ Tela integrada para preenchimento do documento por sistemas externos
+    - ⬜ Validações dos campos do documento
 - ⬜ Incluir debounce nos campos de pesquisa
 - ⬜ Incluir loading quando o backend estiver funcionando
 - ⬜ Incluir componentes de feedback (toasts e messages)

@@ -6,7 +6,7 @@ import { FieldType, FieldOrientationType } from "@/commons/types/field.types";
 
 import IPage from "@/commons/interfaces/IPage";
 import IDocument, { IDocumentVersion } from "@/commons/interfaces/IDocument";
-import { ICompletedDocument } from "@/commons/interfaces/document/ICompletedDocument";
+import { ICompletedDocument, ICompletedDocumentField } from "@/commons/interfaces/document/ICompletedDocument";
 
 import FieldsDefaultProps from "@/commons/constants/fields/default.configuration";
 
@@ -52,6 +52,7 @@ interface IDocumentContext {
   scrollPosition: number,
   setScrollPosition: React.Dispatch<React.SetStateAction<number>>,
   createDocument: () => void,
+  saveDocumentFill: (id: string, field?: ICompletedDocumentField, data?: ICompletedDocument) => void,
 }
 
 interface IFieldPosition {
@@ -125,10 +126,11 @@ export const DocumentProvider: FC = ({ children }) => {
   };
 
   const handleDocumentData = async (id: number | string) => {
-    const { data: document }: { data: ICompletedDocument[] } = await api.get(`/completed_documents?id=${id}`);
+    const { data: [document] }: { data: ICompletedDocument[] } = await api.get(`/completed_documents?id=${id}`);
 
-    if (document.length) {
-      setDocumentData(document[0]);
+    if (document) {
+      setTargetVersion(document.version);
+      setDocumentData(document);
     }
   };
 
@@ -471,7 +473,7 @@ export const DocumentProvider: FC = ({ children }) => {
 
     const { _id, version } = document;
 
-    const { data: documentCreated } : { data: ICompletedDocument } = await api.post('/completed_documents', {
+    const { data: documentCreated }: { data: ICompletedDocument } = await api.post('/completed_documents', {
       document_id: _id,
       system_id: 1,
       company_id: 1,
@@ -481,8 +483,37 @@ export const DocumentProvider: FC = ({ children }) => {
       created_by: 1,
       created_at: new Date(),
     });
-    
+
     setDocumentData(documentCreated);
+  };
+
+  const saveDocumentFill = async (id: string, field?: ICompletedDocumentField, data?: ICompletedDocument) => {
+    let documentDataCopy = { ...documentData };
+
+    if (field) {
+      documentDataCopy.updated_at = new Date();
+
+      const fieldIndex = documentDataCopy.fields?.findIndex(item => item.field_id === field.field_id) ?? -1;
+
+      if (fieldIndex === -1) {
+        documentDataCopy.fields?.push(field);
+      } else if (documentDataCopy.fields) {
+        documentDataCopy.fields[fieldIndex].value = field.value;
+      }
+    } else if (data) {
+      documentDataCopy = {
+        ...documentDataCopy,
+        ...data,
+        updated_at: new Date()
+      }
+    }
+
+    // Se houver alterações entre os objetos de documentData (dados atuais no banco de dados) e a sua cópia
+    // salva as modificações no banco de dados
+    if (JSON.stringify(documentData) !== JSON.stringify(documentDataCopy)) {
+      const { data: newDocumentData } = await api.put(`/completed_documents/${id}`, documentDataCopy);
+      // setDocumentData(newDocumentData);
+    }
   };
 
   return (
@@ -526,7 +557,8 @@ export const DocumentProvider: FC = ({ children }) => {
         deleteVersion,
         scrollPosition,
         setScrollPosition,
-        createDocument
+        createDocument,
+        saveDocumentFill
       }}
     >
       {children}
