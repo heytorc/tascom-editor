@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import api from "@/commons/services/api";
 
 import IUserLoginResponse from '@/commons/interfaces/user/IUserLoginResponse';
+import useLocalStorage from "@/commons/hooks/useLocalStorage";
 
 interface IUser {
   id?: string;
@@ -40,7 +41,9 @@ export const AuthContext = createContext({} as IAuthContext);
 export const AuthProvider: FC = ({ children }) => {
   const navigate = useNavigate();
 
-  const [cookie, setCookie, removeCookie] = useCookies(['app.tascomeditor.token'])
+  const [userStoraged, setUserStoraged] = useLocalStorage<string>("user", "");
+
+  const [cookie, setCookie, removeCookie] = useCookies(['app.tascomeditor.token', 'app.tascomeditor.user'])
 
   const [user, setUser] = useState<IUser>({});
   const [error, setError] = useState({ message: null });
@@ -58,6 +61,8 @@ export const AuthProvider: FC = ({ children }) => {
         maxAge: 60 * 60 * 1, // 1 hora
         path: '/app',
       });
+
+      setUserStoraged(JSON.stringify({ id: userAuthenticaded.id }));
   
       setUser(userAuthenticaded);
   
@@ -70,6 +75,7 @@ export const AuthProvider: FC = ({ children }) => {
 
   const logOff = () => {
     removeCookie('app.tascomeditor.token');
+    setUserStoraged("");
 
     navigate('/');
   };
@@ -79,7 +85,7 @@ export const AuthProvider: FC = ({ children }) => {
       user,
       error,
       signIn,
-      logOff,
+      logOff
     }}>
       {children}
     </AuthContext.Provider>

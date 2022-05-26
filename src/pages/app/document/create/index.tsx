@@ -308,8 +308,6 @@ const CreateDocument = () => {
 
   const toggleQuitDialog = () => setQuitDialogIsOpen(!quitDialogIsOpen);
 
-  const handleSaveDocument = () => { };
-
   const handleFinishDocument = () => { };
 
   const handleQuitDocument = () => { };

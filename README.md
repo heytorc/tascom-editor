@@ -472,6 +472,7 @@ Armazena os dados preenchidos nos documentos.
     - ⬜ Cancelar
     - ✅ Exibir para preenchimento o documento da versão atual (com status de 'published')
     - ✅ Adaptar preenchimento do documento baseado na versão atual
+    - ✅ Adicionar verificação de documento em preenchimento e não permitir criar um novo até que documento em uso seja concluído ou excluído
     - ⬜ Adaptação do layout para tablets
     - ⬜ Impressão do documento
     - ⬜ Tela integrada para preenchimento do documento por sistemas externos

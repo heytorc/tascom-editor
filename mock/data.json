@@ -4002,6 +4002,7 @@
       "username": "admin",
       "password": "admin",
       "system_id": 1,
+      "company_id": 1,
       "token": "test",
       "active": true
     }

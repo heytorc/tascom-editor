@@ -1,6 +1,8 @@
 import React, { createContext, FC, useCallback, useContext, useEffect, useState } from "react";
 import { v1 as uuidv1 } from 'uuid';
 
+import useLocalStorage from "@/commons/hooks/useLocalStorage";
+
 import IField, { IFieldOptions } from "@/commons/interfaces/IField";
 import { FieldType, FieldOrientationType } from "@/commons/types/field.types";
 
@@ -10,7 +12,7 @@ import { ICompletedDocument, ICompletedDocumentField } from "@/commons/interface
 
 import FieldsDefaultProps from "@/commons/constants/fields/default.configuration";
 
-import api from "../services/api";
+import api from "@/commons/services/api";
 
 interface IDocumentContext {
   fields: IField[],
@@ -73,6 +75,8 @@ interface ICurrentDocument {
 export const DocumentContext = createContext({} as IDocumentContext);
 
 export const DocumentProvider: FC = ({ children }) => {
+  const [userStoraged, setUserStoraged] = useLocalStorage<string>("user", "");
+
   const [pages, setPages] = useState<IPage[]>();
   const [scrollPosition, setScrollPosition] = useState<number>(0);
 
@@ -472,6 +476,15 @@ export const DocumentProvider: FC = ({ children }) => {
     if (!document) throw { message: 'DOCUMENT_NOT_FOUND' };
 
     const { _id, version } = document;
+
+    const { id: userId } = JSON.parse(userStoraged);
+
+    const { data: [fillingDocument] } = await api.get(`/completed_documents?document_id=${_id}&status=filling&created_by=${userId}&company_id=1&_sort=id&_order=desc`);
+
+    if (fillingDocument) {
+      setDocumentData(fillingDocument);
+      return;
+    }
 
     const { data: documentCreated }: { data: ICompletedDocument } = await api.post('/completed_documents', {
       document_id: _id,
