@@ -43,6 +43,7 @@ function App() {
                   <Route path=":id/preview" element={<PreviewDocument />}>
                     <Route path=":record_id" element={<PreviewDocument />} />
                   </Route>
+                  <Route path=":id/print/:record_id" element={<PreviewDocument />} />
                 </Route>
               </Route>
             </Routes>

@@ -3895,50 +3895,22 @@
   ],
   "completed_documents": [
     {
-      "_id": 1,
-      "id": 1,
       "document_id": 1,
       "system_id": 1,
       "company_id": 1,
-      "version": 1,
+      "version": 7,
       "fields": [
         {
           "field_id": "99ce7ff0-b150-11ec-98b2-7592572f6de7",
-          "value": "Heytor"
-        },
-        {
-          "field_id": "0de74290-b15c-11ec-8a81-8f0dbfe5d20b",
-          "value": "1234567"
-        },
-        {
-          "field_id": "4b9cfd50-b15c-11ec-8a81-8f0dbfe5d20b",
-          "value": "2020-12-21"
-        },
-        {
-          "field_id": "aadb9e70-b15c-11ec-8a81-8f0dbfe5d20b",
-          "value": "A90 - Dengue"
-        },
-        {
-          "field_id": "18582460-b15c-11ec-8a81-8f0dbfe5d20b",
-          "value": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Facilis magni ipsum nostrum. Reiciendis odio harum quas perferendis architecto ipsum voluptatum unde nihil placeat voluptates impedit, ducimus nulla! Eaque, hic nisi?"
+          "value": "asdasdasd"
         }
       ],
       "status": "canceled",
       "created_by": 1,
-      "created_at": "2022-01-01T00:00:00-03:00",
-      "canceled_by": 1,
-      "canceled_at": "2022-01-01T00:00:00-03:00"
-    },
-    {
-      "document_id": 1,
-      "system_id": 1,
-      "company_id": 1,
-      "version": 7,
-      "fields": [],
-      "status": "filling",
-      "created_by": 1,
-      "created_at": "2022-05-27T12:38:25.393Z",
-      "id": 2
+      "created_at": "2022-05-31T03:40:55.497Z",
+      "id": 1,
+      "updated_at": "2022-05-31T03:41:08.999Z",
+      "update_by": 1
     },
     {
       "document_id": 1,
@@ -3947,15 +3919,42 @@
       "version": 7,
       "fields": [
         {
-          "field_id": "99ce7ff0-b150-11ec-98b2-7592572f6de7",
-          "value": "teste aaaaaaaa"
+          "field_id": "18582460-b15c-11ec-8a81-8f0dbfe5d20b",
+          "value": "asdasdasd"
         }
       ],
-      "status": "filling",
+      "status": "canceled",
       "created_by": 1,
-      "created_at": "2022-05-27T12:38:25.399Z",
+      "created_at": "2022-05-31T03:43:22.738Z",
+      "id": 2,
+      "updated_at": "2022-05-31T03:44:14.626Z",
+      "update_by": 1
+    },
+    {
+      "document_id": 1,
+      "system_id": 1,
+      "company_id": 1,
+      "version": 7,
+      "fields": [
+        {
+          "field_id": "5482cd80-bb7c-11ec-9550-95871a6fb583",
+          "value": true
+        },
+        {
+          "field_id": "ae67c210-bb86-11ec-a204-e1cd46e40a27",
+          "value": true
+        },
+        {
+          "field_id": "4cdb6e20-bb8b-11ec-aa51-c79594e9c0b3",
+          "value": "1"
+        }
+      ],
+      "status": "canceled",
+      "created_by": 1,
+      "created_at": "2022-05-31T03:44:24.347Z",
       "id": 3,
-      "updated_at": "2022-05-27T12:38:51.387Z"
+      "updated_at": "2022-05-31T03:44:40.300Z",
+      "update_by": 1
     }
   ],
   "users": [

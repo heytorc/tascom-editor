@@ -466,17 +466,17 @@ Armazena os dados preenchidos nos documentos.
     - ✅ Ao criar um campo, adiciona-lo em uma posição x e y que o usuário possa ver em tela
     - ✅ Comparar estados do documento que está sendo preenchido e o salvo no banco para verificar se existem alterações não salvas
   - ⬜ Preenchimento do Documento
-    - ⚙️ Tela para preenchimento do documento
-    - ⚙️ Salvar
-    - ⬜ Concluir
-    - ⬜ Cancelar
+    - ✅ Tela para preenchimento do documento
+    - ✅ Salvar
+    - ✅ Concluir
+    - ✅ Cancelar
     - ✅ Exibir para preenchimento o documento da versão atual (com status de 'published')
     - ✅ Adaptar preenchimento do documento baseado na versão atual
     - ✅ Adicionar verificação de documento em preenchimento e não permitir criar um novo até que documento em uso seja concluído ou excluído
     - ⬜ Adaptação do layout para tablets
-    - ⬜ Impressão do documento
+    - ⚙️ Impressão do documento
     - ⬜ Tela integrada para preenchimento do documento por sistemas externos
-    - ⬜ Validações dos campos do documento
+    - ⚙️ Validações dos campos do documento
 - ⬜ Incluir debounce nos campos de pesquisa
 - ⬜ Incluir loading quando o backend estiver funcionando
 - ⬜ Incluir componentes de feedback (toasts e messages)

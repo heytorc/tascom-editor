@@ -16,6 +16,8 @@ export interface ICompletedDocument {
   created_at: Date,
   updated_by: string,
   updated_at: Date,
-  canceled_by: string,
-  canceled_at: Date,
+  canceled_by?: string,
+  canceled_at?: Date,
+  finished_by?: string,
+  finished_at?: Date,
 }

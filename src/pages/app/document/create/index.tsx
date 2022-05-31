@@ -58,7 +58,8 @@ const CreateDocument = () => {
     createDocument,
     saveDocumentFill,
     finishDocument,
-    quitDocument
+    quitDocument,
+    cancelDocument
   } = useDocument();
 
   const [documentCurrentData, setDocumentCurrentData] = useState<ICompletedDocument | undefined>();
@@ -66,6 +67,7 @@ const CreateDocument = () => {
   const [optionsIsOpen, setOptionsIsOpen] = useState<boolean>(false);
   const [finishDialogIsOpen, setFinishDialogIsOpen] = useState<boolean>(false);
   const [quitDialogIsOpen, setQuitDialogIsOpen] = useState<boolean>(false);
+  const [cancelDialogIsOpen, setCancelDialogIsOpen] = useState<boolean>(false);
 
   const transitionDuration = {
     enter: theme.transitions.duration.enteringScreen,
@@ -80,7 +82,7 @@ const CreateDocument = () => {
   useEffect(() => {
     if (document?._id && !documentData?.id && record_id) {
       handleDocumentData(record_id);
-    } else if (document?._id) {
+    } else if (document?._id && !documentData?.id) {
       createDocument();
     }
   }, [document]);
@@ -96,28 +98,31 @@ const CreateDocument = () => {
     documentCurrentData?.fields.find(item => item.field_id === id)?.value
   ), [documentCurrentData]);
 
-  const handleFieldChangeValue = useCallback(() => {
-    if (documentData?.id) {
-      saveDocumentFill(documentData?.id, undefined, documentCurrentData);
+  const handleFieldChangeValue = (data: ICompletedDocument) => {
+    if (data?.id) {
+      saveDocumentFill(data?.id, undefined, data);
     }
-  }, [documentData, documentCurrentData]);
+  };
 
-  const debounceFieldChangeValue = useCallback(debounce(handleFieldChangeValue, 500), [documentData, documentCurrentData]);
+  const debounceFieldChangeValue = useCallback(debounce(data => handleFieldChangeValue(data), 500), []);
 
   const handleChange = ({ field_id, value }: ICompletedDocumentField) => {
-    const documentCurrentDataCopy: any = { ...documentCurrentData };
+    if (documentData) {
+      if (documentData.status !== 'filling') return;
 
-    const fieldIndex = documentCurrentDataCopy.fields?.findIndex((item: any) => item.field_id === field_id) ?? -1;
+      const documentCurrentDataCopy: ICompletedDocument = { ...documentData };
 
-    if (documentCurrentDataCopy?.fields) {
-      if (fieldIndex > -1) {
-        documentCurrentDataCopy.fields[fieldIndex].value = value;
-      } else {
-        documentCurrentDataCopy.fields.push({ field_id, value })
+      const fieldIndex = documentCurrentDataCopy.fields?.findIndex((item: any) => item.field_id === field_id) ?? -1;
+
+      if (documentCurrentDataCopy?.fields) {
+        if (fieldIndex > -1) {
+          documentCurrentDataCopy.fields[fieldIndex].value = value;
+        } else {
+          documentCurrentDataCopy.fields.push({ field_id, value })
+        }
+        setDocumentCurrentData(documentCurrentDataCopy);
+        debounceFieldChangeValue(documentCurrentDataCopy);
       }
-
-      setDocumentCurrentData(documentCurrentDataCopy);
-      debounceFieldChangeValue();
     }
   };
 
@@ -138,7 +143,9 @@ const CreateDocument = () => {
       <EditorLabel dangerouslySetInnerHTML={{ __html: field.label }} />
     );
 
-    const value = handleFieldValue(field._id);
+    const isDisabled = documentData?.status !== 'filling';
+
+    const value = handleFieldValue(field._id) ?? '';
 
     switch (field.type) {
       case 'text':
@@ -153,6 +160,7 @@ const CreateDocument = () => {
                 handleChange({ field_id: field._id, value: element.target.value })
               }}
               value={value}
+              disabled={isDisabled}
               fullWidth
             />
           </Stack>
@@ -168,6 +176,7 @@ const CreateDocument = () => {
                 onChange={(date: Date | null, keyboardInputValue?: string) => { handleChange({ field_id: field._id, value: dayjs(date).toISOString() }) }}
                 renderInput={(params) => <TextField size="small" {...params} />}
                 value={`${value}`}
+                disabled={isDisabled}
               />
             </LocalizationProvider>
           </Stack>
@@ -184,7 +193,7 @@ const CreateDocument = () => {
               style={{ width: field.size.width, cursor: "move" }}
               onChange={(element) => handleChange({ field_id: field._id, value: element.target.value })}
               value={value}
-              disabled
+              disabled={isDisabled}
             />
           </Stack>
         );
@@ -200,6 +209,7 @@ const CreateDocument = () => {
               placeholder={field.placeholder}
               onChange={(element) => handleChange({ field_id: field._id, value: element.target.value })}
               value={value}
+              disabled={isDisabled}
               rows={5}
               fullWidth
               multiline
@@ -217,6 +227,7 @@ const CreateDocument = () => {
                   color="secondary"
                   onChange={(element, checked) => handleChange({ field_id: field._id, value: checked })}
                   checked={!!value}
+                  disabled={isDisabled}
                 />
               )}
               label={field.label}
@@ -237,6 +248,7 @@ const CreateDocument = () => {
                 />
               )}
               label={field.label}
+              disabled={isDisabled}
             />
           </FormGroup>
         );
@@ -262,6 +274,7 @@ const CreateDocument = () => {
                   label={label}
                   checked={fieldValue === value}
                   value={fieldValue}
+                  disabled={isDisabled}
                 />
               ))}
             </RadioGroup>
@@ -278,6 +291,7 @@ const CreateDocument = () => {
             onChange={(event, fieldOption) => {
               if (fieldOption?.value) handleChange({ field_id: field._id, value: fieldOption?.value })
             }}
+            disabled={isDisabled}
             disablePortal
             fullWidth
           />
@@ -316,14 +330,30 @@ const CreateDocument = () => {
 
   const toggleQuitDialog = () => setQuitDialogIsOpen(!quitDialogIsOpen);
 
-  const handleFinishDocument = () => {
+  const toggleCancelDialog = () => setCancelDialogIsOpen(!cancelDialogIsOpen);
+
+  const handleFinishDocument = async () => {
+    toggleOptionDialog();
+    toggleFinishDialog();
     finishDocument();
   };
 
   const handleQuitDocument = async () => {
+    toggleOptionDialog();
+    toggleQuitDialog();
     quitDocument();
     navigate('/app');
   };
+
+  const handleCancelDocument = async () => {
+    toggleOptionDialog();
+    toggleCancelDialog();
+    cancelDocument();
+  };
+
+  const handlePrintDocument = useCallback(() => {
+    window.open(`/app/document/${documentData?.document_id}/print/${documentData?.id}`);
+  }, [documentData]);
 
   return (
     <>
@@ -369,11 +399,20 @@ const CreateDocument = () => {
         <Divider />
         <DialogContent>
           <Stack gap={3}>
-            <Button variant="contained" color="secondary">Salvar</Button>
-            <Button variant="contained" onClick={toggleFinishDialog} color="success">Finalizar</Button>
-            <Button variant="outlined" onClick={toggleQuitDialog} color="error">Desistir</Button>
             {documentData?.status === 'finished' && (
-              <Button variant="outlined" onClick={toggleQuitDialog} color="error">Cancelar</Button>
+              <>
+                <Button variant="contained" onClick={toggleQuitDialog} color="secondary">Imprimir</Button>
+                <Button variant="outlined" onClick={toggleCancelDialog} color="error">Cancelar</Button>
+              </>
+            )}
+            {documentData?.status === 'filling' && (
+              <>
+                <Button variant="contained" onClick={toggleFinishDialog} color="success">Finalizar</Button>
+                <Button variant="outlined" onClick={toggleQuitDialog} color="error">Desistir</Button>
+              </>
+            )}
+            {documentData?.status === 'canceled' && (
+              <Button variant="contained" onClick={handlePrintDocument} color="secondary">Imprimir</Button>
             )}
           </Stack>
         </DialogContent>
@@ -401,7 +440,6 @@ const CreateDocument = () => {
         </DialogActions>
       </Dialog>
 
-
       {/* Quit Dialog */}
       <Dialog
         open={quitDialogIsOpen}
@@ -425,6 +463,32 @@ const CreateDocument = () => {
         <DialogActions>
           <Button onClick={() => { }}>Não</Button>
           <Button onClick={handleQuitDocument} autoFocus>Sim</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Cencel Dialog */}
+      <Dialog
+        open={cancelDialogIsOpen}
+        onClose={toggleCancelDialog}
+        aria-labelledby="cancel-dialog-title"
+        aria-describedby="cancel-dialog-description"
+      >
+        <DialogTitle id="cancel-dialog-title">
+          Desistir do Documento
+        </DialogTitle>
+        <Divider />
+        <DialogContent>
+          <DialogContentText id="cancel-dialog-description">
+            Deseja cancelar este documento?
+          </DialogContentText>
+
+          <DialogContentText color="error" id="cancel-dialog-alert">
+            Esta operação não poderá ser desfeita!
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => { }}>Não</Button>
+          <Button onClick={handleCancelDocument} autoFocus>Sim</Button>
         </DialogActions>
       </Dialog>
     </>

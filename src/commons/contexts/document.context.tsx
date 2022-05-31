@@ -55,8 +55,9 @@ interface IDocumentContext {
   setScrollPosition: React.Dispatch<React.SetStateAction<number>>,
   createDocument: () => void,
   saveDocumentFill: (id: string, field?: ICompletedDocumentField, data?: ICompletedDocument) => void,
-  finishDocument: () => void
-  quitDocument: () => void
+  finishDocument: () => void,
+  quitDocument: () => void,
+  cancelDocument: () => void
 }
 
 interface IFieldPosition {
@@ -536,7 +537,23 @@ export const DocumentProvider: FC = ({ children }) => {
       ...documentData,
       status: "finished",
       updated_at: new Date(),
-      update_by: 1
+      update_by: 1,
+      finished_at: new Date(),
+      finished_by: 1,
+    });
+
+    setDocumentData(newDocumentData);
+  };
+
+  const cancelDocument = async () => {
+    debugger;
+    const { data: newDocumentData } = await api.put(`/completed_documents/${documentData?.id}`, {
+      ...documentData,
+      status: "canceled",
+      updated_at: new Date(),
+      update_by: 1,
+      canceled_at: new Date(),
+      canceled_by: 1,
     });
 
     setDocumentData(newDocumentData);
@@ -592,7 +609,8 @@ export const DocumentProvider: FC = ({ children }) => {
         createDocument,
         saveDocumentFill,
         finishDocument,
-        quitDocument
+        quitDocument,
+        cancelDocument
       }}
     >
       {children}
