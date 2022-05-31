@@ -37,7 +37,7 @@ import {
   EditorBuildInputText
 } from '@/commons/styles/editor';
 import dayjs from "dayjs";
-import { ICompletedDocumentField } from "@/commons/interfaces/document/ICompletedDocument";
+import { ICompletedDocument, ICompletedDocumentField } from "@/commons/interfaces/document/ICompletedDocument";
 
 interface IPreviewDocumentParams {
   id: string | undefined;
@@ -57,9 +57,11 @@ const CreateDocument = () => {
     handleDocumentData,
     createDocument,
     saveDocumentFill,
+    finishDocument,
+    quitDocument
   } = useDocument();
 
-  const [documentCurrentData, setDocumentCurrentData] = useState(documentData);
+  const [documentCurrentData, setDocumentCurrentData] = useState<ICompletedDocument | undefined>();
 
   const [optionsIsOpen, setOptionsIsOpen] = useState<boolean>(false);
   const [finishDialogIsOpen, setFinishDialogIsOpen] = useState<boolean>(false);
@@ -72,10 +74,11 @@ const CreateDocument = () => {
 
   useEffect(() => {
     if (id) findDocument(id);
+    if (record_id) handleDocumentData(record_id);
   }, []);
 
   useEffect(() => {
-    if (document?._id && record_id) {
+    if (document?._id && !documentData?.id && record_id) {
       handleDocumentData(record_id);
     } else if (document?._id) {
       createDocument();
@@ -83,17 +86,25 @@ const CreateDocument = () => {
   }, [document]);
 
   useEffect(() => {
+    setDocumentCurrentData(documentData);
     if (documentData?.id && !record_id) {
       navigate(`/app/document/${documentData.document_id}/create/${documentData.id}`);
     }
-    setDocumentCurrentData(documentData);
   }, [documentData]);
 
   const handleFieldValue = useCallback((id: string) => (
     documentCurrentData?.fields.find(item => item.field_id === id)?.value
   ), [documentCurrentData]);
 
-  const handleFieldChangeValue = useCallback(({ field_id, value }: ICompletedDocumentField) => {
+  const handleFieldChangeValue = useCallback(() => {
+    if (documentData?.id) {
+      saveDocumentFill(documentData?.id, undefined, documentCurrentData);
+    }
+  }, [documentData, documentCurrentData]);
+
+  const debounceFieldChangeValue = useCallback(debounce(handleFieldChangeValue, 500), [documentData, documentCurrentData]);
+
+  const handleChange = ({ field_id, value }: ICompletedDocumentField) => {
     const documentCurrentDataCopy: any = { ...documentCurrentData };
 
     const fieldIndex = documentCurrentDataCopy.fields?.findIndex((item: any) => item.field_id === field_id) ?? -1;
@@ -106,14 +117,9 @@ const CreateDocument = () => {
       }
 
       setDocumentCurrentData(documentCurrentDataCopy);
-      
-      if (record_id) {
-        saveDocumentFill(record_id, undefined, documentCurrentDataCopy);
-      }
+      debounceFieldChangeValue();
     }
-  }, [documentCurrentData]);
-
-  const debounceFieldChangeValue = debounce(handleFieldChangeValue, 500);
+  };
 
   const handleBuildField = (field: IField, index: number) => {
     let fieldComponent = <></>;
@@ -143,7 +149,9 @@ const CreateDocument = () => {
               size="small"
               name={`${field.label}-text`}
               placeholder={field.placeholder}
-              onChange={(element) => debounceFieldChangeValue({ field_id: field._id, value: element.target.value })}
+              onChange={(element) => {
+                handleChange({ field_id: field._id, value: element.target.value })
+              }}
               value={value}
               fullWidth
             />
@@ -157,7 +165,7 @@ const CreateDocument = () => {
             {label}
             <LocalizationProvider dateAdapter={DateAdapter}>
               <DatePicker
-                onChange={(date: Date | null, keyboardInputValue?: string) => { handleFieldChangeValue({ field_id: field._id, value: dayjs(date).toISOString() }) }}
+                onChange={(date: Date | null, keyboardInputValue?: string) => { handleChange({ field_id: field._id, value: dayjs(date).toISOString() }) }}
                 renderInput={(params) => <TextField size="small" {...params} />}
                 value={`${value}`}
               />
@@ -174,7 +182,7 @@ const CreateDocument = () => {
               name={`${field.label}-number`}
               placeholder={field.placeholder}
               style={{ width: field.size.width, cursor: "move" }}
-              onChange={(element) => debounceFieldChangeValue({ field_id: field._id, value: element.target.value })}
+              onChange={(element) => handleChange({ field_id: field._id, value: element.target.value })}
               value={value}
               disabled
             />
@@ -190,7 +198,7 @@ const CreateDocument = () => {
               size="small"
               name={`${field.label}-textarea`}
               placeholder={field.placeholder}
-              onChange={(element) => debounceFieldChangeValue({ field_id: field._id, value: element.target.value })}
+              onChange={(element) => handleChange({ field_id: field._id, value: element.target.value })}
               value={value}
               rows={5}
               fullWidth
@@ -207,7 +215,7 @@ const CreateDocument = () => {
               control={(
                 <EditorBuildSwitch
                   color="secondary"
-                  onChange={(element, checked) => handleFieldChangeValue({ field_id: field._id, value: checked })}
+                  onChange={(element, checked) => handleChange({ field_id: field._id, value: checked })}
                   checked={!!value}
                 />
               )}
@@ -224,7 +232,7 @@ const CreateDocument = () => {
               control={(
                 <EditorBuildCheckbox
                   color="secondary"
-                  onChange={(element, checked) => handleFieldChangeValue({ field_id: field._id, value: checked })}
+                  onChange={(element, checked) => handleChange({ field_id: field._id, value: checked })}
                   checked={!!value}
                 />
               )}
@@ -248,7 +256,7 @@ const CreateDocument = () => {
                   control={(
                     <EditorBuildRadio
                       color="secondary"
-                      onChange={(element, checked) => handleFieldChangeValue({ field_id: field._id, value: fieldValue })}
+                      onChange={(element, checked) => handleChange({ field_id: field._id, value: fieldValue })}
                     />
                   )}
                   label={label}
@@ -268,7 +276,7 @@ const CreateDocument = () => {
             renderInput={(params) => <EditorBuildInputText {...params} name={field.tag} label={field.label} />}
             size="small"
             onChange={(event, fieldOption) => {
-              if (fieldOption?.value) debounceFieldChangeValue({ field_id: field._id, value: fieldOption?.value })
+              if (fieldOption?.value) handleChange({ field_id: field._id, value: fieldOption?.value })
             }}
             disablePortal
             fullWidth
@@ -308,9 +316,14 @@ const CreateDocument = () => {
 
   const toggleQuitDialog = () => setQuitDialogIsOpen(!quitDialogIsOpen);
 
-  const handleFinishDocument = () => { };
+  const handleFinishDocument = () => {
+    finishDocument();
+  };
 
-  const handleQuitDocument = () => { };
+  const handleQuitDocument = async () => {
+    quitDocument();
+    navigate('/app');
+  };
 
   return (
     <>
@@ -359,12 +372,11 @@ const CreateDocument = () => {
             <Button variant="contained" color="secondary">Salvar</Button>
             <Button variant="contained" onClick={toggleFinishDialog} color="success">Finalizar</Button>
             <Button variant="outlined" onClick={toggleQuitDialog} color="error">Desistir</Button>
+            {documentData?.status === 'finished' && (
+              <Button variant="outlined" onClick={toggleQuitDialog} color="error">Cancelar</Button>
+            )}
           </Stack>
         </DialogContent>
-        <DialogActions>
-          {/* <Button onClick={handleCancel} autoFocus>{cancelButtonLabel}</Button> */}
-          {/* <Button onClick={handleConfirm}>{confirmButtonLabel}</Button> */}
-        </DialogActions>
       </Dialog>
 
       {/* Finish Dialog */}
@@ -385,7 +397,7 @@ const CreateDocument = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => { }}>Não</Button>
-          <Button onClick={() => { }} autoFocus>Sim</Button>
+          <Button onClick={handleFinishDocument} autoFocus>Sim</Button>
         </DialogActions>
       </Dialog>
 
@@ -412,7 +424,7 @@ const CreateDocument = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => { }}>Não</Button>
-          <Button onClick={() => { }} autoFocus>Sim</Button>
+          <Button onClick={handleQuitDocument} autoFocus>Sim</Button>
         </DialogActions>
       </Dialog>
     </>
