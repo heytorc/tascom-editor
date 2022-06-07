@@ -21,11 +21,11 @@
       "company_id": 2,
       "active": true,
       "created_at": "2022-01-01T00:00:00-03:00",
-      "updated_at": "2022-05-25T00:14:34.805Z",
-      "version": 7,
+      "updated_at": "2022-06-07T01:01:25.288Z",
+      "version": 8,
       "pages": 2,
       "size": {
-        "width": 800,
+        "width": 780,
         "height": 1500
       },
       "versions": [
@@ -3417,7 +3417,7 @@
                 "y": 0
               },
               "size": {
-                "width": 396,
+                "width": 376,
                 "height": 80
               },
               "styles": {
@@ -3435,11 +3435,11 @@
               "placeholder": "Texto",
               "type": "text",
               "position": {
-                "x": 411,
+                "x": 377,
                 "y": 0
               },
               "size": {
-                "width": 170,
+                "width": 186,
                 "height": 76
               },
               "styles": {
@@ -3458,10 +3458,10 @@
               "type": "textarea",
               "position": {
                 "x": 0,
-                "y": 90
+                "y": 83
               },
               "size": {
-                "width": 800,
+                "width": 776,
                 "height": 168
               },
               "styles": {
@@ -3479,10 +3479,10 @@
               "type": "label",
               "position": {
                 "x": 0,
-                "y": 279
+                "y": 258
               },
               "size": {
-                "width": 800,
+                "width": 770,
                 "height": 85
               },
               "styles": {
@@ -3499,7 +3499,7 @@
               "placeholder": "Data",
               "type": "date",
               "position": {
-                "x": 588,
+                "x": 568,
                 "y": 0
               },
               "size": {
@@ -3522,10 +3522,10 @@
               "type": "text",
               "position": {
                 "x": 0,
-                "y": 382
+                "y": 355
               },
               "size": {
-                "width": 800,
+                "width": 780,
                 "height": 80
               },
               "styles": {
@@ -3543,10 +3543,10 @@
               "type": "textarea",
               "position": {
                 "x": 0,
-                "y": 468
+                "y": 445
               },
               "size": {
-                "width": 797,
+                "width": 780,
                 "height": 173
               },
               "styles": {
@@ -3562,8 +3562,8 @@
               "label": "<ol><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li></ol>",
               "type": "label",
               "position": {
-                "x": 0,
-                "y": 678
+                "x": 3,
+                "y": 639
               },
               "size": {
                 "width": 102,
@@ -3604,11 +3604,11 @@
               "placeholder": "Texto",
               "type": "text",
               "position": {
-                "x": 284,
-                "y": 865
+                "x": 308,
+                "y": 858
               },
               "size": {
-                "width": 516,
+                "width": 472,
                 "height": 80
               },
               "styles": {
@@ -3644,8 +3644,8 @@
               "label": "<ol><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li></ol>",
               "type": "label",
               "position": {
-                "x": 108,
-                "y": 678
+                "x": 104,
+                "y": 644
               },
               "size": {
                 "width": 99,
@@ -3664,8 +3664,8 @@
               "label": "<ol><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li></ol>",
               "type": "label",
               "position": {
-                "x": 218,
-                "y": 677
+                "x": 200,
+                "y": 632
               },
               "size": {
                 "width": 102,
@@ -3684,8 +3684,8 @@
               "label": "<ol><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li><li>Teste</li></ol>",
               "type": "label",
               "position": {
-                "x": 322,
-                "y": 677
+                "x": 304,
+                "y": 637
               },
               "size": {
                 "width": 101,
@@ -3706,10 +3706,10 @@
               "type": "text",
               "position": {
                 "x": 434,
-                "y": 661
+                "y": 632
               },
               "size": {
-                "width": 366,
+                "width": 346,
                 "height": 80
               },
               "styles": {
@@ -3725,8 +3725,8 @@
               "label": "Pergunta?",
               "type": "yesOrNot",
               "position": {
-                "x": 438,
-                "y": 777
+                "x": 435,
+                "y": 716
               },
               "size": {
                 "width": 155,
@@ -3818,10 +3818,10 @@
               "tag": "select-tipo-alta",
               "position": {
                 "x": 0,
-                "y": 1192
+                "y": 1200
               },
               "size": {
-                "width": 800,
+                "width": 780,
                 "height": 52
               },
               "options": [
@@ -3886,9 +3886,9 @@
             }
           ],
           "number": 8,
-          "created_at": "2022-05-25T00:13:19.244Z",
-          "updated_at": "2022-05-25T00:14:34.805Z",
-          "status": "building"
+          "created_at": "2022-06-07T01:01:33.909Z",
+          "updated_at": "2022-06-07T01:01:33.909Z",
+          "status": "published"
         }
       ]
     }
@@ -3955,6 +3955,70 @@
       "id": 3,
       "updated_at": "2022-05-31T03:44:40.300Z",
       "update_by": 1
+    },
+    {
+      "document_id": 1,
+      "system_id": 1,
+      "company_id": 1,
+      "version": 8,
+      "fields": [
+        {
+          "field_id": "5482cd80-bb7c-11ec-9550-95871a6fb583",
+          "value": true
+        },
+        {
+          "field_id": "ae67c210-bb86-11ec-a204-e1cd46e40a27",
+          "value": true
+        },
+        {
+          "field_id": "b45bf560-bb86-11ec-a204-e1cd46e40a27",
+          "value": true
+        },
+        {
+          "field_id": "4cdb6e20-bb8b-11ec-aa51-c79594e9c0b3",
+          "value": "5"
+        },
+        {
+          "field_id": "2158fd70-bfec-11ec-bc9a-d3fe3170e5e0",
+          "value": true
+        },
+        {
+          "field_id": "6c521d40-dbbf-11ec-be0e-c9e3f6e4f92d",
+          "value": true
+        },
+        {
+          "field_id": "e51d83e0-bf6d-11ec-be87-6dee43b2c900",
+          "value": "3"
+        },
+        {
+          "field_id": "98710e20-b9e8-11ec-b91d-7d9371f2b701",
+          "value": "2022-06-23T01:14:50.000Z"
+        },
+        {
+          "field_id": "9b50ae70-b9e8-11ec-b91d-7d9371f2b701",
+          "value": "heytor cavalcanti de moura"
+        },
+        {
+          "field_id": "85d2e9b0-bb2c-11ec-901a-cd912624111d",
+          "value": "adasdasdsss"
+        },
+        {
+          "field_id": "aadb9e70-b15c-11ec-8a81-8f0dbfe5d20b",
+          "value": "a90 asdasd"
+        },
+        {
+          "field_id": "4b9cfd50-b15c-11ec-8a81-8f0dbfe5d20b",
+          "value": "2022-06-29T01:15:42.000Z"
+        }
+      ],
+      "status": "finished",
+      "created_by": 1,
+      "created_at": "2022-06-07T01:04:22.727Z",
+      "id": 4,
+      "updated_at": "2022-06-07T01:15:59.149Z",
+      "update_by": 1,
+      "finished_at": "2022-06-07T01:15:59.149Z",
+      "finished_by": 1
     }
   ],
   "users": [

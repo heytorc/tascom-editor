@@ -39,6 +39,8 @@ import {
 import dayjs from "dayjs";
 import { ICompletedDocument, ICompletedDocumentField } from "@/commons/interfaces/document/ICompletedDocument";
 
+import { DocumentContainer } from "./styles";
+
 interface IPreviewDocumentParams {
   id: string | undefined;
   record_id?: string | undefined;
@@ -357,17 +359,24 @@ const CreateDocument = () => {
 
   return (
     <>
-      <Stack display={'flex'} flex={1} alignItems={'center'} style={{ background: '#fff' }}>
-        <Stack
-          display={'flex'}
+      <Stack
+        display={'flex'}
+        flex={1}
+        alignItems={'center'}
+        style={{
+          background: '#fff',
+          width: '100%',
+          height: document?.size.height
+        }}
+      >
+        <DocumentContainer
           style={{
             width: document?.size.width,
             height: document?.size.height,
-            position: 'relative',
           }}
         >
           {fields?.map((field, index: number) => handleBuildField(field, index))}
-        </Stack>
+        </DocumentContainer>
       </Stack>
 
       {/* FAB Button */}

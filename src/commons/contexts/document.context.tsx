@@ -546,7 +546,6 @@ export const DocumentProvider: FC = ({ children }) => {
   };
 
   const cancelDocument = async () => {
-    debugger;
     const { data: newDocumentData } = await api.put(`/completed_documents/${documentData?.id}`, {
       ...documentData,
       status: "canceled",
