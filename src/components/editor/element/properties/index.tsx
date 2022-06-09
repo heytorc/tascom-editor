@@ -54,6 +54,7 @@ export default function ElementProperties() {
     updateFieldOptionData,
     updateDocumentName,
     toggleActiveDocument,
+    toggleRequiredField,
     setTargetVersion,
   } = useDocument();
 
@@ -290,6 +291,21 @@ export default function ElementProperties() {
                       </Stack>
                     </Stack>
                   )}
+                  
+                  {/* Field is Required */}
+                  <Stack>
+                    <FormGroup>
+                      <FormControlLabel
+                        control={(
+                          <EditorBuildSwitch
+                            checked={selectedField?.required}
+                            onChange={(element, checked) => toggleRequiredField(checked)}
+                          />
+                        )}
+                        label={`Obrigatório?`}
+                      />
+                    </FormGroup>
+                  </Stack>
 
                   <Stack display={'flex'} justifyContent={'flex-end'} paddingY={2}>
                     <Button

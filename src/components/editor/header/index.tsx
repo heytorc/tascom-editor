@@ -26,7 +26,6 @@ export default function EditorHeader() {
 
   const {
     document,
-    documentData,
     documentLastVersionData,
     saveDocument,
     publishDocument,
@@ -141,7 +140,7 @@ export default function EditorHeader() {
                   variant="contained"
                   color="secondary"
                   onClick={handleSaveDocument}
-                  disabled={handleDisableSaveButton()}
+                  // disabled={handleDisableSaveButton()}
                 >
                   Salvar
                 </Button>

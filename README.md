@@ -476,7 +476,7 @@ Armazena os dados preenchidos nos documentos.
     - ✅ Adaptação do layout para tablets
     - ⚙️ Impressão do documento
     - ⬜ Tela integrada para preenchimento do documento por sistemas externos
-    - ⚙️ Validações dos campos do documento
+    - ✅ Validações dos campos do documento
 - ⬜ Incluir debounce nos campos de pesquisa
 - ⬜ Incluir loading quando o backend estiver funcionando
 - ⬜ Incluir componentes de feedback (toasts e messages)

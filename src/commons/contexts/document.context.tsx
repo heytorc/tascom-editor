@@ -33,6 +33,7 @@ interface IDocumentContext {
   handleDocumentData: (id: number | string) => void,
   updateDocumentName: (name: string) => void,
   toggleActiveDocument: (isActived: boolean) => void,
+  toggleRequiredField: (isRequired: boolean) => void,
   publishDocument: () => void,
   createField: (type: FieldType) => void,
   deleteField: () => void,
@@ -211,6 +212,18 @@ export const DocumentProvider: FC = ({ children }) => {
       documentCopy.active = isActived;
 
       setDocument(documentCopy);
+    }
+  };
+
+  const toggleRequiredField = (isRequired: boolean) => {
+    if (selectedField) {
+      let fieldsCopy = [...fields];
+
+      const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
+      fieldsCopy[fieldKey].required = isRequired;
+
+      setSelectedField(fieldsCopy[fieldKey]);
+      setFields(fieldsCopy);
     }
   };
 
@@ -586,6 +599,7 @@ export const DocumentProvider: FC = ({ children }) => {
         setDocumentLastVersionData,
         updateDocumentName,
         toggleActiveDocument,
+        toggleRequiredField,
         publishDocument,
         createField,
         deleteField,

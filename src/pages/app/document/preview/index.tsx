@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { DatePicker, LocalizationProvider } from '@mui/lab';
 import DateAdapter from '@mui/lab/AdapterDayjs';
+import ptBrLocale from 'dayjs/locale/pt-br';
 import { Rnd } from "react-rnd";
 
 import { useDocument } from "@/commons/contexts/document.context";
@@ -89,7 +90,7 @@ const PreviewDocument = () => {
         fieldComponent = (
           <Stack style={{ ...styles }}>
             {label}
-            <LocalizationProvider dateAdapter={DateAdapter}>
+            <LocalizationProvider dateAdapter={DateAdapter} locale={ptBrLocale}>
               <DatePicker
                 onChange={(date: unknown, keyboardInputValue?: string) => { }}
                 renderInput={(params) => <TextField size="small" {...params} />}
