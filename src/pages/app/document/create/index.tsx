@@ -417,6 +417,11 @@ const CreateDocument = () => {
     cancelDocument();
   };
 
+  const handleCreateDocument = () => {
+    toggleOptionDialog();
+    window.location.href = `/app/document/${document?._id}/create`;
+  };
+
   const handlePrintDocument = useCallback(() => {
     window.open(`/app/document/${documentData?.document_id}/print/${documentData?.id}`);
   }, [documentData]);
@@ -475,6 +480,7 @@ const CreateDocument = () => {
             {documentData?.status === 'finished' && (
               <>
                 <Button variant="contained" onClick={toggleQuitDialog} color="secondary">Imprimir</Button>
+                <Button variant="contained" onClick={handleCreateDocument} color="secondary">Novo</Button>
                 <Button variant="outlined" onClick={toggleCancelDialog} color="error">Cancelar</Button>
               </>
             )}
@@ -508,7 +514,7 @@ const CreateDocument = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => { }}>Não</Button>
+          <Button onClick={toggleFinishDialog}>Não</Button>
           <Button onClick={handleFinishDocument} autoFocus>Sim</Button>
         </DialogActions>
       </Dialog>
@@ -534,7 +540,7 @@ const CreateDocument = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => { }}>Não</Button>
+          <Button onClick={toggleQuitDialog}>Não</Button>
           <Button onClick={handleQuitDocument} autoFocus>Sim</Button>
         </DialogActions>
       </Dialog>
@@ -560,7 +566,7 @@ const CreateDocument = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => { }}>Não</Button>
+          <Button onClick={toggleQuitDialog}>Não</Button>
           <Button onClick={handleCancelDocument} autoFocus>Sim</Button>
         </DialogActions>
       </Dialog>
