@@ -108,7 +108,6 @@ const CreateDocument = () => {
   const handleFieldChangeValue = (data: ICompletedDocument) => {
     if (data?.id) {
       saveDocumentFill(data?.id, undefined, data);
-      validateFields();
     }
   };
 
