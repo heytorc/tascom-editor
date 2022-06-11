@@ -1,19 +1,15 @@
-import React, { useEffect } from "react";
+import React, { createRef, useCallback, useEffect, useRef, useState } from "react";
 import { useParams } from 'react-router-dom';
 import {
   Box,
   Stack,
-  TextField,
   FormGroup,
   FormControlLabel,
   FormControl,
   RadioGroup,
-  Paper,
-  Autocomplete,
+  Typography,
 } from "@mui/material";
-import { DatePicker, LocalizationProvider } from '@mui/lab';
-import DateAdapter from '@mui/lab/AdapterDayjs';
-import { Rnd } from "react-rnd";
+import { useReactToPrint } from 'react-to-print';
 
 import { useDocument } from "@/commons/contexts/document.context";
 import {
@@ -21,7 +17,6 @@ import {
   EditorBuildSwitch,
   EditorBuildCheckbox,
   EditorBuildRadio,
-  EditorBuildInputText
 } from '@/commons/styles/editor';
 
 import IField from "@/commons/interfaces/IField";
@@ -33,9 +28,18 @@ interface IPreviewDocumentParams {
 }
 
 const PrintDocument = () => {
-  const { document, documentData, findDocument, fields, handleDocumentData } = useDocument();
+  const { document, documentData, findDocument, fields, handleDocumentData, setFields } = useDocument();
 
   const { id, record_id } = useParams();
+
+  const [incrementY, setIncrementY] = useState<number>(0);
+  const [startIncrement, setStartIncrement] = useState<number | undefined>(0);
+  // let incrementY: number = 0;
+
+  const documentRef = useRef(null);
+  const handlePrint = useReactToPrint({
+    content: () => documentRef.current,
+  });
 
   useEffect(() => {
     if (id)
@@ -43,22 +47,39 @@ const PrintDocument = () => {
   }, []);
 
   useEffect(() => {
+    console.log(incrementY);
+  }, [incrementY])
+
+  useEffect(() => {
     if (document?._id && record_id)
       handleDocumentData(record_id)
-  }, [document])
+  }, [document]);
 
-  const handleBuildField = (field: IField, index: number) => {
+  useEffect(() => {
+    if (documentData) {
+      formatFieldsPosition();
+    }
+  }, [documentData]);
+
+  useEffect(() => handlePrint(), [fields]);
+
+
+  const handleBuildField = useCallback((field: IField, index: number) => {
     let fieldComponent = <></>;
     let value;
+    let top = field.position.y;
+
+    // if (startIncrement && index > startIncrement) top += incrementY;
+
+    // TODO - Capturar altura do campo para aumentar o eixo y e evitar sobreposição dos elementos
+    // TODO - Reordenar os campos automaticamente na consturção do documento baseado no valor do eixo y para que fiquem em ordem cronologica do documento e evite que o campo fique fora de ordem quando for feita a correção da sobreposição comentado anteriormente.
 
     let styles: React.CSSProperties = {
       width: field.size.width,
-      height: field.size.height,
-      display: "flex",
-      alignItems: "flex-start",
-      justifyContent: "flex-start",
-      flexDirection: "column",
-      padding: 5,
+      pageBreakBefore: 'always',
+      position: 'absolute',
+      top,
+      left: field.position.x,
     };
 
     if (documentData) {
@@ -71,146 +92,127 @@ const PrintDocument = () => {
 
     switch (field.type) {
       case 'text':
+      case 'date':
+      case 'number':
+      case 'select':
         fieldComponent = (
-          <Stack style={{ ...styles }}>
+          <Stack>
             {label}
-            <TextField
-              size="small"
-              name={`${field.label}-text`}
-              placeholder={field.placeholder}
-              style={{ cursor: 'move' }}
-              fullWidth
-            />
+            <Typography>{value}</Typography>
           </Stack>
         )
         break;
 
-      case 'date':
-        fieldComponent = (
-          <Stack style={{ ...styles }}>
-            {label}
-            <LocalizationProvider dateAdapter={DateAdapter}>
-              <DatePicker
-                onChange={(date: unknown, keyboardInputValue?: string) => { }}
-                renderInput={(params) => <TextField size="small" {...params} />}
-                value={undefined}
-              />
-            </LocalizationProvider>
-          </Stack>
-        );
-        break;
-
-      case 'number':
-        fieldComponent = (
-          <Stack style={{ ...styles }}>
-            {label}
-            <TextField
-              name={`${field.label}-number`}
-              placeholder={field.placeholder}
-              style={{ width: field.size.width, cursor: "move" }}
-              value={value}
-              disabled
-            />
-          </Stack>
-        );
-        break;
-
       case 'textarea':
         fieldComponent = (
-          <Stack style={{ ...styles }}>
+          <Stack>
             {label}
-            <TextField
-              size="small"
-              name={`${field.label}-textarea`}
-              placeholder={field.placeholder}
-              value={value}
-              rows={5}
-              fullWidth
-              multiline
-            />
+            {value}
           </Stack>
-        );
+        )
         break;
 
       case 'yesOrNot':
         fieldComponent = (
-          <FormGroup>
-            <FormControlLabel
-              control={<EditorBuildSwitch color="secondary" />}
-              label={field.label}
-            />
-          </FormGroup>
+          <Stack>
+            <FormGroup>
+              <FormControlLabel
+                control={<EditorBuildSwitch color="secondary" />}
+                label={field.label}
+                disabled
+              />
+            </FormGroup>
+          </Stack>
         );
         break;
 
       case 'checkbox':
         fieldComponent = (
-          <FormGroup>
-            <FormControlLabel
-              control={<EditorBuildCheckbox color="secondary" />}
-              label={field.label}
-            />
-          </FormGroup>
+          <Stack>
+            <FormGroup>
+              <FormControlLabel
+                control={<EditorBuildCheckbox color="secondary" />}
+                label={field.label}
+                disabled
+              />
+            </FormGroup>
+          </Stack>
         );
         break;
 
       case 'radio':
         fieldComponent = (
-          <FormControl>
-            <RadioGroup
-              row={field?.orientation === 'row'}
-              aria-labelledby="demo-radio-buttons-group-label"
-              name={field.tag}
-            >
-              {field.options?.map(({ label, value }, index) => (
-                <FormControlLabel
-                  key={`field_${field._id}_radio_option_${index}`}
-                  control={<EditorBuildRadio color="secondary" />}
-                  label={label}
-                  value={value}
-                />
-              ))}
-            </RadioGroup>
-          </FormControl>
-        );
-        break;
-
-      case 'select':
-        fieldComponent = (
-          <Autocomplete
-            options={field.options || []}
-            renderInput={(params) => <EditorBuildInputText {...params} name={field.tag} label={field.label} />}
-            size="small"
-            disablePortal
-            fullWidth
-          />
+          <Stack>
+            <FormControl disabled>
+              <RadioGroup
+                row={field?.orientation === 'row'}
+                aria-labelledby="demo-radio-buttons-group-label"
+                name={field.tag}
+              >
+                {field.options?.map(({ label, value }, index) => (
+                  <FormControlLabel
+                    key={`field_${field._id}_radio_option_${index}`}
+                    control={<EditorBuildRadio color="secondary" />}
+                    label={label}
+                    value={value}
+                  />
+                ))}
+              </RadioGroup>
+            </FormControl>
+          </Stack>
         );
         break;
 
       default:
         fieldComponent = (
-          <EditorLabel m={0} style={{ ...field.size }} dangerouslySetInnerHTML={{ __html: field.label }} />
+          <Stack>
+            <EditorLabel m={0} dangerouslySetInnerHTML={{ __html: field.label }} />
+          </Stack>
         );
         break;
     }
 
-    return (
-      <Rnd
-        key={`editor-field-${index}`}
-        default={{
-          ...field.position,
-          ...field.size,
-        }}
-        maxWidth={800}
-        enableResizing={false}
-        disableDragging
-        bounds="parent"
+    const fieldElement = (
+      <div
+        key={`field_${index}`}
+        style={styles}
       >
-        <div style={{ ...styles }}>
-          {fieldComponent}
-        </div>
-      </Rnd>
+        {fieldComponent}
+      </div>
     );
+
+    // console.log('position', field.position.y);
+
+    // if (fieldRef?.current && fieldRef?.current?.clientHeight > field.size.height) {
+    //   if (!startIncrement || (index <= startIncrement)) {
+    //     setStartIncrement(index);
+    //     setIncrementY(200);
+    //   }
+    // }
+
+    // if ((top + field.size.height) < (beforeElementY + beforeElementHeight)) {
+    //   spacer = <Divider />
+    // }
+
+    return fieldElement;
+  }, [documentData, fields]);
+
+  // Isso aqui ta a maior gabiarra
+  const formatFieldsPosition = () => {
+    const fieldsCopy = [...fields];
+    let refIndex: number;
+
+    fieldsCopy.map((field, index) => {
+      if (field.type === 'textarea') {
+        if (!refIndex) {
+          refIndex = index;
+        }
+      }
+
+      if (refIndex >= 0 && refIndex !== index) fieldsCopy[index].position.y += 180;
+    });
+
+    setFields(fieldsCopy);
   };
 
   return (
@@ -223,25 +225,23 @@ const PrintDocument = () => {
         height={'100vh'}
         paddingY={10}
       >
-        <Paper elevation={2}>
-          <Stack
-            padding={5}
-            style={{
-              background: '#fff',
-              borderRadius: 5,
-            }}>
-            {document && (
-              <Stack
-                style={{
-                  width: document?.size.width,
-                  height: document?.size.height,
-                  position: 'relative',
-                }}>
-                {fields.map((field: any, index: number) => handleBuildField(field, index))}
-              </Stack>
-            )}
-          </Stack>
-        </Paper>
+        <Stack
+          ref={documentRef} 
+          padding={5}
+          style={{
+            background: '#fff',
+          }}>
+          {document && (
+            <Stack
+              style={{
+                width: document?.size.width,
+                height: document?.size.height,
+                position: 'relative',
+              }}>
+              {fields.map((field: any, index: number) => handleBuildField(field, index))}
+            </Stack>
+          )}
+        </Stack>
       </Box>
     </Stack>
   );

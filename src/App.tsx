@@ -16,6 +16,7 @@ import DocumentPage from "@/pages/app/document";
 import BuildDocument from "@/pages/app/document/build";
 import CreateDocument from "@/pages/app/document/create";
 import PreviewDocument from "@/pages/app/document/preview";
+import PrintDocument from "@/pages/app/document/print";
 
 import { AuthMiddleware } from "@/commons/middlewares/auth.middleware";
 
@@ -48,7 +49,7 @@ function App() {
                     <Route path=":id/preview" element={<PreviewDocument />}>
                       <Route path=":record_id" element={<PreviewDocument />} />
                     </Route>
-                    <Route path=":id/print/:record_id" element={<PreviewDocument />} />
+                    <Route path=":id/print/:record_id" element={<PrintDocument />} />
                   </Route>
                 </Route>
               </Routes>

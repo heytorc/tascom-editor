@@ -478,7 +478,7 @@ const CreateDocument = () => {
           <Stack gap={3}>
             {documentData?.status === 'finished' && (
               <>
-                <Button variant="contained" onClick={toggleQuitDialog} color="secondary">Imprimir</Button>
+                <Button variant="contained" onClick={handlePrintDocument} color="secondary">Imprimir</Button>
                 <Button variant="contained" onClick={handleCreateDocument} color="secondary">Novo</Button>
                 <Button variant="outlined" onClick={toggleCancelDialog} color="error">Cancelar</Button>
               </>

@@ -441,6 +441,7 @@ Armazena os dados preenchidos nos documentos.
     - ⬜ Versionamento
     - ⬜ API para retorno dos campos
     - ⬜ Validação dos tipos dos campos
+    - ⬜ Impressão do documento
   - ⬜ CRUD Preenchimento Documento
 
 ## Frontend
@@ -474,10 +475,10 @@ Armazena os dados preenchidos nos documentos.
     - ✅ Adaptar preenchimento do documento baseado na versão atual
     - ✅ Adicionar verificação de documento em preenchimento e não permitir criar um novo até que documento em uso seja concluído ou excluído
     - ✅ Adaptação do layout para tablets
-    - ⚙️ Impressão do documento
-    - ⬜ Tela integrada para preenchimento do documento por sistemas externos
+    - ⬜ Impressão do documento (Deixar responsabilidade para o back)
+    - ✅ Tela integrada para preenchimento do documento por sistemas externos
     - ✅ Validações dos campos do documento
 - ⬜ Incluir debounce nos campos de pesquisa
 - ⬜ Incluir loading quando o backend estiver funcionando
-- ⬜ Incluir componentes de feedback (toasts e messages)
+- ✅ Incluir componentes de feedback (toasts e messages)
 - ⬜ Armazenar a última página antes de deslogar por sessão expirada
