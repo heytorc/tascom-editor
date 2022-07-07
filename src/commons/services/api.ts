@@ -25,7 +25,7 @@ function setCookie(cname: string, cvalue: string, exdays: number) {
 }
 
 const api = axios.create({
-  baseURL: 'http://localhost:3001'
+  baseURL: import.meta.env.VITE_API_URL
 });
 
 api.interceptors.request.use((config) => {
