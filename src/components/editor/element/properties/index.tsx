@@ -293,19 +293,21 @@ export default function ElementProperties() {
                   )}
                   
                   {/* Field is Required */}
-                  <Stack>
-                    <FormGroup>
-                      <FormControlLabel
-                        control={(
-                          <EditorBuildSwitch
-                            checked={selectedField?.required}
-                            onChange={(element, checked) => toggleRequiredField(checked)}
-                          />
-                        )}
-                        label={`Obrigatório?`}
-                      />
-                    </FormGroup>
-                  </Stack>
+                  {!['yesOrNot', 'label', 'checkbox'].includes(selectedField?.type) && (
+                    <Stack>
+                      <FormGroup>
+                        <FormControlLabel
+                          control={(
+                            <EditorBuildSwitch
+                              checked={selectedField?.required}
+                              onChange={(element, checked) => toggleRequiredField(checked)}
+                            />
+                          )}
+                          label={`Obrigatório?`}
+                        />
+                      </FormGroup>
+                    </Stack>
+                  )}
 
                   <Stack display={'flex'} justifyContent={'flex-end'} paddingY={2}>
                     <Button

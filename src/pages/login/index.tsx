@@ -23,7 +23,7 @@ interface IFormInput {
 
 export default function LoginPage() {
   const { register, handleSubmit, watch, formState: { errors, isSubmitting }, setError } = useForm<IFormInput>();
-  const { signIn } = useAuth();
+  const { signIn, error } = useAuth();
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -98,6 +98,8 @@ export default function LoginPage() {
 
               {errors.username?.message && (<Text>{errors.username.message}</Text>)}
               {errors.password?.message && (<Text>{errors.password.message}</Text>)}
+              
+              {error.message && (<Text color="error" align="center" mb={2}>{error.message}</Text>)}
 
               <LoadingButton
                 type="submit"

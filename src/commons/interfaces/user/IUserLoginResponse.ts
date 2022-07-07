@@ -1,10 +1,10 @@
 export default interface IUserLoginResponse {
-  id: string;
+  _id: string;
   name: string;
   email: string;
   company?: string;
   system_id: string;
-  token: string;
+  access_token: string;
   active: boolean;
   type: "USER" | "ADMIN";
 }

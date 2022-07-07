@@ -8,10 +8,10 @@ export const AuthMiddleware = () => {
   const { user } = useAuth();
   const location = useLocation();
   const [{ 'app.tascomeditor.token': token }] = useCookies(['app.tascomeditor.token']);
-
-  // debugger;
-
-  if (!user?.id && !token) {
+  
+  localStorage.setItem('currentPage', location.pathname);
+  
+  if (!user?._id && !token) {
     // Redirect them to the /login page, but save the current location they were
     // trying to go to when they were redirected. This allows us to send them
     // along to that page after they login, which is a nicer user experience

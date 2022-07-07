@@ -87,17 +87,17 @@ const CreateDocument = () => {
   }, []);
 
   useEffect(() => {
-    if (document?._id && !documentData?.id && record_id) {
+    if (document?._id && !documentData?._id && record_id) {
       handleDocumentData(record_id);
-    } else if (document?._id && !documentData?.id) {
+    } else if (document?._id && !documentData?._id) {
       createDocument();
     }
   }, [document]);
 
   useEffect(() => {
     setDocumentCurrentData(documentData);
-    if (documentData?.id && !record_id) {
-      navigate(`/app/document/${documentData.document_id}/create/${documentData.id}`);
+    if (documentData?._id && !record_id) {
+      navigate(`/app/document/${document?._id}/create/${documentData._id}`);
     }
   }, [documentData]);
 
@@ -106,8 +106,8 @@ const CreateDocument = () => {
   ), [documentCurrentData]);
 
   const handleFieldChangeValue = (data: ICompletedDocument) => {
-    if (data?.id) {
-      saveDocumentFill(data?.id, undefined, data);
+    if (data?._id) {
+      saveDocumentFill(data?._id, undefined, data);
     }
   };
 
@@ -369,6 +369,8 @@ const CreateDocument = () => {
       });
     }
 
+    console.log(fieldsInvalids);
+
     setInvalidFields(fieldsInvalids);
 
     return !fieldsInvalids.length;
@@ -422,7 +424,7 @@ const CreateDocument = () => {
   };
 
   const handlePrintDocument = useCallback(() => {
-    window.open(`/app/document/${documentData?.document_id}/print/${documentData?.id}`);
+    window.open(`/app/document/${documentData?.document_id}/print/${documentData?._id}`);
   }, [documentData]);
 
   return (

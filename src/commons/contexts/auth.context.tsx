@@ -8,7 +8,7 @@ import IUserLoginResponse from '@/commons/interfaces/user/IUserLoginResponse';
 import useLocalStorage from "@/commons/hooks/useLocalStorage";
 
 interface IUser {
-  id?: string;
+  _id?: string;
   name?: string;
   username?: string;
   password?: string;
@@ -30,7 +30,8 @@ interface IAuthError {
 }
 
 interface IAuthContext {
-  user: IUser;
+  user?: IUser;
+  setUser: React.Dispatch<React.SetStateAction<IUser | undefined>>,
   error: IAuthError;
   signIn: (data: IUserLoginRequest) => Promise<void>;
   logOff: () => void;
@@ -43,9 +44,11 @@ export const AuthProvider: FC = ({ children }) => {
 
   const [userStoraged, setUserStoraged] = useLocalStorage<string>("user", "");
 
+  const userLogged: IUser | undefined = userStoraged.length > 0 ? JSON.parse(userStoraged) : undefined;
+
   const [cookie, setCookie, removeCookie] = useCookies(['app.tascomeditor.token', 'app.tascomeditor.user'])
 
-  const [user, setUser] = useState<IUser>({});
+  const [user, setUser] = useState<IUser | undefined>(userLogged);
   const [error, setError] = useState({ message: null });
 
   const signIn = async (userData: IUserLoginRequest) => {
@@ -53,29 +56,32 @@ export const AuthProvider: FC = ({ children }) => {
       setError({ message: null });
 
       // const { data: userAuthenticaded } = await api.post<IUserLoginResponse>('/user/auth', userData);
-      const { data: [userAuthenticaded] } = await api.get<IUserLoginResponse[]>(`/users/?username=${userData.username}&password=${userData.password}&_limit=1`);
+      const { data: { access_token, ...userAuthenticaded } } = await api.post<IUserLoginResponse>(`/auth/login`, userData);
   
-      api.defaults.headers.common['Authorization'] = userAuthenticaded.token;
+      api.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
   
-      setCookie('app.tascomeditor.token', userAuthenticaded.token, {
+      setCookie('app.tascomeditor.token', access_token, {
         maxAge: 60 * 60 * 1, // 1 hora
         path: '/app',
       });
 
-      setUserStoraged(JSON.stringify({ id: userAuthenticaded.id }));
+      setUserStoraged(JSON.stringify(userAuthenticaded));
   
       setUser(userAuthenticaded);
+
+      const lastPage = localStorage.getItem('currentPage') || '/app';
   
-      navigate('/app');
+      navigate(lastPage);
     } catch (error: any) {
-      const { response: { data: message = null } } = error;
-      setError(message);
+      const { response: { data: { message = null } } } = error;
+      setError({ message });
     }
   };
 
   const logOff = () => {
     removeCookie('app.tascomeditor.token');
     setUserStoraged("");
+    localStorage.removeItem('currentPage');
 
     navigate('/');
   };
@@ -83,6 +89,7 @@ export const AuthProvider: FC = ({ children }) => {
   return (
     <AuthContext.Provider value={{
       user,
+      setUser,
       error,
       signIn,
       logOff

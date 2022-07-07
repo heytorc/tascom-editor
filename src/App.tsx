@@ -40,8 +40,9 @@ function App() {
                   <Route index element={<Layout><AppPage /></Layout>} />
                   <Route path="document" element={<AuthMiddleware />}>
                     <Route index element={<Layout><DocumentPage /></Layout>} />
-                    <Route path="build" element={<BuildDocument />}>
-                      <Route path=":record_id" element={<BuildDocument />} />
+                    <Route path="build" element={<AuthMiddleware />}>
+                      <Route element={<BuildDocument />} />
+                      <Route path=":id" element={<BuildDocument />} />
                     </Route>
                     <Route path=":id/create" element={<CreateDocument />}>
                       <Route path=":record_id" element={<CreateDocument />} />

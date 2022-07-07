@@ -1,4 +1,6 @@
-import IField from "@/commons/interfaces/IField"
+import IField from "@/commons/interfaces/IField";
+
+// TODO - Adicionar tipo de campo Range
 
 const text: IField = {
   _id: "",
@@ -124,7 +126,7 @@ const checkbox: IField = {
     y: 20
   },
   size: {
-    width: 300,
+    width: 135,
     height: 50
   },
   styles: {},
@@ -142,15 +144,15 @@ const radio: IField = {
     y: 20
   },
   size: {
-    width: 300,
-    height: 95
+    width: 175,
+    height: 50
   },
   styles: {},
   required: false,
   useRichText: false,
   options: [
-    { label: 'Opção 1', value: '1' },
-    { label: 'Opção 2', value: '2' },
+    { label: 'Sim', value: 'sim' },
+    { label: 'Não', value: 'nao' },
   ],
   orientation: 'row',
 }
@@ -195,6 +197,28 @@ const select: IField = {
   useRichText: false,
 }
 
+const range: IField = {
+  _id: "",
+  label: "Range",
+  type: "range",
+  tag: "range",
+  position: {
+    x: 0,
+    y: 20
+  },
+  size: {
+    width: 300,
+    height: 52
+  },
+  options: [
+    { label: 'Opção 1', value: '1' },
+    { label: 'Opção 2', value: '2' },
+  ],
+  styles: {},
+  required: false,
+  useRichText: false,
+}
+
 export default {
   text,
   date,
@@ -204,5 +228,6 @@ export default {
   radio,
   checkbox,
   select,
-  yesOrNot
+  yesOrNot,
+  range
 }

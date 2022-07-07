@@ -14,6 +14,9 @@ import FieldsDefaultProps from "@/commons/constants/fields/default.configuration
 
 import api from "@/commons/services/api";
 
+// TODO - Alterar rotas para consumir dados do backend
+// TODO - Atualizar a lista de versão quando o documento for publicado
+
 interface IDocumentContext {
   fields: IField[],
   setFields: React.Dispatch<React.SetStateAction<IField[]>>,
@@ -28,9 +31,9 @@ interface IDocumentContext {
   setDocumentData: React.Dispatch<React.SetStateAction<any>>,
   targetVersion: number | string | undefined,
   setTargetVersion: React.Dispatch<React.SetStateAction<number | string | undefined>>,
-  findDocument: (id: number | string, version?: number | string) => void,
+  findDocument: (id: string, version?: number | string) => void,
   saveDocument: () => Promise<IDocument | undefined>,
-  handleDocumentData: (id: number | string) => void,
+  handleDocumentData: (id: string) => void,
   updateDocumentName: (name: string) => void,
   toggleActiveDocument: (isActived: boolean) => void,
   toggleRequiredField: (isRequired: boolean) => void,
@@ -116,25 +119,25 @@ export const DocumentProvider: FC = ({ children }) => {
     }
   }, [document]);
 
-  const findDocument = async (id: number | string, version?: number | string) => {
-    const { data: document }: any = await api.get(`/documents?id=${id}`);
+  const findDocument = async (id: string, version?: number | string) => {
+    const { data: document }: any = await api.get(`/documents/${id}`);
 
-    if (document[0]) {
-      setDocument(document[0]);
-      setDocumentLastVersionData(document[0]);
+    if (document) {
+      setDocument(document);
+      setDocumentLastVersionData(document);
 
       if (version) {
         setTargetVersion(version);
       } else {
-        const currentVersion = handleBuildingVersion(document[0]);
+        const currentVersion = handleBuildingVersion(document);
         if (currentVersion)
           setTargetVersion(currentVersion.data.number);
       }
     }
   };
 
-  const handleDocumentData = async (id: number | string) => {
-    const { data: [document] }: { data: ICompletedDocument[] } = await api.get(`/completed_documents?id=${id}`);
+  const handleDocumentData = async (id: string) => {
+    const { data: document }: { data: ICompletedDocument } = await api.get(`/records/${id}`);
 
     if (document) {
       setTargetVersion(document.version);
@@ -159,8 +162,10 @@ export const DocumentProvider: FC = ({ children }) => {
 
           data.versions[index] = currentVersion;
           data.updated_at = new Date;
+          
+          // debugger;
 
-          const { data: documentSaved }: { data: IDocument } = await api.put(`/documents/${document._id}`, data);
+          const { data: documentSaved }: { data: IDocument } = await api.patch(`/documents/${document._id}`, data);
           console.log(documentSaved);
           setDocument(documentSaved);
 
@@ -168,7 +173,7 @@ export const DocumentProvider: FC = ({ children }) => {
           const documentCopy = { ...document };
           const newVersion = documentCopy.version + 1;
 
-          const { data: [documentData] }: { data: IDocument[] } = await api.get(`/documents?id=${document._id}`);
+          const { data: documentData }: { data: IDocument } = await api.get(`/documents/${document._id}`);
 
           documentData.updated_at = new Date;
           documentData.versions.push({
@@ -179,7 +184,7 @@ export const DocumentProvider: FC = ({ children }) => {
             status: 'building'
           });
 
-          const { data: documentSaved }: { data: IDocument } = await api.put(`/documents/${document._id}`, documentData);
+          const { data: documentSaved }: { data: IDocument } = await api.patch(`/documents/${document._id}`, documentData);
           setDocument(documentSaved);
           setTargetVersion(newVersion);
 
@@ -279,7 +284,7 @@ export const DocumentProvider: FC = ({ children }) => {
   const publishDocument = async () => {
     if (document && targetVersion) {
 
-      const { data: [documentData] }: { data: IDocument[] } = await api.get(`/documents?id=${document._id}`);
+      const { data: documentData }: { data: IDocument } = await api.get(`/documents/${document._id}`);
 
       documentData.version = parseInt(`${targetVersion}`);
 
@@ -294,27 +299,28 @@ export const DocumentProvider: FC = ({ children }) => {
         }
       }
 
-      const documentSaved = await api.put(`/documents/${document._id}`, documentData);
+      const documentSaved = await api.patch(`/documents/${document._id}`, documentData);
       console.log(documentSaved);
     }
   };
 
   const createField = (type: FieldType) => {
-    let field = FieldsDefaultProps[type];
-    field = {
-      ...field,
+    let newField = FieldsDefaultProps[type];
+    setSelectedField(undefined);
+
+    newField = {
+      ...newField,
       position: {
         x: 0,
-        y: scrollPosition ?? field.position.y
+        y: scrollPosition ?? newField.position.y
       },
       _id: uuidv1()
     };
 
-    const fieldsCopy = [...fields];
-    fieldsCopy.push(field);
+    const fieldsCopy = [...fields, newField];
 
     setFields(fieldsCopy);
-    setSelectedField(field);
+    setSelectedField(newField);
   };
 
   const deleteField = () => {
@@ -476,7 +482,7 @@ export const DocumentProvider: FC = ({ children }) => {
       if (currentVersionIndex && currentVersionIndex > -1) {
         documentCopy.versions?.splice(currentVersionIndex, 1);
 
-        const { data: documentSaved } = await api.put(`/documents/${documentCopy._id}`, documentCopy);
+        const { data: documentSaved } = await api.patch(`/documents/${documentCopy._id}`, documentCopy);
 
         setDocument(documentSaved);
       } else {
@@ -493,24 +499,24 @@ export const DocumentProvider: FC = ({ children }) => {
 
     const { _id, version } = document;
 
-    const { id: userId } = JSON.parse(userStoraged);
+    const { _id: userId, company_id = '62b1053fa702bc507415019e', system_id } = JSON.parse(userStoraged);
 
-    const { data: [fillingDocument] } = await api.get(`/completed_documents?document_id=${_id}&status=filling&created_by=${userId}&company_id=1&_sort=id&_order=desc`);
+    const { data: [fillingDocument] } = await api.get(`/records?document_id=${_id}&created_by=${userId}&company_id=${company_id}&status=filling`);
+
 
     if (fillingDocument) {
       setDocumentData(fillingDocument);
       return;
     }
 
-    const { data: documentCreated }: { data: ICompletedDocument } = await api.post('/completed_documents', {
+    const { data: documentCreated }: { data: ICompletedDocument } = await api.post('/records', {
       document_id: _id,
-      system_id: 1,
-      company_id: 1,
+      system_id,
+      company_id,
       version,
       fields: [],
       status: "filling",
-      created_by: 1,
-      created_at: new Date(),
+      created_by: userId,
     });
 
     setDocumentData(documentCreated);
@@ -540,13 +546,13 @@ export const DocumentProvider: FC = ({ children }) => {
     // Se houver alterações entre os objetos de documentData (dados atuais no banco de dados) e a sua cópia
     // salva as modificações no banco de dados
     if (JSON.stringify(documentData) !== JSON.stringify(documentDataCopy)) {
-      const { data: newDocumentData } = await api.put(`/completed_documents/${id}`, documentDataCopy);
+      const { data: newDocumentData } = await api.patch(`/records/${id}`, documentDataCopy);
       // setDocumentData(newDocumentData);
     }
   };
 
   const finishDocument = async () => {
-    const { data: newDocumentData } = await api.put(`/completed_documents/${documentData?.id}`, {
+    const { data: newDocumentData } = await api.patch(`/records/${documentData?._id}`, {
       ...documentData,
       status: "finished",
       updated_at: new Date(),
@@ -559,7 +565,7 @@ export const DocumentProvider: FC = ({ children }) => {
   };
 
   const cancelDocument = async () => {
-    const { data: newDocumentData } = await api.put(`/completed_documents/${documentData?.id}`, {
+    const { data: newDocumentData } = await api.patch(`/records/${documentData?._id}`, {
       ...documentData,
       status: "canceled",
       updated_at: new Date(),
@@ -572,7 +578,7 @@ export const DocumentProvider: FC = ({ children }) => {
   };
   
   const quitDocument = async () => {
-    await api.delete(`/completed_documents/${documentData?.id}`);
+    await api.delete(`/records/${documentData?._id}`);
 
     setDocumentData(undefined);
   };

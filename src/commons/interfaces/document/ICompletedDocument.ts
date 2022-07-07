@@ -1,3 +1,5 @@
+import IDocument from "../IDocument";
+
 export interface ICompletedDocumentField {
   field_id: string,
   value: string | number | boolean
@@ -5,8 +7,7 @@ export interface ICompletedDocumentField {
 
 export interface ICompletedDocument {
   _id: string,
-  id: string,
-  document_id: string,
+  document_id: string | IDocument,
   system_id: string,
   company_id: string,
   version: number,

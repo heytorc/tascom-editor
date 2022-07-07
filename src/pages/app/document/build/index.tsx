@@ -13,6 +13,7 @@ import {
 import { DatePicker, LocalizationProvider } from '@mui/lab';
 import DateAdapter from '@mui/lab/AdapterDayjs';
 import ptBrLocale from 'dayjs/locale/pt-br';
+import { useParams } from 'react-router-dom';
 
 import { useDocument } from "@/commons/contexts/document.context";
 import useQuery from "@/commons/hooks/useQuery";
@@ -45,6 +46,7 @@ export default function BuildDocument() {
   } = useDocument();
 
   const queryParams = useQuery();
+  const { id } = useParams();
 
   const handleScroll = (currentTarget: EventTarget & HTMLDivElement) => {
     const { scrollTop } = currentTarget;
@@ -53,8 +55,8 @@ export default function BuildDocument() {
 
   useEffect(() => {
     let version = queryParams.get("version") ?? undefined;
-
-    findDocument(1, version);
+    if (id)
+      findDocument(id, version);
   }, []);
 
   const handleDragStop = (event: any, { x, y }: DraggableData) => {
