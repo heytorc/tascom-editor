@@ -25,6 +25,7 @@ import Layout from '@/components/layout/default';
 import SnackbarComponent from "@/components/snackbar";
 
 import './App.css';
+import AuthSystem from "./pages/auth/system";
 
 function App() {
   return (
@@ -53,6 +54,7 @@ function App() {
                     <Route path=":id/print/:record_id" element={<PrintDocument />} />
                   </Route>
                 </Route>
+                <Route path="auth" element={<AuthSystem />} />
               </Routes>
             </DocumentProvider>
           </AuthProvider>

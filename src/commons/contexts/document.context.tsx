@@ -13,6 +13,7 @@ import { ICompletedDocument, ICompletedDocumentField } from "@/commons/interface
 import FieldsDefaultProps from "@/commons/constants/fields/default.configuration";
 
 import api from "@/commons/services/api";
+import { useAuth } from "./auth.context";
 
 // TODO - Alterar rotas para consumir dados do backend
 // TODO - Atualizar a lista de versão quando o documento for publicado
@@ -83,6 +84,8 @@ export const DocumentContext = createContext({} as IDocumentContext);
 
 export const DocumentProvider: FC = ({ children }) => {
   const [userStoraged, setUserStoraged] = useLocalStorage<string>("user", "");
+
+  const { user } = useAuth();
 
   const [pages, setPages] = useState<IPage[]>();
   const [scrollPosition, setScrollPosition] = useState<number>(0);
@@ -499,7 +502,7 @@ export const DocumentProvider: FC = ({ children }) => {
 
     const { _id, version } = document;
 
-    const { _id: userId, company_id = '62b1053fa702bc507415019e', system_id } = JSON.parse(userStoraged);
+    const { _id: userId, company_id = '62b1053fa702bc507415019e', system_id } = userStoraged ? JSON.parse(userStoraged) :  user;
 
     const { data: [fillingDocument] } = await api.get(`/records?document_id=${_id}&created_by=${userId}&company_id=${company_id}&status=filling`);
 
