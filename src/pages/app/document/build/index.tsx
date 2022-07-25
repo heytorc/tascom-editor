@@ -103,7 +103,7 @@ export default function BuildDocument() {
     }
 
     const label = (
-      <EditorLabel m={0} dangerouslySetInnerHTML={{ __html: field.label }} />
+      field.label.length > 0 || field.label !== '<p><br></p>' ? <EditorLabel m={0} dangerouslySetInnerHTML={{ __html: field.label }} /> : <></>
     );
 
     switch (field.type) {
