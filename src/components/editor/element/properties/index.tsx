@@ -26,6 +26,7 @@ import { GitMerge } from "phosphor-react";
 import { List, arrayMove } from 'react-movable';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { useNavigate } from 'react-router-dom';
 
 import { useDocument } from "@/commons/contexts/document.context";
 import useEventListener from "@/commons/hooks/useEventListener";
@@ -33,8 +34,9 @@ import useEventListener from "@/commons/hooks/useEventListener";
 import DialogComponent from '@/components/dialog';
 import VersionBadgeComponent from '@/components/editor/document/version.badge';
 
+import keycodes from '@/commons/constants/keycodes';
+
 import { EditorReorderGroup, EditorReorderItem, EditorBuildRadio, EditorBuildSwitch } from "@/commons/styles/editor";
-import { useNavigate } from 'react-router-dom';
 
 export default function ElementProperties() {
   const {
@@ -56,6 +58,7 @@ export default function ElementProperties() {
     toggleActiveDocument,
     toggleRequiredField,
     setTargetVersion,
+    setSelectedField,
   } = useDocument();
 
   const navigate = useNavigate();
@@ -77,13 +80,22 @@ export default function ElementProperties() {
     })
   };
 
-  const handleDeleteField = (keyCode?: number) => {
-    if (keyCode && keyCode === 46) {
+  const handleKeyPress = (keyCode?: number) => {
+    switch(keyCode) {
+      case keycodes.DELETE:
       setDeleteModalIsOpen(true);
+      break;
+      
+      case keycodes.ESC:
+      setSelectedField(undefined);
+      break;
+      
+      default:
+      break;
     }
   };
 
-  useEventListener('keyup', (handler: any) => handleDeleteField(handler.keyCode));
+  useEventListener('keyup', (handler: any) => handleKeyPress(handler.keyCode));
 
   const handleOpenVersion = (versionNumber: number) => {
     if (document) {
