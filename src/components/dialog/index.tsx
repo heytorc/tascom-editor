@@ -54,8 +54,8 @@ export default function DialogComponent({
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCancel} autoFocus>{cancelButtonLabel}</Button>
-          <Button onClick={handleConfirm}>{confirmButtonLabel}</Button>
+          <Button onClick={handleCancel}>{cancelButtonLabel}</Button>
+          <Button onClick={handleConfirm} autoFocus>{confirmButtonLabel}</Button>
         </DialogActions>
       </Dialog>
     </div>
