@@ -41,17 +41,11 @@ export default function BuildDocument() {
     selectedField,
     setSelectedField,
     updateFieldPosition,
-    updateFieldSize,
-    setScrollPosition
+    updateFieldSize
   } = useDocument();
 
   const queryParams = useQuery();
   const { id } = useParams();
-
-  const handleScroll = (currentTarget: EventTarget & HTMLDivElement) => {
-    const { scrollTop } = currentTarget;
-    setScrollPosition(scrollTop);
-  };
 
   useEffect(() => {
     let version = queryParams.get("version") ?? undefined;
@@ -275,7 +269,6 @@ export default function BuildDocument() {
           paddingBottom={10}
           height={'100vh'}
           style={{ overflowX: 'hidden' }}
-          onScroll={(event) => handleScroll(event.currentTarget)}
         >
           <Paper elevation={2}>
             <Stack

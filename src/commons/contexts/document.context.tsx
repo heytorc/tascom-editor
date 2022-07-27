@@ -56,8 +56,6 @@ interface IDocumentContext {
   updateFieldOptionData: (optionIndex: number, prop: 'value' | 'label', value: string) => void,
   handleBuildingVersion: (currentDocument?: IDocument) => ICurrentDocument | undefined,
   deleteVersion: () => void,
-  scrollPosition: number,
-  setScrollPosition: React.Dispatch<React.SetStateAction<number>>,
   createDocument: () => void,
   saveDocumentFill: (id: string, field?: ICompletedDocumentField, data?: ICompletedDocument) => void,
   finishDocument: () => void,
@@ -88,7 +86,6 @@ export const DocumentProvider: FC = ({ children }) => {
   const { user } = useAuth();
 
   const [pages, setPages] = useState<IPage[]>();
-  const [scrollPosition, setScrollPosition] = useState<number>(0);
 
   const [documents, setDocuments] = useState<IDocument[]>([]);
   const [document, setDocument] = useState<IDocument>();
@@ -309,13 +306,16 @@ export const DocumentProvider: FC = ({ children }) => {
 
   const createField = (type: FieldType) => {
     let newField = FieldsDefaultProps[type];
-    setSelectedField(undefined);
+
+    const positions = fields.map(field => field.position);
+
+    const maxY = Math.max(...positions.map(position => position.y));
 
     newField = {
       ...newField,
       position: {
         x: 0,
-        y: scrollPosition ?? newField.position.y
+        y: maxY + 100
       },
       _id: uuidv1()
     };
@@ -626,8 +626,6 @@ export const DocumentProvider: FC = ({ children }) => {
         updateFieldOptionData,
         handleBuildingVersion,
         deleteVersion,
-        scrollPosition,
-        setScrollPosition,
         createDocument,
         saveDocumentFill,
         finishDocument,
