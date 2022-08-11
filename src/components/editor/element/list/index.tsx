@@ -8,7 +8,8 @@ import {
   CheckBoxOutlined,
   ToggleOnOutlined,
   RadioButtonCheckedOutlined,
-  ArrowDropDownCircleOutlined
+  ArrowDropDownCircleOutlined,
+  LinearScaleOutlined
 } from '@mui/icons-material';
 
 import { useDocument } from "@/commons/contexts/document.context";
@@ -109,7 +110,7 @@ export default function EditorElements() {
             </Stack>
 
             <Text>Elementos de Seleção</Text>
-            
+
             <Stack
               flex={1}
               flexDirection={'row'}
@@ -157,6 +158,16 @@ export default function EditorElements() {
                 fullWidth
               >
                 Seleção
+              </ElementTypeButton>
+
+              <ElementTypeButton
+                color="primary"
+                onClick={() => createField('range')}
+                startIcon={<LinearScaleOutlined />}
+                style={{ justifyContent: 'flex-start' }}
+                fullWidth
+              >
+                Intervalo
               </ElementTypeButton>
             </Stack>
           </Stack>

@@ -10,6 +10,7 @@ import {
   RadioGroup,
   Paper,
   Autocomplete,
+  Slider,
 } from "@mui/material";
 import { DatePicker, LocalizationProvider } from '@mui/lab';
 import DateAdapter from '@mui/lab/AdapterDayjs';
@@ -184,6 +185,22 @@ const PreviewDocument = () => {
             size="small"
             disablePortal
             fullWidth
+          />
+        );
+        break;
+      
+      case 'range':
+        const marks = field.options ? field.options.map(({ label, value }) => ({ label, value: parseFloat(value) })) : [];
+
+        fieldComponent = (
+          <Slider
+            defaultValue={field.min}
+            step={field.steps}
+            min={field.min}
+            max={field.max}
+            valueLabelDisplay="auto"
+            marks={marks}
+            value={value as number}
           />
         );
         break;

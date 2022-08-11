@@ -17,7 +17,8 @@ import {
   DialogContentText,
   DialogTitle,
   Divider,
-  FormHelperText
+  FormHelperText,
+  Slider
 } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
 import { Info as InfoIcon } from '@mui/icons-material';
@@ -327,6 +328,26 @@ const CreateDocument = () => {
           />
         );
         break;
+
+        case 'range':
+          const marks = field.options ? field.options.map(({ label, value }) => ({ label, value: parseFloat(value) })) : [];
+  
+          fieldComponent = (
+            <Slider
+              defaultValue={field.min}
+              getAriaValueText={value => `${value}`}
+              step={field.steps}
+              min={field.min}
+              max={field.max}
+              valueLabelDisplay="auto"
+              marks={marks}
+              value={value as number}
+              onChange={(event: Event, newValue: number | number[])  => {
+                handleChange({ field_id: field._id, value: newValue as number })
+              }}
+            />
+          )
+          break;
 
       default:
         fieldComponent = (

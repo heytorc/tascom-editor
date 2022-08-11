@@ -46,6 +46,9 @@ interface IDocumentContext {
   updateFieldPlaceholder: (value: string) => void,
   updateFieldPosition: (position: IFieldPosition, only?: "x" | "y") => void,
   updateFieldSize: (size: IElementSize, only?: "width" | "height") => void,
+  updateFieldStep: (step: number) => void,
+  updateFieldMax: (max: number) => void,
+  updateFieldMin: (min: number) => void,
   documents: IDocument[],
   handleDocuments: () => void,
   updateDocumentSize: (size: IElementSize, only?: "width" | "height") => void,
@@ -406,6 +409,42 @@ export const DocumentProvider: FC = ({ children }) => {
     }
   };
 
+  const updateFieldStep = (steps: number,) => {
+    if (selectedField) {
+      let fieldsCopy = [...fields];
+
+      const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
+
+      fieldsCopy[fieldKey].steps = steps;
+
+      setFields(fieldsCopy);
+    }
+  };
+
+  const updateFieldMax = (max: number) => {
+    if (selectedField) {
+      let fieldsCopy = [...fields];
+
+      const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
+
+      fieldsCopy[fieldKey].max = max;
+
+      setFields(fieldsCopy);
+    }
+  };  
+
+  const updateFieldMin = (min: number) => {
+    if (selectedField) {
+      let fieldsCopy = [...fields];
+
+      const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
+
+      fieldsCopy[fieldKey].min = !isNaN(min) ? min : 1;
+
+      setFields(fieldsCopy);
+    }
+  };
+
   const addFieldOptions = (option: IFieldOptions) => {
     if (selectedField) {
       let fieldsCopy = [...fields];
@@ -616,6 +655,9 @@ export const DocumentProvider: FC = ({ children }) => {
         updateFieldPlaceholder,
         updateFieldPosition,
         updateFieldSize,
+        updateFieldStep,
+        updateFieldMax,
+        updateFieldMin,
         handleDocuments,
         updateDocumentSize,
         addFieldOptions,

@@ -42,5 +42,8 @@ export default interface IField {
   isResizable?: boolean,
   useRichText?: boolean,
   options?: IFieldOptions[],
-  orientation?: FieldOrientationType
+  orientation?: FieldOrientationType,
+  steps?: number,
+  max?: number,
+  min?: number
 }

@@ -9,6 +9,7 @@ import {
   FormControl,
   RadioGroup,
   Autocomplete,
+  Slider,
 } from "@mui/material";
 import { DatePicker, LocalizationProvider } from '@mui/lab';
 import DateAdapter from '@mui/lab/AdapterDayjs';
@@ -217,6 +218,23 @@ export default function BuildDocument() {
             disabled
           />
         );
+        break;
+
+      case 'range':
+        const marks = field.options ? field.options.map(({ label, value }) => ({ label, value: parseFloat(value) })) : [];
+
+        fieldComponent = (
+          <Slider
+            defaultValue={0}
+            getAriaValueText={value => `${value}`}
+            step={field.steps}
+            min={field.min}
+            max={field.max}
+            valueLabelDisplay="auto"
+            marks={marks}
+            disabled
+          />
+        )
         break;
 
       default:

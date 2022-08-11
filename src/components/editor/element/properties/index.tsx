@@ -55,6 +55,9 @@ export default function ElementProperties() {
     updateFieldOrientation,
     updateFieldOptionData,
     updateDocumentName,
+    updateFieldStep,
+    updateFieldMin,
+    updateFieldMax,
     toggleActiveDocument,
     toggleRequiredField,
     setTargetVersion,
@@ -214,6 +217,48 @@ export default function ElementProperties() {
 
                     </Stack>
                   </Stack>
+
+                  {/* Field Min */}
+                  {selectedField && selectedField.type === 'range' && (
+                    <Stack paddingY={1} mb={1}>
+                      <Text fontWeight={'bold'} mb={2}>Mínimo:</Text>
+                      <TextField
+                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                        onChange={(element) => updateFieldMin(parseInt(element.target.value))}
+                        name={`${selectedField?.min}-min`}
+                        value={selectedField?.min}
+                        size="small"
+                        />
+                    </Stack>
+                  )}
+
+                  {/* Field Max */}
+                  {selectedField && selectedField.type === 'range' && (
+                    <Stack paddingY={1} mb={1}>
+                      <Text fontWeight={'bold'} mb={2}>Máximo:</Text>
+                      <TextField
+                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                        onChange={(element) => updateFieldMax(parseInt(element.target.value))}
+                        name={`${selectedField?.max}-max`}
+                        value={selectedField?.max}
+                        size="small"
+                        />
+                    </Stack>
+                  )}
+                  
+                  {/* Field Steps */}
+                  {selectedField && selectedField.type === 'range' && (
+                    <Stack paddingY={1} mb={1}>
+                      <Text fontWeight={'bold'} mb={2}>Intervalo:</Text>
+                      <TextField
+                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                        onChange={(element) => updateFieldStep(parseInt(element.target.value))}
+                        name={`${selectedField?.steps}-steps`}
+                        value={selectedField?.steps}
+                        size="small"
+                        />
+                    </Stack>
+                  )}
 
                   {/* Field Options */}
                   {selectedField?.options && (
