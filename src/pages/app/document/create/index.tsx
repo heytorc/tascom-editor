@@ -61,7 +61,7 @@ const CreateDocument = () => {
     findDocument,
     fields,
     handleDocumentData,
-    createDocument,
+    createDocumentToFill,
     saveDocumentFill,
     finishDocument,
     quitDocument,
@@ -91,7 +91,7 @@ const CreateDocument = () => {
     if (document?._id && !documentData?._id && record_id) {
       handleDocumentData(record_id);
     } else if (document?._id && !documentData?._id) {
-      createDocument();
+      createDocumentToFill();
     }
   }, [document]);
 

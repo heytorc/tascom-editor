@@ -11,6 +11,7 @@ import IDocument, { IDocumentVersion } from "@/commons/interfaces/IDocument";
 import { ICompletedDocument, ICompletedDocumentField } from "@/commons/interfaces/document/ICompletedDocument";
 
 import FieldsDefaultProps from "@/commons/constants/fields/default.configuration";
+import DocumentDefaultData from "@/commons/constants/documents/default.configuration"
 
 import api from "@/commons/services/api";
 import { useAuth } from "./auth.context";
@@ -32,6 +33,7 @@ interface IDocumentContext {
   setDocumentData: React.Dispatch<React.SetStateAction<any>>,
   targetVersion: number | string | undefined,
   setTargetVersion: React.Dispatch<React.SetStateAction<number | string | undefined>>,
+  createDocument: (name: string) => Promise<IDocument | undefined>,
   findDocument: (id: string, version?: number | string) => void,
   saveDocument: () => Promise<IDocument | undefined>,
   handleDocumentData: (id: string) => void,
@@ -59,7 +61,7 @@ interface IDocumentContext {
   updateFieldOptionData: (optionIndex: number, prop: 'value' | 'label', value: string) => void,
   handleBuildingVersion: (currentDocument?: IDocument) => ICurrentDocument | undefined,
   deleteVersion: () => void,
-  createDocument: () => void,
+  createDocumentToFill: () => void,
   saveDocumentFill: (id: string, field?: ICompletedDocumentField, data?: ICompletedDocument) => void,
   finishDocument: () => void,
   quitDocument: () => void,
@@ -122,7 +124,38 @@ export const DocumentProvider: FC = ({ children }) => {
     }
   }, [document]);
 
+  const createDocument = async (name: string): Promise<IDocument | undefined> => {
+    const { _id: userId, company_id = '62b1053fa702bc507415019e', system_id } = userStoraged ? JSON.parse(userStoraged) : user;
+
+    const documentDefaultData = {
+      ...DocumentDefaultData,
+      name,
+      company_id,
+      system_id
+    };
+
+    try {
+
+      const { data: document }: any = await api.post(`/documents/`, documentDefaultData);
+
+      if (document) {
+        setDocument(document);
+        setDocumentLastVersionData(document);
+
+        setTargetVersion(1);
+
+        return document;
+      }
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
   const findDocument = async (id: string, version?: number | string) => {
+    setDocument(undefined);
+    setDocumentLastVersionData(undefined);
+    setFields([]);
+
     const { data: document }: any = await api.get(`/documents/${id}`);
 
     if (document) {
@@ -165,8 +198,6 @@ export const DocumentProvider: FC = ({ children }) => {
 
           data.versions[index] = currentVersion;
           data.updated_at = new Date;
-          
-          // debugger;
 
           const { data: documentSaved }: { data: IDocument } = await api.patch(`/documents/${document._id}`, data);
           console.log(documentSaved);
@@ -312,13 +343,13 @@ export const DocumentProvider: FC = ({ children }) => {
 
     const positions = fields.map(field => field.position);
 
-    const maxY = Math.max(...positions.map(position => position.y));
+    const maxY = !positions.length ? 0 : Math.max(...positions.map(position => position.y)) + 100;
 
     newField = {
       ...newField,
       position: {
         x: 0,
-        y: maxY + 100
+        y: maxY
       },
       _id: uuidv1()
     };
@@ -431,7 +462,7 @@ export const DocumentProvider: FC = ({ children }) => {
 
       setFields(fieldsCopy);
     }
-  };  
+  };
 
   const updateFieldMin = (min: number) => {
     if (selectedField) {
@@ -536,12 +567,12 @@ export const DocumentProvider: FC = ({ children }) => {
   }
 
   // Document Fill
-  const createDocument = async () => {
+  const createDocumentToFill = async () => {
     if (!document) throw { message: 'DOCUMENT_NOT_FOUND' };
 
     const { _id, version } = document;
 
-    const { _id: userId, company_id = '62b1053fa702bc507415019e', system_id } = userStoraged ? JSON.parse(userStoraged) :  user;
+    const { _id: userId, company_id = '62b1053fa702bc507415019e', system_id } = userStoraged ? JSON.parse(userStoraged) : user;
 
     const { data: [fillingDocument] } = await api.get(`/records?document_id=${_id}&created_by=${userId}&company_id=${company_id}&status=filling`);
 
@@ -618,7 +649,7 @@ export const DocumentProvider: FC = ({ children }) => {
 
     setDocumentData(newDocumentData);
   };
-  
+
   const quitDocument = async () => {
     await api.delete(`/records/${documentData?._id}`);
 
@@ -638,6 +669,7 @@ export const DocumentProvider: FC = ({ children }) => {
         setSelectedField,
         targetVersion,
         setTargetVersion,
+        createDocument,
         findDocument,
         saveDocument,
         handleDocumentData,
@@ -668,7 +700,7 @@ export const DocumentProvider: FC = ({ children }) => {
         updateFieldOptionData,
         handleBuildingVersion,
         deleteVersion,
-        createDocument,
+        createDocumentToFill,
         saveDocumentFill,
         finishDocument,
         quitDocument,

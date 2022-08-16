@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Paper,
   Box,
@@ -10,18 +10,33 @@ import {
   InputAdornment,
   IconButton,
   Chip,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle
 } from '@mui/material'
-import { SearchOutlined as SeachIcon, Article as ArticleIcon } from '@mui/icons-material';
+import { SearchOutlined as SeachIcon, Article as ArticleIcon, Add as AddIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import { useForm, SubmitHandler } from 'react-hook-form';
+
 import { useDocument } from '@/commons/contexts/document.context';
+import { LoadingButton } from '@mui/lab';
+
+interface IFormDocument {
+  name: string;
+}
 
 export default function DocumentPage() {
   const navigate = useNavigate();
+  const { register, handleSubmit, watch, formState: { errors, isSubmitting }, setError } = useForm<IFormDocument>();
 
-  const { handleDocuments, documents } = useDocument();
-  
+  const { handleDocuments, documents, createDocument, document } = useDocument();
+
   const [search, setSearch] = useState<string>('');
-  const [documentList, setDocumentList] = useState(documents)
+  const [documentList, setDocumentList] = useState(documents);
+
+  const [createModalIsOpen, setCreateModalIsOpen] = useState(false);
 
   useEffect(() => handleDocuments(), []);
   useEffect(() => setDocumentList(documents), [documents]);
@@ -44,6 +59,16 @@ export default function DocumentPage() {
     navigate(`/app/document/build/${id}`);
   };
 
+  const handleCreateDocument: SubmitHandler<IFormDocument> = async ({ name }) => {
+    console.log('errors', errors);
+    console.log('name', name);
+    // if (data.username === 'admin') setError('username', { message: 'username is invalid', type: 'validate' })
+    const documentCreated = await createDocument(name);
+
+    if (documentCreated) navigate(`/app/document/build/${documentCreated._id}`);
+    else setError('name', { message: 'Este nome de documento já existe. Por favor, escolha outro.', type: 'validate' });
+  };
+
   return (
     <>
       <Stack
@@ -56,7 +81,17 @@ export default function DocumentPage() {
         <Stack>
           <Text variant="h5" color="secondary">Documentos</Text>
         </Stack>
-        <Stack>
+
+        <Stack flexDirection={'row'} alignItems={'center'}>
+          <Button
+            type="button"
+            variant="contained"
+            color="secondary"
+            onClick={() => setCreateModalIsOpen(true)}
+            startIcon={<AddIcon />}
+          >
+            Novo Documento
+          </Button>
           <FormControl
             style={{ background: 'white' }}
             sx={{ m: 1, width: '25ch' }}
@@ -84,7 +119,7 @@ export default function DocumentPage() {
       </Stack>
 
       <Box>
-        <Stack flexDirection={'row'}>
+        <Stack flexDirection={'row'} gap={3}>
           {documentList.map(document => (
             <Paper
               key={`document_table_item_${document._id}`}
@@ -113,6 +148,49 @@ export default function DocumentPage() {
           ))}
         </Stack>
       </Box>
+
+
+      <Dialog
+        open={createModalIsOpen}
+        onClose={() => setCreateModalIsOpen(!createModalIsOpen)}
+        fullWidth
+      >
+        <form onSubmit={handleSubmit(handleCreateDocument)}>
+          <DialogTitle>{"Novo Documento"}</DialogTitle>
+          <DialogContent>
+            <Stack>
+              <FormControl sx={{ mb: 1, mt: 2 }} variant="outlined" fullWidth>
+                <InputLabel
+                  htmlFor="document-name"
+                  error={!!errors.name?.type}
+                >
+                  Nome do documento
+                </InputLabel>
+                <OutlinedInput
+                  {...register("name", { required: "Digite o nome do documento" })}
+                  error={!!errors.name?.type}
+                  id="document-name"
+                  label="Nome do documento"
+                />
+              </FormControl>
+
+              {errors.name?.message && (<Text color="error" variant="caption">{errors.name.message}</Text>)}
+            </Stack>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setCreateModalIsOpen(false)}>Cancelar</Button>
+            <LoadingButton
+              type="submit"
+              color="secondary"
+              loadingPosition="start"
+              variant={'contained'}
+              loading={isSubmitting}
+            >
+              Criar
+            </LoadingButton>
+          </DialogActions>
+        </form>
+      </Dialog>
     </>
   )
 }

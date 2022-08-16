@@ -246,7 +246,9 @@ export default function BuildDocument() {
 
     return (
       <Rnd
+        id={`editor-field-${index}`}
         key={`editor-field-${index}`}
+        bounds="parent"
         default={{
           ...field.position,
           ...field.size,
@@ -256,7 +258,6 @@ export default function BuildDocument() {
         onResize={handleResize}
         enableResizing={(selectedField?._id === field._id)}
         disableDragging={!(selectedField?._id === field._id)}
-        bounds="parent"
       >
         <div className="handle" style={{ ...styles }} onClick={() => {
           setSelectedField(undefined);
@@ -296,6 +297,7 @@ export default function BuildDocument() {
                 borderRadius: 5,
               }}>
               <Stack
+                className="dragging-container"
                 style={{
                   width: document?.size.width,
                   height: document?.size.height,
