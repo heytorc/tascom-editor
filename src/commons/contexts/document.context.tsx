@@ -166,8 +166,11 @@ export const DocumentProvider: FC = ({ children }) => {
         setTargetVersion(version);
       } else {
         const currentVersion = handleBuildingVersion(document);
-        if (currentVersion)
+
+        if (currentVersion) {
+          setCurrentVersion(currentVersion.data);
           setTargetVersion(currentVersion.data.number);
+        }
       }
     }
   };

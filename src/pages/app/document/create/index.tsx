@@ -18,7 +18,10 @@ import {
   DialogTitle,
   Divider,
   FormHelperText,
-  Slider
+  Slider,
+  Typography as Text,
+  Paper,
+  Box
 } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
 import { Info as InfoIcon } from '@mui/icons-material';
@@ -65,7 +68,8 @@ const CreateDocument = () => {
     saveDocumentFill,
     finishDocument,
     quitDocument,
-    cancelDocument
+    cancelDocument,
+    currentVersion
   } = useDocument();
   const { feedback, setFeedback } = useGlobal();
 
@@ -90,10 +94,14 @@ const CreateDocument = () => {
   useEffect(() => {
     if (document?._id && !documentData?._id && record_id) {
       handleDocumentData(record_id);
-    } else if (document?._id && !documentData?._id) {
-      createDocumentToFill();
     }
   }, [document]);
+
+  useEffect(() => {
+    if (document?._id && !documentData?._id && currentVersion?.status === 'published') {
+      createDocumentToFill();
+    }
+  }, [currentVersion]);
 
   useEffect(() => {
     setDocumentCurrentData(documentData);
@@ -329,25 +337,25 @@ const CreateDocument = () => {
         );
         break;
 
-        case 'range':
-          const marks = field.options ? field.options.map(({ label, value }) => ({ label, value: parseFloat(value) })) : [];
-  
-          fieldComponent = (
-            <Slider
-              defaultValue={field.min}
-              getAriaValueText={value => `${value}`}
-              step={field.steps}
-              min={field.min}
-              max={field.max}
-              valueLabelDisplay="auto"
-              marks={marks}
-              value={value as number}
-              onChange={(event: Event, newValue: number | number[])  => {
-                handleChange({ field_id: field._id, value: newValue as number })
-              }}
-            />
-          )
-          break;
+      case 'range':
+        const marks = field.options ? field.options.map(({ label, value }) => ({ label, value: parseFloat(value) })) : [];
+
+        fieldComponent = (
+          <Slider
+            defaultValue={field.min}
+            getAriaValueText={value => `${value}`}
+            step={field.steps}
+            min={field.min}
+            max={field.max}
+            valueLabelDisplay="auto"
+            marks={marks}
+            value={value as number}
+            onChange={(event: Event, newValue: number | number[]) => {
+              handleChange({ field_id: field._id, value: newValue as number })
+            }}
+          />
+        )
+        break;
 
       default:
         fieldComponent = (
@@ -450,148 +458,169 @@ const CreateDocument = () => {
 
   return (
     <>
-      <Stack
-        display={'flex'}
-        flex={1}
-        alignItems={'center'}
-        style={{
-          background: '#fff',
-          width: '100%',
-          height: document?.size.height
-        }}
-      >
-        <DocumentContainer
-          style={{
-            width: document?.size.width,
-            height: document?.size.height,
-          }}
-        >
-          {fields?.map((field, index: number) => handleBuildField(field, index))}
-        </DocumentContainer>
-      </Stack>
-
-      {/* FAB Button */}
-      <Stack style={{ position: 'fixed', right: 30, bottom: 30 }}>
-        <Zoom
-          in
-          timeout={transitionDuration}
-          style={{
-            transitionDelay: `${transitionDuration.exit}ms`,
-          }}
-          unmountOnExit
-        >
-          <Fab color="secondary" aria-label="more_options" onClick={toggleOptionDialog}>
-            <InfoIcon />
-          </Fab>
-        </Zoom>
-      </Stack>
-
-      {/* Options Dialog */}
-      <Dialog
-        open={optionsIsOpen}
-        onClose={toggleOptionDialog}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          Opções
-        </DialogTitle>
-        <Divider />
-        <DialogContent>
-          <Stack gap={3}>
-            {documentData?.status === 'finished' && (
-              <>
-                <Button variant="contained" onClick={handlePrintDocument} color="secondary">Imprimir</Button>
-                <Button variant="contained" onClick={handleCreateDocument} color="secondary">Novo</Button>
-                <Button variant="outlined" onClick={toggleCancelDialog} color="error">Cancelar</Button>
-              </>
-            )}
-            {documentData?.status === 'filling' && (
-              <>
-                <Button variant="contained" onClick={toggleFinishDialog} color="success">Finalizar</Button>
-                <Button variant="outlined" onClick={toggleQuitDialog} color="error">Desistir</Button>
-              </>
-            )}
-            {documentData?.status === 'canceled' && (
-              <Button variant="contained" onClick={handlePrintDocument} color="secondary">Imprimir</Button>
-            )}
+      {currentVersion?.status === 'published' ? (
+        <>
+          <Stack
+            display={'flex'}
+            flex={1}
+            alignItems={'center'}
+            style={{
+              background: '#fff',
+              width: '100%',
+              height: document?.size.height
+            }}
+          >
+            <DocumentContainer
+              style={{
+                width: document?.size.width,
+                height: document?.size.height,
+              }}
+            >
+              {fields?.map((field, index: number) => handleBuildField(field, index))}
+            </DocumentContainer>
           </Stack>
-        </DialogContent>
-      </Dialog>
 
-      {/* Finish Dialog */}
-      <Dialog
-        open={finishDialogIsOpen}
-        onClose={toggleFinishDialog}
-        aria-labelledby="finish-dialog-title"
-        aria-describedby="finish-dialog-description"
-      >
-        <DialogTitle id="finish-dialog-title">
-          Finalizar Documento
-        </DialogTitle>
-        <Divider />
-        <DialogContent>
-          <DialogContentText id="finish-dialog-description">
-            Deseja finalizar este documento?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={toggleFinishDialog}>Não</Button>
-          <Button onClick={handleFinishDocument} autoFocus>Sim</Button>
-        </DialogActions>
-      </Dialog>
+          {/* FAB Button */}
+          <Stack style={{ position: 'fixed', right: 30, bottom: 30 }}>
+            <Zoom
+              in
+              timeout={transitionDuration}
+              style={{
+                transitionDelay: `${transitionDuration.exit}ms`,
+              }}
+              unmountOnExit
+            >
+              <Fab color="secondary" aria-label="more_options" onClick={toggleOptionDialog}>
+                <InfoIcon />
+              </Fab>
+            </Zoom>
+          </Stack>
 
-      {/* Quit Dialog */}
-      <Dialog
-        open={quitDialogIsOpen}
-        onClose={toggleQuitDialog}
-        aria-labelledby="quit-dialog-title"
-        aria-describedby="quit-dialog-description"
-      >
-        <DialogTitle id="quit-dialog-title">
-          Desistir do Documento
-        </DialogTitle>
-        <Divider />
-        <DialogContent>
-          <DialogContentText id="quit-dialog-description">
-            Deseja desistir do preenchimento deste documento?
-          </DialogContentText>
+          {/* Options Dialog */}
+          <Dialog
+            open={optionsIsOpen}
+            onClose={toggleOptionDialog}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              Opções
+            </DialogTitle>
+            <Divider />
+            <DialogContent>
+              <Stack gap={3}>
+                {documentData?.status === 'finished' && (
+                  <>
+                    <Button variant="contained" onClick={handlePrintDocument} color="secondary">Imprimir</Button>
+                    <Button variant="contained" onClick={handleCreateDocument} color="secondary">Novo</Button>
+                    <Button variant="outlined" onClick={toggleCancelDialog} color="error">Cancelar</Button>
+                  </>
+                )}
+                {documentData?.status === 'filling' && (
+                  <>
+                    <Button variant="contained" onClick={toggleFinishDialog} color="success">Finalizar</Button>
+                    <Button variant="outlined" onClick={toggleQuitDialog} color="error">Desistir</Button>
+                  </>
+                )}
+                {documentData?.status === 'canceled' && (
+                  <Button variant="contained" onClick={handlePrintDocument} color="secondary">Imprimir</Button>
+                )}
+              </Stack>
+            </DialogContent>
+          </Dialog>
 
-          <DialogContentText color="error" id="quit-dialog-alert">
-            Esta operação não poderá ser desfeita!
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={toggleQuitDialog}>Não</Button>
-          <Button onClick={handleQuitDocument} autoFocus>Sim</Button>
-        </DialogActions>
-      </Dialog>
+          {/* Finish Dialog */}
+          <Dialog
+            open={finishDialogIsOpen}
+            onClose={toggleFinishDialog}
+            aria-labelledby="finish-dialog-title"
+            aria-describedby="finish-dialog-description"
+          >
+            <DialogTitle id="finish-dialog-title">
+              Finalizar Documento
+            </DialogTitle>
+            <Divider />
+            <DialogContent>
+              <DialogContentText id="finish-dialog-description">
+                Deseja finalizar este documento?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={toggleFinishDialog}>Não</Button>
+              <Button onClick={handleFinishDocument} autoFocus>Sim</Button>
+            </DialogActions>
+          </Dialog>
 
-      {/* Cencel Dialog */}
-      <Dialog
-        open={cancelDialogIsOpen}
-        onClose={toggleCancelDialog}
-        aria-labelledby="cancel-dialog-title"
-        aria-describedby="cancel-dialog-description"
-      >
-        <DialogTitle id="cancel-dialog-title">
-          Desistir do Documento
-        </DialogTitle>
-        <Divider />
-        <DialogContent>
-          <DialogContentText id="cancel-dialog-description">
-            Deseja cancelar este documento?
-          </DialogContentText>
+          {/* Quit Dialog */}
+          <Dialog
+            open={quitDialogIsOpen}
+            onClose={toggleQuitDialog}
+            aria-labelledby="quit-dialog-title"
+            aria-describedby="quit-dialog-description"
+          >
+            <DialogTitle id="quit-dialog-title">
+              Desistir do Documento
+            </DialogTitle>
+            <Divider />
+            <DialogContent>
+              <DialogContentText id="quit-dialog-description">
+                Deseja desistir do preenchimento deste documento?
+              </DialogContentText>
 
-          <DialogContentText color="error" id="cancel-dialog-alert">
-            Esta operação não poderá ser desfeita!
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={toggleQuitDialog}>Não</Button>
-          <Button onClick={handleCancelDocument} autoFocus>Sim</Button>
-        </DialogActions>
-      </Dialog>
+              <DialogContentText color="error" id="quit-dialog-alert">
+                Esta operação não poderá ser desfeita!
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={toggleQuitDialog}>Não</Button>
+              <Button onClick={handleQuitDocument} autoFocus>Sim</Button>
+            </DialogActions>
+          </Dialog>
+
+          {/* Cencel Dialog */}
+          <Dialog
+            open={cancelDialogIsOpen}
+            onClose={toggleCancelDialog}
+            aria-labelledby="cancel-dialog-title"
+            aria-describedby="cancel-dialog-description"
+          >
+            <DialogTitle id="cancel-dialog-title">
+              Desistir do Documento
+            </DialogTitle>
+            <Divider />
+            <DialogContent>
+              <DialogContentText id="cancel-dialog-description">
+                Deseja cancelar este documento?
+              </DialogContentText>
+
+              <DialogContentText color="error" id="cancel-dialog-alert">
+                Esta operação não poderá ser desfeita!
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={toggleQuitDialog}>Não</Button>
+              <Button onClick={handleCancelDocument} autoFocus>Sim</Button>
+            </DialogActions>
+          </Dialog>
+        </>
+      ) : (
+        <Stack
+          display={'flex'}
+          flex={1}
+          alignItems={'center'}
+          justifyContent={'center'}
+          style={{
+            width: '100%',
+            height: '100vh'
+          }}
+        >
+          <Paper elevation={2}>
+            <Box p={2}>
+              <Text align='center'>Não existe versão publicada para este documento</Text>
+            </Box>
+          </Paper>
+        </Stack>
+      )}
     </>
   );
 };
