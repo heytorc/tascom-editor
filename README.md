@@ -429,24 +429,24 @@ Armazena os dados preenchidos nos documentos.
 
 ## Backend
 
-- ⬜ Autenticação JWT
+- ✅ Autenticação JWT
 - Rotas
   - Autenticação
-    - ⬜ Gerar token
-    - ⬜ Validar token
-    - ⬜ Autenticar usuario
+    - ✅ Gerar token
+    - ✅ Validar token
+    - ✅ Autenticar usuario
   - ⬜ CRUD Usuários
   - ⬜ CRUD Sistema
   - CRUD Estrutura Documento
-    - ⬜ Versionamento
-    - ⬜ API para retorno dos campos
+    - ✅ Versionamento
+    - ✅ API para retorno dos campos
     - ⬜ Validação dos tipos dos campos
     - ⬜ Impressão do documento
-  - ⬜ CRUD Preenchimento Documento
+  - ✅ CRUD Preenchimento Documento
 
 ## Frontend
 
-- ⬜ Autenticação
+- ✅ Autenticação
 - ⬜ Permissões
 - ⬜ Menu
 - (CRUD) Lista, formulários e visualização:
@@ -478,7 +478,7 @@ Armazena os dados preenchidos nos documentos.
     - ⬜ Impressão do documento (Deixar responsabilidade para o back)
     - ✅ Tela integrada para preenchimento do documento por sistemas externos
     - ✅ Validações dos campos do documento
-- ⬜ Incluir debounce nos campos de pesquisa
+- ✅ Incluir debounce nos campos de pesquisa
 - ⬜ Incluir loading quando o backend estiver funcionando
 - ✅ Incluir componentes de feedback (toasts e messages)
-- ⬜ Armazenar a última página antes de deslogar por sessão expirada
+- ✅ Armazenar a última página antes de deslogar por sessão expirada
