@@ -42,7 +42,8 @@ export default function BuildDocument() {
     selectedField,
     setSelectedField,
     updateFieldPosition,
-    updateFieldSize
+    updateFieldSize,
+    clearContext
   } = useDocument();
 
   const queryParams = useQuery();
@@ -50,6 +51,7 @@ export default function BuildDocument() {
 
   useEffect(() => {
     let version = queryParams.get("version") ?? undefined;
+    clearContext();
     if (id)
       findDocument(id, version);
   }, []);

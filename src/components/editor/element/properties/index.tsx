@@ -62,6 +62,7 @@ export default function ElementProperties() {
     toggleRequiredField,
     setTargetVersion,
     setSelectedField,
+    setFields
   } = useDocument();
 
   const navigate = useNavigate();
@@ -102,6 +103,7 @@ export default function ElementProperties() {
 
   const handleOpenVersion = (versionNumber: number) => {
     if (document) {
+      setFields([]);
       navigate(`/app/document/build/${document?._id}?version=${versionNumber}`);
       setTargetVersion(versionNumber);
     }
@@ -441,7 +443,7 @@ export default function ElementProperties() {
             {/* Document Versions */}
             <TabPanel value="3">
               <ListComponent>
-                {document?.versions.reverse().map((version, index) => (
+                {document?.versions.sort((a, b) => b.number - a.number).map((version, index) => (
                   <Stack
                     key={`document_version_${index}`}
                     bgcolor={(theme) => version.number === currentVersion?.number ? theme.palette.secondary.light : ''}

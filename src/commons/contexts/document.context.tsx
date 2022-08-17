@@ -65,7 +65,8 @@ interface IDocumentContext {
   saveDocumentFill: (id: string, field?: ICompletedDocumentField, data?: ICompletedDocument) => void,
   finishDocument: () => void,
   quitDocument: () => void,
-  cancelDocument: () => void
+  cancelDocument: () => void,
+  clearContext: () => void
 }
 
 interface IFieldPosition {
@@ -108,6 +109,17 @@ export const DocumentProvider: FC = ({ children }) => {
     fillDocumentFields();
   }, [document, targetVersion]);
 
+  const clearContext = () => {
+    setDocuments([]);
+    setDocument(undefined);
+    setDocumentLastVersionData(undefined);
+    setTargetVersion(undefined);
+    setCurrentVersion(undefined);
+    setFields([]);
+    setSelectedField(undefined);
+    setDocumentData(undefined);
+  }
+
   const handleBuildingVersion = useCallback((currentDocument?: IDocument): ICurrentDocument | undefined => {
     const doc = document || currentDocument;
 
@@ -122,7 +134,7 @@ export const DocumentProvider: FC = ({ children }) => {
 
       if (actualIndexVersion > -1) return { data: versions[actualIndexVersion], index: actualIndexVersion };
     }
-  }, [document]);
+  }, []);
 
   const createDocument = async (name: string): Promise<IDocument | undefined> => {
     const { _id: userId, company_id = '62b1053fa702bc507415019e', system_id } = userStoraged ? JSON.parse(userStoraged) : user;
@@ -707,7 +719,8 @@ export const DocumentProvider: FC = ({ children }) => {
         saveDocumentFill,
         finishDocument,
         quitDocument,
-        cancelDocument
+        cancelDocument,
+        clearContext
       }}
     >
       {children}
