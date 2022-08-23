@@ -1,5 +1,6 @@
 import React, { createContext, FC, useCallback, useContext, useEffect, useState } from "react";
 import { v1 as uuidv1 } from 'uuid';
+import { cloneDeep } from 'lodash';
 
 import useLocalStorage from "@/commons/hooks/useLocalStorage";
 
@@ -271,7 +272,7 @@ export const DocumentProvider: FC = ({ children }) => {
 
   const toggleRequiredField = (isRequired: boolean) => {
     if (selectedField) {
-      let fieldsCopy = [...fields];
+      const fieldsCopy = cloneDeep(fields);
 
       const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
       fieldsCopy[fieldKey].required = isRequired;
@@ -354,7 +355,9 @@ export const DocumentProvider: FC = ({ children }) => {
   };
 
   const createField = (type: FieldType) => {
-    let newField = FieldsDefaultProps[type];
+    setSelectedField(undefined);
+
+    let newField = cloneDeep(FieldsDefaultProps[type]);
 
     const positions = fields.map(field => field.position);
 
@@ -369,15 +372,16 @@ export const DocumentProvider: FC = ({ children }) => {
       _id: uuidv1()
     };
 
-    const fieldsCopy = [...fields, newField];
+    const fieldsCopy = cloneDeep(fields);
+    fieldsCopy.push(newField);
 
     setFields(fieldsCopy);
-    setSelectedField(newField);
+    setTimeout(() => setSelectedField(newField), 100);
   };
 
   const deleteField = () => {
     if (selectedField) {
-      let fieldsCopy = [...fields];
+      const fieldsCopy = cloneDeep(fields);
 
       const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
       fieldsCopy.splice(fieldKey, 1);
@@ -389,7 +393,7 @@ export const DocumentProvider: FC = ({ children }) => {
 
   const updateFieldLabel = (value: string) => {
     if (selectedField) {
-      let fieldsCopy = [...fields];
+      const fieldsCopy = cloneDeep(fields);
 
       const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
       fieldsCopy[fieldKey].label = value;
@@ -401,7 +405,7 @@ export const DocumentProvider: FC = ({ children }) => {
 
   const updateFieldTag = (value: string) => {
     if (selectedField) {
-      let fieldsCopy = [...fields];
+      const fieldsCopy = cloneDeep(fields);
 
       const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
       fieldsCopy[fieldKey].tag = value;
@@ -413,7 +417,7 @@ export const DocumentProvider: FC = ({ children }) => {
 
   const updateFieldPlaceholder = (value: string) => {
     if (selectedField) {
-      let fieldsCopy = [...fields];
+      const fieldsCopy = cloneDeep(fields);
 
       const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
       fieldsCopy[fieldKey].placeholder = value;
@@ -425,7 +429,7 @@ export const DocumentProvider: FC = ({ children }) => {
 
   const updateFieldPosition = (position: IFieldPosition, only?: "x" | "y") => {
     if (selectedField) {
-      let fieldsCopy = [...fields];
+      const fieldsCopy = cloneDeep(fields);
 
       const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
 
@@ -441,7 +445,7 @@ export const DocumentProvider: FC = ({ children }) => {
 
   const updateFieldSize = (size: IElementSize, only?: "width" | "height") => {
     if (selectedField) {
-      let fieldsCopy = [...fields];
+      const fieldsCopy = cloneDeep(fields);
 
       const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
 
@@ -457,7 +461,7 @@ export const DocumentProvider: FC = ({ children }) => {
 
   const updateFieldStep = (steps: number,) => {
     if (selectedField) {
-      let fieldsCopy = [...fields];
+      const fieldsCopy = cloneDeep(fields);
 
       const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
 
@@ -469,7 +473,7 @@ export const DocumentProvider: FC = ({ children }) => {
 
   const updateFieldMax = (max: number) => {
     if (selectedField) {
-      let fieldsCopy = [...fields];
+      const fieldsCopy = cloneDeep(fields);
 
       const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
 
@@ -481,7 +485,7 @@ export const DocumentProvider: FC = ({ children }) => {
 
   const updateFieldMin = (min: number) => {
     if (selectedField) {
-      let fieldsCopy = [...fields];
+      const fieldsCopy = cloneDeep(fields);
 
       const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
 
@@ -493,7 +497,7 @@ export const DocumentProvider: FC = ({ children }) => {
 
   const addFieldOptions = (option: IFieldOptions) => {
     if (selectedField) {
-      let fieldsCopy = [...fields];
+      const fieldsCopy = cloneDeep(fields);
 
       const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
       fieldsCopy[fieldKey].options?.push(option);
@@ -505,7 +509,7 @@ export const DocumentProvider: FC = ({ children }) => {
 
   const updateFieldOptions = (options: IFieldOptions[]) => {
     if (selectedField) {
-      let fieldsCopy = [...fields];
+      const fieldsCopy = cloneDeep(fields);
 
       const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
       fieldsCopy[fieldKey].options = options;
@@ -517,7 +521,7 @@ export const DocumentProvider: FC = ({ children }) => {
 
   const deleteFieldOption = (index: number) => {
     if (selectedField) {
-      let fieldsCopy = [...fields];
+      const fieldsCopy = cloneDeep(fields);
 
       const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id);
 
@@ -533,7 +537,7 @@ export const DocumentProvider: FC = ({ children }) => {
 
   const updateFieldOrientation = (orientation: FieldOrientationType) => {
     if (selectedField) {
-      let fieldsCopy = [...fields];
+      const fieldsCopy = cloneDeep(fields);
 
       const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id);
       fieldsCopy[fieldKey].orientation = orientation;
@@ -545,7 +549,7 @@ export const DocumentProvider: FC = ({ children }) => {
 
   const updateFieldOptionData = (optionIndex: number, prop: 'value' | 'label', value: string) => {
     if (selectedField) {
-      let fieldsCopy = [...fields];
+      const fieldsCopy = cloneDeep(fields);
 
       const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id);
       let optionsCopy = fieldsCopy[fieldKey].options;
