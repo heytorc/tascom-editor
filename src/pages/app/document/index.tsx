@@ -111,7 +111,7 @@ export default function DocumentPage() {
       </Stack>
 
       <Box>
-        <Stack flexDirection={'row'} gap={3}>
+        <Stack flexDirection={'row'} gap={3} flexWrap={'wrap'}>
 
           {filterDocuments.length > 0 ? (
             <>
