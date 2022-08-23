@@ -69,21 +69,13 @@ export default function DocumentPage() {
         alignItems={'center'}
         justifyContent={'space-between'}
         mb={5}
+        flexWrap={'wrap'}
       >
         <Stack>
           <Text variant="h5" color="secondary">Documentos</Text>
         </Stack>
 
-        <Stack flexDirection={'row'} alignItems={'center'}>
-          <Button
-            type="button"
-            variant="contained"
-            color="secondary"
-            onClick={() => setCreateModalIsOpen(true)}
-            startIcon={<AddIcon />}
-          >
-            Novo Documento
-          </Button>
+        <Stack flexDirection={'row'} alignItems={'center'} justifyContent={'flex-end'}>
           <FormControl
             style={{ background: 'white' }}
             sx={{ m: 1, width: '25ch' }}
@@ -107,6 +99,15 @@ export default function DocumentPage() {
               label="Password"
             />
           </FormControl>
+          <Button
+            type="button"
+            variant="contained"
+            color="secondary"
+            onClick={() => setCreateModalIsOpen(true)}
+            startIcon={<AddIcon />}
+          >
+            Criar
+          </Button>
         </Stack>
       </Stack>
 
