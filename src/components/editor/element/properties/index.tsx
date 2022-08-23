@@ -62,7 +62,8 @@ export default function ElementProperties() {
     toggleRequiredField,
     setTargetVersion,
     setSelectedField,
-    setFields
+    setFields,
+    targetVersion
   } = useDocument();
 
   const navigate = useNavigate();
@@ -102,10 +103,10 @@ export default function ElementProperties() {
   useEventListener('keyup', (handler: any) => handleKeyPress(handler.keyCode));
 
   const handleOpenVersion = (versionNumber: number) => {
-    if (document) {
+    if (document && targetVersion !== versionNumber) {
       setFields([]);
-      navigate(`/app/document/build/${document?._id}?version=${versionNumber}`);
       setTargetVersion(versionNumber);
+      navigate(`/app/document/build/${document?._id}?version=${versionNumber}`);
     }
   };
 
