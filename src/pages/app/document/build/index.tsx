@@ -90,7 +90,7 @@ export default function BuildDocument() {
       borderStyle: 'dashed',
       borderColor: '#4FD1C5',
       transition: '.5s ease',
-      height: '100%',
+      height: (field.label && field.type === 'textarea') ? field.size.height + 50 : field.size.height,
       cursor: 'move',
     };
 
