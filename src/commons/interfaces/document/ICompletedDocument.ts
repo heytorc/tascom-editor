@@ -2,7 +2,7 @@ import IDocument from "../IDocument";
 
 export interface ICompletedDocumentField {
   field_id: string,
-  value: string | number | boolean
+  value?: string | number | boolean
 }
 
 export interface ICompletedDocument {

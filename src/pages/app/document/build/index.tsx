@@ -128,7 +128,7 @@ export default function BuildDocument() {
               <DatePicker
                 onChange={(date: unknown, keyboardInputValue?: string) => { }}
                 renderInput={(params) => <EditorBuildInputText size="small" className={`${selectedClass}`} {...params} />}
-                value={undefined}
+                value={null}
                 disabled
               />
             </LocalizationProvider>

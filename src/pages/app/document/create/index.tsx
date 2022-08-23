@@ -194,7 +194,10 @@ const CreateDocument = () => {
             <LocalizationProvider dateAdapter={DateAdapter} locale={ptBrLocale}>
               <DatePicker
                 onChange={(date: Date | null, keyboardInputValue?: string) => {
-                  handleChange({ field_id: field._id, value: dayjs(date).toISOString() })
+                  handleChange({
+                    field_id: field._id,
+                    value: dayjs(date).isValid() ? dayjs(date).toISOString() : keyboardInputValue
+                  });
                 }}
                 renderInput={(params) => (
                   <TextField
@@ -203,7 +206,7 @@ const CreateDocument = () => {
                     {...params}
                   />
                 )}
-                value={value ? `${value}` : undefined}
+                value={value ? `${value}` : null}
                 disabled={isDisabled}
               />
             </LocalizationProvider>
