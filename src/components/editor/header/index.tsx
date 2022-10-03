@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Stack,
@@ -77,7 +77,7 @@ export default function EditorHeader() {
     }
   };
 
-  const handleSaveDocument = async () => {
+  const handleSaveDocument = useCallback(async () => {
     const documentData = await saveDocument();
 
     if (documentData) {
@@ -87,7 +87,7 @@ export default function EditorHeader() {
         navigate(`/app/document/build/${document?._id}?version=${buildingVersion.number}`);
     }
 
-  };
+  }, [document, fields])
 
   const handleDisableSaveButton = (): boolean => {
     const compareData = JSON.stringify(documentLastVersionData) === JSON.stringify(document);

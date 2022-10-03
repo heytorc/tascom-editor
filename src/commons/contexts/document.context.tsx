@@ -197,9 +197,9 @@ export const DocumentProvider: FC = ({ children }) => {
     }
   };
 
-  const saveDocument = async (): Promise<IDocument | undefined> => {
+  const saveDocument = useCallback(async (): Promise<IDocument | undefined> => {
     if (document) {
-      let version = handleBuildingVersion();
+      let version = handleBuildingVersion(document);
 
       if (!version) return;
 
@@ -216,8 +216,9 @@ export const DocumentProvider: FC = ({ children }) => {
           data.updated_at = new Date;
 
           const { data: documentSaved }: { data: IDocument } = await api.patch(`/documents/${document._id}`, data);
-          console.log(documentSaved);
+          
           setDocument(documentSaved);
+          return documentSaved;
 
         } else if (currentVersion.status === 'published') {
           const documentCopy = { ...document };
@@ -235,6 +236,7 @@ export const DocumentProvider: FC = ({ children }) => {
           });
 
           const { data: documentSaved }: { data: IDocument } = await api.patch(`/documents/${document._id}`, documentData);
+
           setDocument(documentSaved);
           setTargetVersion(newVersion);
 
@@ -242,7 +244,7 @@ export const DocumentProvider: FC = ({ children }) => {
         }
       }
     }
-  };
+  }, [document, fields]);
 
   const handleDocuments = async () => {
     const { data } = await api.get<IDocument[]>(`/documents`);
@@ -350,7 +352,6 @@ export const DocumentProvider: FC = ({ children }) => {
       }
 
       const documentSaved = await api.patch(`/documents/${document._id}`, documentData);
-      console.log(documentSaved);
     }
   };
 
