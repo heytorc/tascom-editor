@@ -338,9 +338,11 @@ export const DocumentProvider: FC = ({ children }) => {
 
       const { data: documentData }: { data: IDocument } = await api.get(`/documents/${document._id}`);
 
-      documentData.version = parseInt(`${targetVersion}`);
+      const newVersion = parseInt(`${targetVersion}`);
 
-      let versionKey = documentData.versions.findIndex(item => item.number === targetVersion);
+      documentData.version = newVersion;
+
+      let versionKey = documentData.versions.findIndex(item => item.number === newVersion);
 
       if (versionKey > -1) {
         documentData.versions[versionKey] = {
