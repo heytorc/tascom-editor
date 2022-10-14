@@ -86,17 +86,17 @@ export default function ElementProperties() {
   };
 
   const handleKeyPress = (keyCode?: number) => {
-    switch(keyCode) {
+    switch (keyCode) {
       case keycodes.DELETE:
-      setDeleteModalIsOpen(true);
-      break;
-      
+        setDeleteModalIsOpen(true);
+        break;
+
       case keycodes.ESC:
-      setSelectedField(undefined);
-      break;
-      
+        setSelectedField(undefined);
+        break;
+
       default:
-      break;
+        break;
     }
   };
 
@@ -182,15 +182,17 @@ export default function ElementProperties() {
 
 
                   {/* Field Placeholder */}
-                  <Stack paddingY={1} mb={1}>
-                    <TextField
-                      label="Placeholder"
-                      onChange={(element) => updateFieldPlaceholder(element.currentTarget.value)}
-                      name={`${selectedField?.label}-placeholder`}
-                      value={selectedField?.placeholder}
-                      size="small"
-                    />
-                  </Stack>
+                  {typeof selectedField?.placeholder !== 'undefined' && (
+                    <Stack paddingY={1} mb={1}>
+                      <TextField
+                        label="Placeholder"
+                        onChange={(element) => updateFieldPlaceholder(element.currentTarget.value)}
+                        name={`${selectedField?.label}-placeholder`}
+                        value={selectedField?.placeholder}
+                        size="small"
+                      />
+                    </Stack>
+                  )}
 
                   {/* Field Size */}
                   <Stack paddingY={1} mb={1}>
@@ -231,7 +233,7 @@ export default function ElementProperties() {
                         name={`${selectedField?.min}-min`}
                         value={selectedField?.min}
                         size="small"
-                        />
+                      />
                     </Stack>
                   )}
 
@@ -245,10 +247,10 @@ export default function ElementProperties() {
                         name={`${selectedField?.max}-max`}
                         value={selectedField?.max}
                         size="small"
-                        />
+                      />
                     </Stack>
                   )}
-                  
+
                   {/* Field Steps */}
                   {selectedField && selectedField.type === 'range' && (
                     <Stack paddingY={1} mb={1}>
@@ -259,7 +261,7 @@ export default function ElementProperties() {
                         name={`${selectedField?.steps}-steps`}
                         value={selectedField?.steps}
                         size="small"
-                        />
+                      />
                     </Stack>
                   )}
 
@@ -351,7 +353,7 @@ export default function ElementProperties() {
                       </Stack>
                     </Stack>
                   )}
-                  
+
                   {/* Field is Required */}
                   {!['yesOrNot', 'label', 'checkbox'].includes(selectedField?.type) && (
                     <Stack>
