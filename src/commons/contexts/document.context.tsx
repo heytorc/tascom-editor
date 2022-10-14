@@ -387,10 +387,14 @@ export const DocumentProvider: FC = ({ children }) => {
       const fieldsCopy = cloneDeep(fields);
 
       const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
+
       fieldsCopy.splice(fieldKey, 1);
 
       setSelectedField(undefined);
-      setFields(fieldsCopy);
+      setFields([]);
+
+      // Delay para atualização do estado
+      setTimeout(() => setFields(fieldsCopy), 100)
     }
   };
 
