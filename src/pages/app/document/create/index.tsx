@@ -271,19 +271,28 @@ const CreateDocument = () => {
 
       case 'checkbox':
         fieldComponent = (
-          <FormGroup>
-            <FormControlLabel
-              control={(
-                <EditorBuildCheckbox
-                  color="secondary"
-                  onChange={(element, checked) => handleChange({ field_id: field._id, value: checked })}
-                  checked={!!value}
+          <FormControl>
+            <RadioGroup
+              row={field?.orientation === 'row'}
+              aria-labelledby="demo-radio-buttons-group-label"
+              name={field.tag}
+            >
+              {field.options?.map(({ label, value }, index) => (
+                <FormControlLabel
+                  key={`field_${field._id}_checkbox_option_${index}`}
+                  control={(
+                    <EditorBuildCheckbox
+                      color="secondary"
+                      onChange={(element, checked) => handleChange({ field_id: field._id, value: checked })}
+                      checked={!!value}
+                    />
+                  )}
+                  label={label}
+                  disabled={isDisabled}
                 />
-              )}
-              label={field.label}
-              disabled={isDisabled}
-            />
-          </FormGroup>
+              ))}
+            </RadioGroup>
+          </FormControl>
         );
         break;
 

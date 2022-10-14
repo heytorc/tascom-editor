@@ -147,12 +147,25 @@ const PreviewDocument = () => {
 
       case 'checkbox':
         fieldComponent = (
-          <FormGroup>
-            <FormControlLabel
-              control={<EditorBuildCheckbox color="secondary" />}
-              label={field.label}
-            />
-          </FormGroup>
+          <FormControl>
+            <RadioGroup
+              row={field?.orientation === 'row'}
+              aria-labelledby="demo-radio-buttons-group-label"
+              name={field.tag}
+            >
+              {field.options?.map(({ label, value }, index) => (
+                <FormControlLabel
+                  key={`field_${field._id}_checkbox_option_${index}`}
+                  control={(
+                    <EditorBuildCheckbox
+                      color="secondary"
+                    />
+                  )}
+                  label={label}
+                />
+              ))}
+            </RadioGroup>
+          </FormControl>
         );
         break;
 
@@ -188,7 +201,7 @@ const PreviewDocument = () => {
           />
         );
         break;
-      
+
       case 'range':
         const marks = field.options ? field.options.map(({ label, value }) => ({ label, value: parseFloat(value) })) : [];
 

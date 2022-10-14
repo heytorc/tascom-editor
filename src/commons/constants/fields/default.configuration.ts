@@ -126,12 +126,17 @@ const checkbox: IField = {
     y: 20
   },
   size: {
-    width: 135,
+    width: 270,
     height: 50
   },
   styles: {},
   required: false,
   useRichText: false,
+  options: [
+    { label: 'Opção 1', value: '1' },
+    { label: 'Opção 2', value: '2' },
+  ],
+  orientation: 'row',
 }
 
 const radio: IField = {

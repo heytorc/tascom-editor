@@ -182,9 +182,22 @@ export default function BuildDocument() {
 
       case 'checkbox':
         fieldComponent = (
-          <FormGroup style={{ cursor: 'move' }}>
-            <FormControlLabel control={<EditorBuildCheckbox className={`${selectedClass}`} defaultChecked disabled />} label={field.label} />
-          </FormGroup>
+          <FormControl>
+            <RadioGroup
+              row={field?.orientation === 'row'}
+              aria-labelledby="demo-radio-buttons-group-label"
+              name={field.tag}
+            >
+              {field.options?.map(({ label, value }, index) => (
+                <FormControlLabel
+                  key={`field_${field._id}_checkbox_option_${index}`}
+                  control={<EditorBuildCheckbox className={`${selectedClass}`} defaultChecked disabled />}
+                  label={label}
+                  value={value}
+                />
+              ))}
+            </RadioGroup>
+          </FormControl>
         );
         break;
 
