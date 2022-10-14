@@ -587,7 +587,7 @@ export const DocumentProvider: FC = ({ children }) => {
 
       const documentCopy = { ...document };
 
-      if (currentVersionIndex && currentVersionIndex > -1) {
+      if (typeof currentVersionIndex === 'number' && currentVersionIndex > -1) {
         documentCopy.versions?.splice(currentVersionIndex, 1);
 
         const { data: documentSaved } = await api.patch(`/documents/${documentCopy._id}`, documentCopy);
