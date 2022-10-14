@@ -447,16 +447,25 @@ export const DocumentProvider: FC = ({ children }) => {
   const updateFieldSize = (size: IElementSize, only?: "width" | "height") => {
     if (selectedField) {
       const fieldsCopy = cloneDeep(fields);
+      const selectedFieldCopy = cloneDeep(selectedField);
 
       const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
 
       if (only) {
+
+        if (document && size[only] > document?.size[only]) return;
+
         fieldsCopy[fieldKey].size[only] = isNaN(size[only]) ? 0 : size[only];
+        selectedFieldCopy.size[only] = fieldsCopy[fieldKey].size[only];
       } else {
+        if (document && (size.width > document?.size.width || size.height > document?.size.height)) return;
+
         fieldsCopy[fieldKey].size = size;
+        selectedFieldCopy.size = size;
       }
 
       setFields(fieldsCopy);
+      setSelectedField(selectedFieldCopy)
     }
   };
 
