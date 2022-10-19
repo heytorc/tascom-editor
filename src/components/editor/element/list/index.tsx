@@ -9,13 +9,13 @@ import {
   ToggleOnOutlined,
   RadioButtonCheckedOutlined,
   ArrowDropDownCircleOutlined,
-  LinearScaleOutlined
+  LinearScaleOutlined,
+  ImageRounded
 } from '@mui/icons-material';
 
 import { useDocument } from "@/commons/contexts/document.context";
 
 import { ElementTypeButton } from "@/commons/styles/editor";
-
 
 export default function EditorElements() {
 
@@ -86,6 +86,27 @@ export default function EditorElements() {
 
             </Stack>
 
+            <Text>Imagens</Text>
+
+            <Stack
+              flex={1}
+              flexDirection={'row'}
+              flexWrap={'wrap'}
+              alignItems={'center'}
+              justifyContent={'space-between'}
+              gap={2}
+              marginY={3}
+            >
+              <ElementTypeButton
+                color="primary"
+                onClick={() => createField('image')}
+                startIcon={<ImageRounded />}
+                style={{ justifyContent: 'flex-start' }}
+                fullWidth
+              >
+                Imagem
+              </ElementTypeButton>
+            </Stack>
 
             <Text>Elementos de Data</Text>
 
@@ -170,6 +191,7 @@ export default function EditorElements() {
                 Intervalo
               </ElementTypeButton>
             </Stack>
+            
           </Stack>
         </Stack>
       </Box>
