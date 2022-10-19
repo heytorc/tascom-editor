@@ -27,7 +27,8 @@ export default interface IField {
   _id: string,
   label: string,
   placeholder?: string,
-  tag: string;
+  src?: string,
+  tag: string,
   type: FieldType,
   position: {
     x: number,
