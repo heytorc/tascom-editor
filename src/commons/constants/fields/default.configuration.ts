@@ -232,7 +232,7 @@ const image: IField = {
   label: "Image",
   type: "image",
   tag: "image",
-  src: "https://www.tascominformatica.com.br/img/logo-tascom2.png",
+  src: "",
   position: {
     x: 0,
     y: 20
