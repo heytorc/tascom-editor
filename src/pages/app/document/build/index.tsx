@@ -80,7 +80,7 @@ export default function BuildDocument() {
       justifyContent: "flex-start",
       flexDirection: 'column',
       transition: '.5s ease',
-      padding: 5,
+      padding: 2,
       cursor: 'pointer',
     };
 
@@ -294,6 +294,8 @@ export default function BuildDocument() {
           ...field.position,
           ...field.size,
         }}
+        dragGrid={[10, 10]}
+        resizeGrid={[10, 10]}
         maxWidth={800}
         onDragStop={handleDragStop}
         onResize={handleResize}
