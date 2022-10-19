@@ -368,6 +368,17 @@ const CreateDocument = () => {
           />
         )
         break;
+      
+      case 'image':
+        fieldComponent = (
+          <img
+            src={field.src}
+            alt={''}
+            width={'100%'}
+            height={'100%'}
+          />
+        )
+        break;
 
       default:
         fieldComponent = (

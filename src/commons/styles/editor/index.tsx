@@ -79,3 +79,9 @@ export const EditorReorderItem = styled.li`
     gap: 1rem;
   }
 `;
+
+export const EditorImageInput = styled.img`
+  width: 100%;
+  border-radius: .5rem;
+  border: 2px dashed #eee;
+`;

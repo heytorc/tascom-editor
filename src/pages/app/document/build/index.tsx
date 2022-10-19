@@ -252,6 +252,17 @@ export default function BuildDocument() {
         )
         break;
 
+      case 'image':
+        fieldComponent = (
+          <img
+            src={field.src}
+            alt={''}
+            width={'100%'}
+            height={'100%'}
+          />
+        )
+        break;
+
       default:
         fieldComponent = (
           <EditorLabel m={0} dangerouslySetInnerHTML={{ __html: field.label }} />
