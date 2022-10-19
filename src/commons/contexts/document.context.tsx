@@ -52,6 +52,7 @@ interface IDocumentContext {
   updateFieldStep: (step: number) => void,
   updateFieldMax: (max: number) => void,
   updateFieldMin: (min: number) => void,
+  updateSourceField: (src: string | null) => void,
   documents: IDocument[],
   handleDocuments: () => void,
   updateDocumentSize: (size: IElementSize, only?: "width" | "height") => void,
@@ -579,6 +580,18 @@ export const DocumentProvider: FC = ({ children }) => {
     }
   }
 
+  const updateSourceField = (src: string | null) => {
+    if (selectedField) {
+      const fieldsCopy = cloneDeep(fields);
+
+      const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id);
+      fieldsCopy[fieldKey].src = src ?? undefined;
+
+      setSelectedField(fieldsCopy[fieldKey]);
+      setFields(fieldsCopy);
+    }
+  }
+
   const deleteVersion = async () => {
     if (currentVersion) {
       if (currentVersion.status !== 'building') throw { message: 'VERSION_IS_NOT_BUILDING' };
@@ -725,6 +738,7 @@ export const DocumentProvider: FC = ({ children }) => {
         updateFieldStep,
         updateFieldMax,
         updateFieldMin,
+        updateSourceField,
         handleDocuments,
         updateDocumentSize,
         addFieldOptions,
