@@ -24,7 +24,7 @@ import {
   Box
 } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
-import { Info as InfoIcon } from '@mui/icons-material';
+import { ImageRounded, Info as InfoIcon } from '@mui/icons-material';
 import { DatePicker, LocalizationProvider } from '@mui/lab';
 import DateAdapter from '@mui/lab/AdapterDayjs';
 import ptBrLocale from 'dayjs/locale/pt-br';
@@ -371,12 +371,26 @@ const CreateDocument = () => {
       
       case 'image':
         fieldComponent = (
-          <img
-            src={field.src}
-            alt={''}
-            width={'100%'}
-            height={'100%'}
-          />
+          <>
+            {field.src ? (
+              <img
+                src={field.src}
+                alt={''}
+                width={'100%'}
+                height={'100%'}
+              />
+            ) : (
+              <Stack
+                flex={1}
+                display={'flex'}
+                justifyContent={'center'}
+                alignItems={'center'}
+                width={'100%'}
+              >
+                <ImageRounded fontSize={'large'} color={'primary'} />
+              </Stack>
+            )}
+          </>
         )
         break;
 

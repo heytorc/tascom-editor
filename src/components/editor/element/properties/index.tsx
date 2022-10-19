@@ -387,12 +387,28 @@ export default function ElementProperties() {
                         component="label"
                         fullWidth
                       >
-                        <EditorImageInput
-                          src={selectedField.src}
-                        />
+                        {selectedField.src ? (
+                          <EditorImageInput
+                            src={selectedField.src}
+                          />
+                        ) : (
+                          <Box
+                            flex={1}
+                            display={'flex'}
+                            justifyContent={'center'}
+                            alignItems={'center'}
+                            width={'100%'}
+                            minHeight={'10rem'}
+                            borderRadius={'.5rem'}
+                            border={'2px dashed #eee'}
+                          >
+                            <Text>Clique para selecionar uma imagem</Text>
+                          </Box>
+                        )}
                         <input
                           type="file"
                           onChange={(e) => handleUpdateSourceField(e.currentTarget.files)}
+                          accept="image/png, image/gif, image/jpeg"
                           hidden
                         />
                       </Button>

@@ -84,4 +84,5 @@ export const EditorImageInput = styled.img`
   width: 100%;
   border-radius: .5rem;
   border: 2px dashed #eee;
+  min-height: 10rem;
 `;

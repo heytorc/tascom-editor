@@ -11,6 +11,7 @@ import {
   Autocomplete,
   Slider,
 } from "@mui/material";
+import { ImageRounded } from '@mui/icons-material';
 import { DatePicker, LocalizationProvider } from '@mui/lab';
 import DateAdapter from '@mui/lab/AdapterDayjs';
 import ptBrLocale from 'dayjs/locale/pt-br';
@@ -254,12 +255,26 @@ export default function BuildDocument() {
 
       case 'image':
         fieldComponent = (
-          <img
-            src={field.src}
-            alt={''}
-            width={'100%'}
-            height={'100%'}
-          />
+          <>
+            {field.src ? (
+              <img
+                src={field.src}
+                alt={''}
+                width={'100%'}
+                height={'100%'}
+              />
+            ) : (
+              <Stack
+                flex={1}
+                display={'flex'}
+                justifyContent={'center'}
+                alignItems={'center'}
+                width={'100%'}
+              >
+                <ImageRounded fontSize={'large'} color={'primary'} />
+              </Stack>
+            )}
+          </>
         )
         break;
 
