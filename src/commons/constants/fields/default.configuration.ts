@@ -227,6 +227,25 @@ const range: IField = {
   min: 1
 }
 
+const image: IField = {
+  _id: "",
+  label: "Image",
+  type: "image",
+  tag: "image",
+  src: "https://www.tascominformatica.com.br/img/logo-tascom2.png",
+  position: {
+    x: 0,
+    y: 20
+  },
+  size: {
+    width: 400,
+    height: 200
+  },
+  styles: {},
+  required: false,
+  useRichText: false,
+}
+
 export default {
   text,
   date,
@@ -237,5 +256,6 @@ export default {
   checkbox,
   select,
   yesOrNot,
-  range
+  range,
+  image
 }
