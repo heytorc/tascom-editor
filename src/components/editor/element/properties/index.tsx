@@ -36,7 +36,13 @@ import VersionBadgeComponent from '@/components/editor/document/version.badge';
 
 import keycodes from '@/commons/constants/keycodes';
 
-import { EditorReorderGroup, EditorReorderItem, EditorBuildRadio, EditorBuildSwitch } from "@/commons/styles/editor";
+import {
+  EditorReorderGroup,
+  EditorReorderItem,
+  EditorBuildRadio,
+  EditorBuildSwitch,
+  EditorImageInput
+} from "@/commons/styles/editor";
 
 export default function ElementProperties() {
   const {
@@ -58,6 +64,7 @@ export default function ElementProperties() {
     updateFieldStep,
     updateFieldMin,
     updateFieldMax,
+    updateSourceField,
     toggleActiveDocument,
     toggleRequiredField,
     setTargetVersion,
@@ -109,6 +116,23 @@ export default function ElementProperties() {
       navigate(`/app/document/build/${document?._id}?version=${versionNumber}`);
     }
   };
+
+  const handleUpdateSourceField = async (file: FileList | null) => {
+
+    const toBase64: any = (file: File) => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+
+    if (file) {
+      const fileData = await toBase64(file[0])
+
+      updateSourceField(fileData);
+    }
+
+  }
 
   return (
     <Box
@@ -354,8 +378,29 @@ export default function ElementProperties() {
                     </Stack>
                   )}
 
+                  {/* Field Source */}
+                  {selectedField && selectedField.type === 'image' && (
+                    <Box width={'100%'} marginY={2}>
+                      <Text fontWeight={'bold'} mb={2}>Selecionar imagem:</Text>
+                      <Button
+                        variant="text"
+                        component="label"
+                        fullWidth
+                      >
+                        <EditorImageInput
+                          src={selectedField.src}
+                        />
+                        <input
+                          type="file"
+                          onChange={(e) => handleUpdateSourceField(e.currentTarget.files)}
+                          hidden
+                        />
+                      </Button>
+                    </Box>
+                  )}
+
                   {/* Field is Required */}
-                  {!['yesOrNot', 'label', 'checkbox'].includes(selectedField?.type) && (
+                  {!['yesOrNot', 'label', 'checkbox', 'image'].includes(selectedField?.type) && (
                     <Stack>
                       <FormGroup>
                         <FormControlLabel
