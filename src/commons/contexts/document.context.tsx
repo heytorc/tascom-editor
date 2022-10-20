@@ -1,6 +1,7 @@
 import React, { createContext, FC, useCallback, useContext, useEffect, useState } from "react";
 import { v1 as uuidv1 } from 'uuid';
 import { cloneDeep } from 'lodash';
+import { Grid } from "react-rnd";
 
 import useLocalStorage from "@/commons/hooks/useLocalStorage";
 
@@ -34,6 +35,8 @@ interface IDocumentContext {
   setDocumentData: React.Dispatch<React.SetStateAction<any>>,
   targetVersion: number | string | undefined,
   setTargetVersion: React.Dispatch<React.SetStateAction<number | string | undefined>>,
+  grid: Grid,
+  setGrid: React.Dispatch<React.SetStateAction<Grid>>,
   createDocument: (name: string) => Promise<IDocument | undefined>,
   findDocument: (id: string, version?: number | string) => void,
   saveDocument: () => Promise<IDocument | undefined>,
@@ -103,6 +106,8 @@ export const DocumentProvider: FC = ({ children }) => {
   const [currentVersion, setCurrentVersion] = useState<IDocumentVersion>();
   const [fields, setFields] = useState<IField[]>([]);
   const [selectedField, setSelectedField] = useState<IField>();
+
+  const [grid, setGrid] = useState<Grid>([20, 20]);
 
   // States to fill document
   const [documentData, setDocumentData] = useState<ICompletedDocument>();
@@ -217,7 +222,7 @@ export const DocumentProvider: FC = ({ children }) => {
           data.updated_at = new Date;
 
           const { data: documentSaved }: { data: IDocument } = await api.patch(`/documents/${document._id}`, data);
-          
+
           setDocument(documentSaved);
           return documentSaved;
 
@@ -442,7 +447,7 @@ export const DocumentProvider: FC = ({ children }) => {
       const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
 
       if (only) {
-        fieldsCopy[fieldKey].position[only] = position[only];
+        fieldsCopy[fieldKey].position[only] = position[only] < 0 ? 0 : position[only];
       } else {
         fieldsCopy[fieldKey].position = position;
       }
@@ -725,6 +730,8 @@ export const DocumentProvider: FC = ({ children }) => {
         setDocumentData,
         documentLastVersionData,
         setDocumentLastVersionData,
+        grid,
+        setGrid,
         updateDocumentName,
         toggleActiveDocument,
         toggleRequiredField,

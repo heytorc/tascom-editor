@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { Rnd, DraggableData, Position, ResizableDelta } from "react-rnd";
 import {
   Box,
@@ -44,8 +44,11 @@ export default function BuildDocument() {
     setSelectedField,
     updateFieldPosition,
     updateFieldSize,
-    clearContext
+    clearContext,
+    grid
   } = useDocument();
+
+  const gridRef = useRef<HTMLCanvasElement>(null);
 
   const queryParams = useQuery();
   const { id } = useParams();
@@ -57,15 +60,38 @@ export default function BuildDocument() {
       findDocument(id, version);
   }, []);
 
+  useEffect(() => {
+    console.log('grid', grid)
+
+    if (gridRef) {
+      gridRef.current?.getContext('2d')
+    }
+
+    renderGrid();
+  }, [document, grid])
+
   const handleDragStop = (event: any, { x, y }: DraggableData) => {
-    updateFieldPosition({ x, y });
+    const [gridX, gridY] = grid;
+
+    const position = {
+      x: Math.ceil(x / gridX) * gridX,
+      y: Math.ceil(y / gridY) * gridY
+    }
+
+    console.log('position', position)
+
+    updateFieldPosition(position);
   };
 
   const handleResize = (e: MouseEvent | TouchEvent, dir: any, elementRef: HTMLElement, delta: ResizableDelta, position: Position) => {
-    updateFieldSize({
-      width: parseFloat(elementRef.style.width),
-      height: parseFloat(elementRef.style.height)
-    })
+    const [gridX, gridY] = grid;
+
+    const size = {
+      width: Math.ceil(parseFloat(elementRef.style.width) / gridX) * gridX,
+      height: Math.ceil(parseFloat(elementRef.style.height) / gridY) * gridY
+    }
+
+    updateFieldSize(size)
   };
 
   const handleBuildField = (field: IField, index: number) => {
@@ -79,18 +105,14 @@ export default function BuildDocument() {
       alignItems: "flex-start",
       justifyContent: "flex-start",
       flexDirection: 'column',
-      transition: '.5s ease',
-      padding: 2,
       cursor: 'pointer',
     };
 
     const selectedFieldStyles: React.CSSProperties = {
-      background: '#EBF8FF30',
-      borderRadius: 5,
-      border: 1,
+      background: '#EBF8FF',
+      border: 0,
       borderStyle: 'dashed',
       borderColor: '#4FD1C5',
-      transition: '.5s ease',
       height: (field.label && field.type === 'textarea') ? field.size.height + 50 : field.size.height,
       cursor: 'move',
     };
@@ -294,8 +316,8 @@ export default function BuildDocument() {
           ...field.position,
           ...field.size,
         }}
-        dragGrid={[10, 10]}
-        resizeGrid={[10, 10]}
+        dragGrid={grid}
+        resizeGrid={grid}
         maxWidth={800}
         onDragStop={handleDragStop}
         onResize={handleResize}
@@ -311,6 +333,40 @@ export default function BuildDocument() {
       </Rnd>
     )
   };
+
+  const renderGrid = useCallback(() => {
+    if (document) {
+      //grid width and height
+      var bw = document.size.width;
+      var bh = document.size.height;
+      //padding around grid
+      var p = 0;
+
+      if (gridRef) {
+        const canvas = gridRef;
+
+        const context = canvas.current?.getContext('2d');
+
+        context?.closePath();
+
+        if (context) {
+          for (var x = 0; x <= bw; x += grid[0]) {
+            context.moveTo(0.5 + x + p, p);
+            context.lineTo(0.5 + x + p, bh + p);
+          }
+
+
+          for (var x = 0; x <= bh; x += grid[0]) {
+            context.moveTo(p, 0.5 + x + p);
+            context.lineTo(bw + p, 0.5 + x + p);
+          }
+
+          context.strokeStyle = "#cccccc30";
+          context.stroke();
+        }
+      }
+    }
+  }, [gridRef]);
 
   return (
     <Stack flex={1}>
@@ -338,15 +394,26 @@ export default function BuildDocument() {
               style={{
                 background: '#fff',
                 borderRadius: 5,
-              }}>
-              <Stack
-                className="dragging-container"
-                style={{
-                  width: document?.size.width,
-                  height: document?.size.height,
-                  position: 'relative',
-                }}>
-                {fields.map((field: any, index: number) => handleBuildField(field, index))}
+              }}
+            >
+              <Stack style={{ position: 'relative', padding: 0 }}>
+                <canvas
+                  ref={gridRef}
+                  width={document?.size?.width}
+                  height={document?.size?.height}
+                  style={{ position: 'absolute' }}
+                >
+                </canvas>
+
+                <Stack
+                  className="dragging-container"
+                  style={{
+                    width: document?.size.width,
+                    height: document?.size.height,
+                    position: 'relative',
+                  }}>
+                  {fields.map((field: any, index: number) => handleBuildField(field, index))}
+                </Stack>
               </Stack>
             </Stack>
           </Paper>

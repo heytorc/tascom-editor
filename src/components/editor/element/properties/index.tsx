@@ -14,6 +14,7 @@ import {
   List as ListComponent,
   ListItemButton,
   ListItem,
+  Slider
 } from "@mui/material";
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import {
@@ -70,7 +71,9 @@ export default function ElementProperties() {
     setTargetVersion,
     setSelectedField,
     setFields,
-    targetVersion
+    targetVersion,
+    grid,
+    setGrid
   } = useDocument();
 
   const navigate = useNavigate();
@@ -170,6 +173,8 @@ export default function ElementProperties() {
             <TabPanel value="1">
               {selectedField && (
                 <Stack>
+
+                  {selectedField.position.x} x {selectedField.position.y}
 
                   {/* Field Description */}
                   <Stack paddingY={1} mb={1}>
@@ -482,6 +487,31 @@ export default function ElementProperties() {
                     name={`${document?.name}-size-y`}
                     value={document?.size.height}
                     size="small"
+                  />
+
+                </Stack>
+
+                <Text fontWeight={'bold'} marginBottom={2}>Grid:</Text>
+
+                <Stack direction={'row'} gap={2} marginBottom={2} alignItems={'baseline'}>
+
+                  <Slider
+                    key={'document-grid-input'}
+                    value={grid[0]}
+                    getAriaValueText={value => `${value}`}
+                    step={5}
+                    min={5}
+                    max={20}
+                    valueLabelDisplay="auto"
+                    marks={[
+                      { value: 5, label: '5' },
+                      { value: 10, label: '10' },
+                      { value: 15, label: '15' },
+                      { value: 20, label: '20' }
+                    ]}
+                    onChangeCommitted={(e, newValue) => {
+                      setGrid([newValue as number, newValue as number])
+                    }}
                   />
 
                 </Stack>

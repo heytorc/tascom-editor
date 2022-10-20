@@ -18,6 +18,8 @@ export const EditorLabel = styled(Typography)`
 
 export const EditorBuildInputText = styled(TextField)`
   cursor: pointer;
+  padding: 0;
+  margin: 0;
   
   & input, & textarea {
     cursor: pointer;
