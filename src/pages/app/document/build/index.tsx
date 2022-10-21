@@ -383,7 +383,7 @@ export default function BuildDocument() {
           paddingTop={15}
           paddingBottom={10}
           height={'100vh'}
-          style={{ overflowX: 'hidden' }}
+          style={{ overflow: 'scroll' }}
         >
           <Paper elevation={2}>
             <Stack
