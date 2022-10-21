@@ -55,18 +55,13 @@ export default function BuildDocument() {
 
   useEffect(() => {
     let version = queryParams.get("version") ?? undefined;
+
     clearContext();
-    if (id)
-      findDocument(id, version);
+
+    if (id) findDocument(id, version);
   }, []);
 
   useEffect(() => {
-    console.log('grid', grid)
-
-    if (gridRef) {
-      gridRef.current?.getContext('2d')
-    }
-
     renderGrid();
   }, [document, grid])
 
@@ -334,7 +329,7 @@ export default function BuildDocument() {
     )
   };
 
-  const renderGrid = useCallback(() => {
+  const renderGrid = () => {
     if (document) {
       //grid width and height
       var bw = document.size.width;
@@ -347,26 +342,28 @@ export default function BuildDocument() {
 
         const context = canvas.current?.getContext('2d');
 
-        context?.closePath();
-
         if (context) {
+          context.strokeStyle = "#cccccc30";
+          context.clearRect(0, 0, bw, bh)
+
           for (var x = 0; x <= bw; x += grid[0]) {
+            context?.beginPath()
             context.moveTo(0.5 + x + p, p);
             context.lineTo(0.5 + x + p, bh + p);
+            context.stroke();
           }
 
 
           for (var x = 0; x <= bh; x += grid[0]) {
+            context?.beginPath()
             context.moveTo(p, 0.5 + x + p);
             context.lineTo(bw + p, 0.5 + x + p);
+            context.stroke();
           }
-
-          context.strokeStyle = "#cccccc30";
-          context.stroke();
         }
       }
     }
-  }, [gridRef]);
+  };
 
   return (
     <Stack flex={1}>

@@ -491,7 +491,7 @@ export default function ElementProperties() {
 
                 </Stack>
 
-                <Text fontWeight={'bold'} marginBottom={2}>Grid:</Text>
+                <Text fontWeight={'bold'} marginBottom={2}>Grade:</Text>
 
                 <Stack direction={'row'} gap={2} marginBottom={2} alignItems={'baseline'}>
 
