@@ -69,11 +69,11 @@ export default function BuildDocument() {
     const [gridX, gridY] = grid;
 
     const position = {
-      x: Math.ceil(x / gridX) * gridX,
-      y: Math.ceil(y / gridY) * gridY
+      x: Math.round(x / gridX) * gridX,
+      y: Math.round(y / gridY) * gridY
     }
 
-    console.log('position', position)
+    console.log('position', position.x, position.y)
 
     updateFieldPosition(position);
   };
@@ -82,8 +82,8 @@ export default function BuildDocument() {
     const [gridX, gridY] = grid;
 
     const size = {
-      width: Math.ceil(parseFloat(elementRef.style.width) / gridX) * gridX,
-      height: Math.ceil(parseFloat(elementRef.style.height) / gridY) * gridY
+      width: Math.round(parseFloat(elementRef.style.width) / gridX) * gridX,
+      height: Math.round(parseFloat(elementRef.style.height) / gridY) * gridY
     }
 
     updateFieldSize(size)
