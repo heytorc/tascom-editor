@@ -47,7 +47,7 @@ export default interface IField {
   steps?: number,
   max?: number,
   min?: number,
-  table: {
+  table?: {
     rows: number,
     columns: number,
     height: number

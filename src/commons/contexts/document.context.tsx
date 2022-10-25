@@ -514,15 +514,11 @@ export const DocumentProvider: FC = ({ children }) => {
       const selectedFieldCopy = cloneDeep(selectedField);
 
       const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
+      const currentField = fieldsCopy[fieldKey];
 
-      if (fieldsCopy[fieldKey].table) {
-        fieldsCopy[fieldKey].table = {
-          ...fieldsCopy[fieldKey].table,
-          columns,
-        };
+      if (currentField.table) currentField.table.columns = columns
 
-        selectedFieldCopy.table.columns = columns;
-      }
+      if (selectedFieldCopy.table) selectedFieldCopy.table.columns = columns;
 
       if (columns > 0) setFields(fieldsCopy);
       setSelectedField(selectedFieldCopy)
@@ -537,15 +533,12 @@ export const DocumentProvider: FC = ({ children }) => {
       const selectedFieldCopy = cloneDeep(selectedField);
 
       const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
+      const currentField = fieldsCopy[fieldKey];
 
-      if (fieldsCopy[fieldKey].table) {
-        fieldsCopy[fieldKey].table = {
-          ...fieldsCopy[fieldKey].table,
-          rows,
-        };
-      }
+      if (currentField.table) currentField.table.rows = rows
 
-      selectedFieldCopy.table.rows = rows;
+      if (selectedFieldCopy.table) selectedFieldCopy.table.rows = rows;
+
 
       if (rows > 0) setFields(fieldsCopy);
       setSelectedField(selectedFieldCopy)
@@ -560,15 +553,11 @@ export const DocumentProvider: FC = ({ children }) => {
       const selectedFieldCopy = cloneDeep(selectedField);
 
       const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
+      const currentField = fieldsCopy[fieldKey];
 
-      if (fieldsCopy[fieldKey].table) {
-        fieldsCopy[fieldKey].table = {
-          ...fieldsCopy[fieldKey].table,
-          height,
-        };
-      }
+      if (currentField.table) currentField.table.height = height
 
-      selectedFieldCopy.table.height = height;
+      if (selectedFieldCopy.table) selectedFieldCopy.table.height = height;
 
       if (height > 0) setFields(fieldsCopy);
       setSelectedField(selectedFieldCopy)
