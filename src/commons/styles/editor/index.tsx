@@ -88,3 +88,11 @@ export const EditorImageInput = styled.img`
   border: 2px dashed #eee;
   min-height: 10rem;
 `;
+
+export const EditorTable = styled.table`
+  border-collapse: collapse;
+
+  &, th, td {
+    border: 1px solid #aaa;
+  }
+`

@@ -246,6 +246,29 @@ const image: IField = {
   useRichText: false,
 }
 
+const table: IField = {
+  _id: "",
+  label: "Table",
+  type: "table",
+  tag: "table",
+  position: {
+    x: 0,
+    y: 20
+  },
+  size: {
+    width: 800,
+    height: 260
+  },
+  styles: { },
+  required: false,
+  useRichText: false,
+  table: {
+    rows: 5,
+    columns: 10,
+    height: 50
+  }
+}
+
 export default {
   text,
   date,
@@ -257,5 +280,6 @@ export default {
   select,
   yesOrNot,
   range,
-  image
+  image,
+  table
 }

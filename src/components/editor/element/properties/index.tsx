@@ -66,6 +66,9 @@ export default function ElementProperties() {
     updateFieldMin,
     updateFieldMax,
     updateSourceField,
+    updateFieldTableColumn,
+    updateFieldTableRows,
+    updateFieldTableHeight,
     toggleActiveDocument,
     toggleRequiredField,
     setTargetVersion,
@@ -220,7 +223,7 @@ export default function ElementProperties() {
                       />
                     </Stack>
                   )}
-                  
+
                   <Stack mb={1}>
                     <Text fontWeight={'bold'} marginBottom={2}>Posição:</Text>
 
@@ -255,6 +258,48 @@ export default function ElementProperties() {
 
                     </Stack>
                   </Stack>
+
+                  {/* Table Size */}
+                  {selectedField && selectedField.type === 'table' && (
+                    <Stack paddingY={1} mb={1}>
+                      <Text fontWeight={'bold'} marginBottom={2}>Tabela:</Text>
+
+                      <Stack direction={'row'} gap={2} alignItems={'baseline'}>
+
+                        <TextField
+                          label="Linhas"
+                          inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                          onChange={(element) => updateFieldTableRows(parseInt(element.target.value))}
+                          name={`${selectedField?.label}-size-w`}
+                          value={selectedField?.table?.rows}
+                          size="small"
+                        />
+
+                        <Text>x</Text>
+
+                        <TextField
+                          label="Colunas"
+                          inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                          onChange={(element) => updateFieldTableColumn(parseInt(element.target.value))}
+                          name={`${selectedField?.label}-size-y`}
+                          value={selectedField?.table?.columns}
+                          size="small"
+                        />
+
+                        <Text>x</Text>
+
+                        <TextField
+                          label="Altura"
+                          inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                          onChange={(element) => updateFieldTableHeight(parseInt(element.target.value))}
+                          name={`${selectedField?.label}-size-y`}
+                          value={selectedField?.table?.height}
+                          size="small"
+                        />
+
+                      </Stack>
+                    </Stack>
+                  )}
 
                   {/* Field Min */}
                   {selectedField && selectedField.type === 'range' && (
@@ -425,7 +470,7 @@ export default function ElementProperties() {
                   )}
 
                   {/* Field is Required */}
-                  {!['yesOrNot', 'label', 'checkbox', 'image'].includes(selectedField?.type) && (
+                  {!['yesOrNot', 'label', 'checkbox', 'image', 'table'].includes(selectedField?.type) && (
                     <Stack>
                       <FormGroup>
                         <FormControlLabel

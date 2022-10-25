@@ -13,7 +13,7 @@ import {
   MenuItem,
   Menu,
   Typography,
-  ListItemIcon
+  ListItemIcon,
 } from "@mui/material";
 import { ImageRounded, ContentCopy } from '@mui/icons-material';
 import { DatePicker, LocalizationProvider } from '@mui/lab';
@@ -33,7 +33,8 @@ import {
   EditorBuildInputText,
   EditorBuildSwitch,
   EditorBuildCheckbox,
-  EditorBuildRadio
+  EditorBuildRadio,
+  EditorTable
 } from '@/commons/styles/editor';
 
 import IField from "@/commons/interfaces/IField";
@@ -313,6 +314,30 @@ export default function BuildDocument() {
               </Stack>
             )}
           </>
+        )
+        break;
+
+      case 'table':
+        fieldComponent = (
+          <Stack
+            flex={1}
+            display={'flex'}
+            justifyContent={'center'}
+            alignItems={'center'}
+            width={'100%'}
+          >
+            <EditorTable width={'100%'}>
+              <tbody>
+                {Array(field.table?.rows).fill(1).map((row, rindex) => (
+                  <tr key={`table_row_${rindex}`}>
+                    {Array(field.table?.columns).fill(1).map((column, cindex) => (
+                      <td key={`table_column_${cindex}`} style={{ height: `${field.table?.height ?? 50}px` }}>&nbsp;</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </EditorTable>
+          </Stack>
         )
         break;
 

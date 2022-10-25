@@ -46,5 +46,10 @@ export default interface IField {
   orientation?: FieldOrientationType,
   steps?: number,
   max?: number,
-  min?: number
+  min?: number,
+  table: {
+    rows: number,
+    columns: number,
+    height: number
+  }
 }

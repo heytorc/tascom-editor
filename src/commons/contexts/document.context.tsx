@@ -57,6 +57,9 @@ interface IDocumentContext {
   updateFieldMax: (max: number) => void,
   updateFieldMin: (min: number) => void,
   updateSourceField: (src: string | null) => void,
+  updateFieldTableColumn: (columns: number) => void,
+  updateFieldTableRows: (rows: number) => void,
+  updateFieldTableHeight: (height: number) => void,
   documents: IDocument[],
   handleDocuments: () => void,
   updateDocumentSize: (size: IElementSize, only?: "width" | "height") => void,
@@ -503,6 +506,75 @@ export const DocumentProvider: FC = ({ children }) => {
     }
   };
 
+  const updateFieldTableColumn = (columns: number) => {
+    if (selectedField) {
+      columns = isNaN(columns) ? 0 : columns;
+
+      const fieldsCopy = cloneDeep(fields);
+      const selectedFieldCopy = cloneDeep(selectedField);
+
+      const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
+
+      if (fieldsCopy[fieldKey].table) {
+        fieldsCopy[fieldKey].table = {
+          ...fieldsCopy[fieldKey].table,
+          columns,
+        };
+
+        selectedFieldCopy.table.columns = columns;
+      }
+
+      if (columns > 0) setFields(fieldsCopy);
+      setSelectedField(selectedFieldCopy)
+    }
+  };
+
+  const updateFieldTableRows = (rows: number) => {
+    if (selectedField) {
+      rows = isNaN(rows) ? 0 : rows;
+
+      const fieldsCopy = cloneDeep(fields);
+      const selectedFieldCopy = cloneDeep(selectedField);
+
+      const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
+
+      if (fieldsCopy[fieldKey].table) {
+        fieldsCopy[fieldKey].table = {
+          ...fieldsCopy[fieldKey].table,
+          rows,
+        };
+      }
+
+      selectedFieldCopy.table.rows = rows;
+
+      if (rows > 0) setFields(fieldsCopy);
+      setSelectedField(selectedFieldCopy)
+    }
+  };
+
+  const updateFieldTableHeight = (height: number) => {
+    if (selectedField) {
+      height = isNaN(height) ? 0 : height;
+
+      const fieldsCopy = cloneDeep(fields);
+      const selectedFieldCopy = cloneDeep(selectedField);
+
+      const fieldKey = fieldsCopy.findIndex(item => item._id === selectedField._id)
+
+      if (fieldsCopy[fieldKey].table) {
+        fieldsCopy[fieldKey].table = {
+          ...fieldsCopy[fieldKey].table,
+          height,
+        };
+      }
+
+      selectedFieldCopy.table.height = height;
+
+      if (height > 0) setFields(fieldsCopy);
+      setSelectedField(selectedFieldCopy)
+    }
+  };
+
   const updateFieldStep = (steps: number,) => {
     if (selectedField) {
       const fieldsCopy = cloneDeep(fields);
@@ -771,6 +843,9 @@ export const DocumentProvider: FC = ({ children }) => {
         updateSourceField,
         handleDocuments,
         updateDocumentSize,
+        updateFieldTableColumn,
+        updateFieldTableRows,
+        updateFieldTableHeight,
         addFieldOptions,
         updateFieldOptions,
         deleteFieldOption,

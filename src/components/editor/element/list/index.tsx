@@ -10,7 +10,8 @@ import {
   RadioButtonCheckedOutlined,
   ArrowDropDownCircleOutlined,
   LinearScaleOutlined,
-  ImageRounded
+  ImageRounded,
+  GridOn
 } from '@mui/icons-material';
 
 import { useDocument } from "@/commons/contexts/document.context";
@@ -84,6 +85,28 @@ export default function EditorElements() {
                 Número
               </ElementTypeButton>
 
+            </Stack>
+
+            <Text>Organização</Text>
+
+            <Stack
+              flex={1}
+              flexDirection={'row'}
+              flexWrap={'wrap'}
+              alignItems={'center'}
+              justifyContent={'space-between'}
+              gap={2}
+              marginY={3}
+            >
+              <ElementTypeButton
+                color="primary"
+                onClick={() => createField('table')}
+                startIcon={<GridOn />}
+                style={{ justifyContent: 'flex-start' }}
+                fullWidth
+              >
+                Tabela
+              </ElementTypeButton>
             </Stack>
 
             <Text>Imagens</Text>
@@ -191,7 +214,6 @@ export default function EditorElements() {
                 Intervalo
               </ElementTypeButton>
             </Stack>
-            
           </Stack>
         </Stack>
       </Box>

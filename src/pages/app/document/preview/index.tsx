@@ -24,7 +24,8 @@ import {
   EditorBuildSwitch,
   EditorBuildCheckbox,
   EditorBuildRadio,
-  EditorBuildInputText
+  EditorBuildInputText,
+  EditorTable
 } from '@/commons/styles/editor';
 
 import IField from "@/commons/interfaces/IField";
@@ -218,7 +219,7 @@ const PreviewDocument = () => {
           />
         );
         break;
-      
+
       case 'image':
         fieldComponent = (
           <>
@@ -241,6 +242,30 @@ const PreviewDocument = () => {
               </Stack>
             )}
           </>
+        )
+        break;
+
+      case 'table':
+        fieldComponent = (
+          <Stack
+            flex={1}
+            display={'flex'}
+            justifyContent={'center'}
+            alignItems={'center'}
+            width={'100%'}
+          >
+            <EditorTable width={'100%'}>
+              <tbody>
+                {Array(field.table?.rows).fill(1).map((row, rindex) => (
+                  <tr key={`table_row_${rindex}`}>
+                    {Array(field.table?.columns).fill(1).map((column, cindex) => (
+                      <td key={`table_column_${cindex}`} style={{ height: `${field.table?.height ?? 50}px` }}>&nbsp;</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </EditorTable>
+          </Stack>
         )
         break;
 
