@@ -46,6 +46,7 @@ interface IDocumentContext {
   toggleRequiredField: (isRequired: boolean) => void,
   publishDocument: () => void,
   createField: (type: FieldType) => void,
+  duplicateField: () => void,
   deleteField: () => void,
   updateFieldLabel: (value: string) => void,
   updateFieldTag: (value: string) => void,
@@ -377,6 +378,27 @@ export const DocumentProvider: FC = ({ children }) => {
       position: {
         x: 0,
         y: maxY
+      },
+      _id: uuidv1()
+    };
+
+    const fieldsCopy = cloneDeep(fields);
+    fieldsCopy.push(newField);
+
+    setFields(fieldsCopy);
+    setTimeout(() => setSelectedField(newField), 100);
+  };
+
+  const duplicateField = () => {
+    let newField = cloneDeep(selectedField);
+
+    if (!newField) return;
+
+    newField = {
+      ...newField,
+      position: {
+        ...newField.position,
+        y: newField.position.y + 100
       },
       _id: uuidv1()
     };
@@ -737,6 +759,7 @@ export const DocumentProvider: FC = ({ children }) => {
         toggleRequiredField,
         publishDocument,
         createField,
+        duplicateField,
         deleteField,
         updateFieldLabel,
         updateFieldPlaceholder,

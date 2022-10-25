@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Rnd, DraggableData, Position, ResizableDelta } from "react-rnd";
 import {
   Box,
@@ -10,12 +10,17 @@ import {
   RadioGroup,
   Autocomplete,
   Slider,
+  MenuItem,
+  Menu,
+  Typography,
+  ListItemIcon
 } from "@mui/material";
-import { ImageRounded } from '@mui/icons-material';
+import { ImageRounded, ContentCopy } from '@mui/icons-material';
 import { DatePicker, LocalizationProvider } from '@mui/lab';
 import DateAdapter from '@mui/lab/AdapterDayjs';
 import ptBrLocale from 'dayjs/locale/pt-br';
 import { useParams } from 'react-router-dom';
+import _ from "lodash";
 
 import { useDocument } from "@/commons/contexts/document.context";
 import useQuery from "@/commons/hooks/useQuery";
@@ -45,13 +50,18 @@ export default function BuildDocument() {
     updateFieldPosition,
     updateFieldSize,
     clearContext,
-    grid
+    grid,
+    duplicateField
   } = useDocument();
 
   const gridRef = useRef<HTMLCanvasElement>(null);
 
   const queryParams = useQuery();
   const { id } = useParams();
+
+  const [fieldRef, setFieldRef] = useState<null | HTMLElement>(null)
+
+  const [isOpenOptionsField, setIsOpenOptionsField] = useState(false);
 
   useEffect(() => {
     let version = queryParams.get("version") ?? undefined;
@@ -88,6 +98,17 @@ export default function BuildDocument() {
 
     updateFieldSize(size)
   };
+
+  const handleClonseFieldOptions = () => {
+    setIsOpenOptionsField(false)
+  }
+
+  const handleDuplicateField = () => {
+    handleClonseFieldOptions()
+
+    if (selectedField)
+      duplicateField()
+  }
 
   const handleBuildField = (field: IField, index: number) => {
     let fieldComponent = <></>;
@@ -319,11 +340,41 @@ export default function BuildDocument() {
         enableResizing={(selectedField?._id === field._id)}
         disableDragging={!(selectedField?._id === field._id)}
       >
-        <div className="handle" style={{ ...styles }} onClick={() => {
-          setSelectedField(undefined);
-          setTimeout(() => setSelectedField(field), 10)
-        }}>
+        <div
+          className="handle"
+          style={{ ...styles }}
+          onClick={() => {
+            setSelectedField(undefined);
+            setTimeout(() => setSelectedField(field), 10)
+          }}
+          onContextMenu={(e) => {
+            if (selectedField?._id === field._id) {
+              setFieldRef(e.currentTarget)
+              setIsOpenOptionsField(true)
+            }
+            e.preventDefault()
+          }}
+        >
           {fieldComponent}
+
+          {fieldRef && selectedField?._id === field._id && (
+            <Menu
+              id="basic-menu"
+              anchorEl={fieldRef}
+              open={isOpenOptionsField}
+              onClose={handleClonseFieldOptions}
+              MenuListProps={{
+                'aria-labelledby': 'basic-button',
+              }}
+            >
+              <MenuItem onClick={handleDuplicateField}>
+                <ListItemIcon>
+                  <ContentCopy fontSize="small" />
+                </ListItemIcon>
+                <Typography>Duplicar</Typography>
+              </MenuItem>
+            </Menu>
+          )}
         </div>
       </Rnd>
     )
