@@ -174,8 +174,6 @@ export default function ElementProperties() {
               {selectedField && (
                 <Stack>
 
-                  {selectedField.position.x} x {selectedField.position.y}
-
                   {/* Field Description */}
                   <Stack paddingY={1} mb={1}>
                     <Text fontWeight={'bold'} mb={2}>Rótulo:</Text>
@@ -222,6 +220,12 @@ export default function ElementProperties() {
                       />
                     </Stack>
                   )}
+                  
+                  <Stack mb={1}>
+                    <Text fontWeight={'bold'} marginBottom={2}>Posição:</Text>
+
+                    <Text>{selectedField.position.x} x {selectedField.position.y}</Text>
+                  </Stack>
 
                   {/* Field Size */}
                   <Stack paddingY={1} mb={1}>
